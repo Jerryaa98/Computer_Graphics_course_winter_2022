@@ -6,9 +6,9 @@ Name: Giries Abu Ayoub
 Student Number: 318156171
 
 
-Name: 
+Name: Lama Ghantous
 
-Student Number: 
+Student Number: 207733908
 
 ### Lecturer
 *Roi Poranne*
