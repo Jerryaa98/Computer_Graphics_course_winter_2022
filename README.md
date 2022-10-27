@@ -1,9 +1,9 @@
 # Computer Graphics 203.3710
 ## Students Team data
 
-Name: 
+Name: Giries Abu Ayoub
 
-Student Number: 
+Student Number: 318156171
 
 
 Name: 
