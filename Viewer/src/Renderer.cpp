@@ -1,9 +1,11 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <algorithm>
+#include <random>
 
 #include "Renderer.h"
 #include "InitShader.h"
+#include <iostream>
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 #define Z_INDEX(width,x,y) ((x)+(y)*(width))
@@ -25,16 +27,95 @@ void Renderer::PutPixel(int i, int j, const glm::vec3& color)
 {
 	if (i < 0) return; if (i >= viewport_width) return;
 	if (j < 0) return; if (j >= viewport_height) return;
-	
+	//std::cout << "i is " << i << ", j is " << j << std::endl;
 	color_buffer[INDEX(viewport_width, i, j, 0)] = color.x;
 	color_buffer[INDEX(viewport_width, i, j, 1)] = color.y;
 	color_buffer[INDEX(viewport_width, i, j, 2)] = color.z;
 }
 
+void Renderer::PlotLineHigh(const glm::ivec2& p1, const glm::ivec2& p2, const glm::vec3& color) {
+	float dx = p2.x - p1.x;
+	float dy = p2.y - p1.y;
+	int xi = 1;
+
+	if (dx < 0) {
+		xi = -1;
+		dx = ((-1) * dx);
+	}
+
+	float d = (2 * dx) - dy;
+	float x = p1.x;
+	for (int y = p1.y; y < p2.y; y++) {
+		PutPixel(x, y, color);
+		if (d > 0) {
+			x += xi;
+			d += (2 * (dx - dy));
+		}
+		else {
+			d += (2 * dx);
+		}
+	}
+}
+
+
+void Renderer::PlotLineLow(const glm::ivec2& p1, const glm::ivec2& p2, const glm::vec3& color) {
+	float dx = p2.x - p1.x;
+	float dy = p2.y - p1.y;
+	int yi = 1;
+
+	if (dy < 0) {
+		yi = -1;
+		dy = ((-1) * dy);
+	}
+
+	float d = (2 * dy) - dx;
+	float y = p1.y;
+	for (int x = p1.x; x < p2.x; x++) {
+		// std::cout << "im here" << std::endl;
+		PutPixel(x, y, color);
+		if (d > 0) {
+			y += yi;
+			d += (2 * (dy - dx));
+		}
+		else {
+			d += (2 * dy);
+		}
+	}
+}
+
 void Renderer::DrawLine(const glm::ivec2& p1, const glm::ivec2& p2, const glm::vec3& color)
 {
-	// TODO: Implement bresenham algorithm
-	// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+	// bresenham algorithm https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+
+	float dx = abs(p1.x - p2.x);
+	float dy = abs(p1.y - p2.y);
+
+	if (dy < dx) {
+		if (p1.x > p2.x) {
+			// std::cout << "draw line low 1" << std::endl;
+			PlotLineLow(p2, p1, color);
+			return;
+		}
+		else {
+			// std::cout << "draw line low 2" << std::endl;
+			PlotLineLow(p1, p2, color);
+			return;
+		}
+	}
+	else {
+		if (p1.y > p2.y) {
+			// std::cout << "draw line high 1" << std::endl;
+			PlotLineHigh(p2, p1, color);
+			return;
+		}
+		else {
+			// std::cout << "draw line high 2" << std::endl;
+			PlotLineHigh(p1, p2, color);
+			return;
+		}
+	}
+
+
 }
 
 void Renderer::CreateBuffers(int w, int h)
@@ -174,7 +255,25 @@ void Renderer::Render(const Scene& scene)
 	int half_width = viewport_width / 2;
 	int half_height = viewport_height / 2;
 	// draw circle
+	// for assignment 1 circle of lines
+	const double pi = 3.14159265358979323846;
+	srand(time(NULL));
+	for (int i = 1; i <= 80; i++) {
+		DrawLine(glm::ivec2(half_width, half_height), glm::ivec2(half_width + 200*(sin((2*pi*i)/45)), half_height + 200 * (cos((2 * pi * i) / 45))), glm::vec3(100, 100, 100));
+	}
 
+	// for bonus, ACTUAL circle
+	int start_width = viewport_width / 2;
+	int start_height =  viewport_height / 2;
+	int length = 200;
+	glm::ivec2 p1 = glm::ivec2(start_width, start_height);
+	glm::ivec2 p2 = glm::ivec2(start_width + length * (sin((2 * pi * 0) / 360)), start_height + length * (cos((2 * pi * 0) / 360)));
+	for (double i = 1; i <= 360; i+=0.5) {
+		p1 = p2;
+		p2 = glm::ivec2(start_width + length * (sin((2 * pi * i) / 360)), start_height + length * (cos((2 * pi * i) / 360)));
+		DrawLine(p1, p2, glm::vec3(100, 0, 0));
+		//DrawLine(glm::ivec2(start_width, start_height), glm::ivec2(half_width + 200 * (sin((2 * pi * i) / 45)), half_height + 200 * (cos((2 * pi * i) / 45))), glm::vec3(100, 0, 0));
+	}
 }
 
 int Renderer::GetViewportWidth() const
