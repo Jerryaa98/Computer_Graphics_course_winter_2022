@@ -1,7 +1,6 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <algorithm>
-#include <random>
 
 #include "Renderer.h"
 #include "InitShader.h"
@@ -257,23 +256,119 @@ void Renderer::Render(const Scene& scene)
 	// draw circle
 	// for assignment 1 circle of lines
 	const double pi = 3.14159265358979323846;
-	srand(time(NULL));
-	for (int i = 1; i <= 80; i++) {
-		DrawLine(glm::ivec2(half_width, half_height), glm::ivec2(half_width + 200*(sin((2*pi*i)/45)), half_height + 200 * (cos((2 * pi * i) / 45))), glm::vec3(100, 100, 100));
-	}
+	//for (int i = 1; i <= 80; i++) {
+	//	DrawLine(glm::ivec2(half_width, half_height), glm::ivec2(half_width + 200*(sin((2*pi*i)/45)), half_height + 200 * (cos((2 * pi * i) / 45))), glm::vec3(100, 100, 100));
+	//}
 
-	// for bonus, ACTUAL circle
-	int start_width = viewport_width / 2;
-	int start_height =  viewport_height / 2;
-	int length = 200;
+	//// for bonus, ACTUAL circle
+	//int start_width = viewport_width / 2;
+	//int start_height =  viewport_height / 2;
+	//int length = 200;
+	//glm::ivec2 p1 = glm::ivec2(start_width, start_height);
+	//glm::ivec2 p2 = glm::ivec2(start_width + length * (sin((2 * pi * 0) / 360)), start_height + length * (cos((2 * pi * 0) / 360)));
+	//for (double i = 1; i <= 360; i+=0.5) {
+	//	p1 = p2;
+	//	p2 = glm::ivec2(start_width + length * (sin((2 * pi * i) / 360)), start_height + length * (cos((2 * pi * i) / 360)));
+	//	DrawLine(p1, p2, glm::vec3(100, 0, 0));
+	//}
+
+	// drawing pumpkin
+	int start_width = 2 * viewport_width / 5;
+	int start_height =  viewport_height / 10;
+	// face
 	glm::ivec2 p1 = glm::ivec2(start_width, start_height);
-	glm::ivec2 p2 = glm::ivec2(start_width + length * (sin((2 * pi * 0) / 360)), start_height + length * (cos((2 * pi * 0) / 360)));
-	for (double i = 1; i <= 360; i+=0.5) {
+	glm::ivec2 p2 = glm::ivec2(start_width + 200, start_height);
+	glm::vec3 orange = glm::vec3(85, 41, 5);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 50, p1.y + 50);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 50, p1.y + 75);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y + 150);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 50, p1.y + 75);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 50, p1.y + 50);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 200, p1.y);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 50, p1.y - 50);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 50, p1.y - 75);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y - 150);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 50, p1.y - 75);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 50, p1.y - 50);
+	DrawLine(p1, p2, orange);
+
+	// mouth
+	p1 = glm::ivec2(start_width - 75, start_height + 75);
+	p2 = glm::ivec2(p1.x + 25, p1.y + 25);
+	for(int i = 0; i < 6; i++){
 		p1 = p2;
-		p2 = glm::ivec2(start_width + length * (sin((2 * pi * i) / 360)), start_height + length * (cos((2 * pi * i) / 360)));
-		DrawLine(p1, p2, glm::vec3(100, 0, 0));
-		//DrawLine(glm::ivec2(start_width, start_height), glm::ivec2(half_width + 200 * (sin((2 * pi * i) / 45)), half_height + 200 * (cos((2 * pi * i) / 45))), glm::vec3(100, 0, 0));
+		p2 = glm::ivec2(p1.x + 25, p1.y + 25);
+		DrawLine(p1, p2, orange);
+		p1 = p2;
+		p2 = glm::ivec2(p1.x + 25, p1.y - 25);
+		DrawLine(p1, p2, orange);
 	}
+	// eyes
+	p1 = glm::ivec2(start_width + 10, start_height + 300);
+	p2 = glm::ivec2(p1.x + 30, p1.y + 60);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 30, p1.y - 60);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 60, p1.y);
+	DrawLine(p1, p2, orange);
+
+	p1 = glm::ivec2(start_width + 190, start_height + 300);
+	p2 = glm::ivec2(p1.x - 30, p1.y + 60);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 30, p1.y - 60);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 60, p1.y);
+	DrawLine(p1, p2, orange);
+
+	// nose
+	p1 = glm::ivec2(start_width + 100, start_height + 200);
+	p2 = glm::ivec2(p1.x + 130, p1.y - 15);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 10, p1.y + 15);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 10, p1.y + 15);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 130, p1.y + 10);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 130, p1.y - 10);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 10, p1.y - 15);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 10 , p1.y - 15);
+	DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 100, p1.y + 10);
 }
 
 int Renderer::GetViewportWidth() const
