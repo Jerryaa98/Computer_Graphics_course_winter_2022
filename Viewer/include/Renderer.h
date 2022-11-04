@@ -19,7 +19,9 @@ public:
 	
 private:
 	void PutPixel(const int i, const int j, const glm::vec3& color);
-
+	void Renderer::DrawCircleOfLines(int start_width, int start_height);
+	void Renderer::DrawActualCircle(int start_width, int start_height);
+	void Renderer::DrawPumpkin(int start_width, int start_height);
 	void CreateBuffers(int w, int h);
 	void CreateOpenglBuffer();
 	void InitOpenglRendering();
