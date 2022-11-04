@@ -349,6 +349,52 @@ void Renderer::DrawPumpkin(int start_width, int start_height) {
 	p1 = p2;
 	p2 = glm::ivec2(p1.x - 20, p1.y + 40);
 	DrawLine(p1, p2, orange);
+
+	//hat 
+
+	glm::vec3 green = glm::vec3(0.5, 0.5, 0.5);
+	p1 = glm::ivec2(start_width + 60, start_height + 400);
+	p2 = glm::ivec2(p1.x + 10, p1.y + 15);
+	DrawLine(p1, p2, orange);
+
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 30, p1.y + 25);
+	DrawLine(p1, p2, orange);
+
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 60, p1.y + 30);
+	DrawLine(p1, p2, orange);
+
+	p1 = p2;
+	glm::ivec2 p3 = p2;
+	p2 = glm::ivec2(p1.x + 10, p1.y - 5);
+	DrawLine(p1, p2, orange);
+
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 16, p1.y - 7);
+	DrawLine(p3, p2, orange);
+
+	p2 = glm::ivec2(p1.x + 20, p1.y - 5);
+	DrawLine(p3, p2, orange);
+	p2 = glm::ivec2(p1.x + 29, p1.y - 2);
+	DrawLine(p3, p2, orange);
+	p2 = glm::ivec2(p1.x + 32, p1.y - 0.5);
+	DrawLine(p3, p2, orange);
+	p2 = glm::ivec2(p1.x + 35, p1.y);
+	DrawLine(p3, p2, orange);
+
+	p1 = glm::ivec2(start_width + 110, start_height + 400);
+	p2 = glm::ivec2(p1.x + 10, p1.y + 15);
+	DrawLine(p1, p2, orange);
+
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 30, p1.y + 25);
+	DrawLine(p1, p2, orange);
+
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 60, p1.y + 30);
+	DrawLine(p1, p2, orange);
+	DrawLine(p3, p2, orange);
 }
 
 void Renderer::Render(const Scene& scene)
