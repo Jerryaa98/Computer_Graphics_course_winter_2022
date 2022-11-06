@@ -418,189 +418,283 @@ void Renderer::DrawPumpkin(int start_width, int start_height) {
 	Renderer::DrawLine(p1, p2, green);
 	Renderer::DrawLine(p3, p2, green);
 
+
 	// happy halloweeen
-	//H
-	
-		int y = start_height + 500;
-		p1 = glm::ivec2(start_width + 200, y);
-		p2 = glm::ivec2(p1.x, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = glm::ivec2(p1.x, p1.y + 20);
-		p2 = glm::ivec2(p1.x + 20, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = glm::ivec2(p2.x, y);
-		p2 = glm::ivec2(p1.x, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-	
+		//H
+
+	int y = start_height + 500;
+	p1 = glm::ivec2(start_width - 130, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = glm::ivec2(p1.x, p1.y + 20);
+	p2 = glm::ivec2(p1.x + 20, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = glm::ivec2(p2.x, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+
 	//A
-	
-		p1 = glm::ivec2(p2.x + 10, y);
-		p2 = glm::ivec2(p1.x + 10, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 10, p1.y - 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p3 = p2;
-		p1 = p2;
-		p2 = glm::ivec2(p1.x -  5, p1.y + 20);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 8, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-		p2 = p3;
-	
+
+	p1 = glm::ivec2(p2.x + 10, y);
+	p2 = glm::ivec2(p1.x + 10, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 10, p1.y - 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p3 = p2;
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 5, p1.y + 20);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 8, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p2 = p3;
+
 	//P
-	
-		p1 = glm::ivec2(p2.x + 10, y);
-		p2 = glm::ivec2(p1.x, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 15, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 5, p1.y - 2);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 2, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 2, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 2, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 4, p1.y - 2);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 5, p1.y - 1);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 10, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-	
+
+	p1 = glm::ivec2(p2.x + 10, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 15, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 5, p1.y - 2);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 2, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 2, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 2, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 4, p1.y - 2);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 5, p1.y - 1);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 10, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+
 	//P
-	
-		p1 = glm::ivec2(p2.x + 30, y);
-		p2 = glm::ivec2(p1.x, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 15, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 5, p1.y - 2);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 2, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 2, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 2, p1.y - 4);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 4, p1.y - 2);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 5, p1.y - 1);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 10, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-	
+
+	p1 = glm::ivec2(p2.x + 30, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 15, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 5, p1.y - 2);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 2, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 2, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 2, p1.y - 4);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 4, p1.y - 2);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 5, p1.y - 1);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 10, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+
 	//Y
-	
-		p1 = glm::ivec2(p2.x + 30, y + 40);
-		p2 = glm::ivec2(p1.x + 10, p1.y - 20);
-		Renderer::DrawLine(p1, p2, orange);
-		p3 = p2;
-		p1 = p2;
-		p2 = p2 = glm::ivec2(p1.x, p1.y - 20);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p3;
-		p2 = glm::ivec2(p1.x + 10, p1.y + 20);
-		Renderer::DrawLine(p1, p2, orange);
-	
+
+	p1 = glm::ivec2(p2.x + 30, y + 40);
+	p2 = glm::ivec2(p1.x + 10, p1.y - 20);
+	Renderer::DrawLine(p1, p2, orange);
+	p3 = p2;
+	p1 = p2;
+	p2 = p2 = glm::ivec2(p1.x, p1.y - 20);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p3;
+	p2 = glm::ivec2(p1.x + 10, p1.y + 20);
+	Renderer::DrawLine(p1, p2, orange);
+
 	//H
-	
-		y = start_height + 440;
-		p1 = glm::ivec2(start_width + 280, y);
-		p2 = glm::ivec2(p1.x, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = glm::ivec2(p1.x, p1.y + 20);
-		p2 = glm::ivec2(p1.x + 20, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = glm::ivec2(p2.x, y);
-		p2 = glm::ivec2(p1.x, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-	
+
+	y = start_height + 500;
+	p1 = glm::ivec2(p2.x + 30, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = glm::ivec2(p1.x, p1.y + 20);
+	p2 = glm::ivec2(p1.x + 20, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = glm::ivec2(p2.x, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+
 	//A
-	
-		p1 = glm::ivec2(p2.x + 10, y);
-		p2 = glm::ivec2(p1.x + 10, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 10, p1.y - 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p3 = p2;
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 5, p1.y + 20);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 8, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-		p2 = p3;
-	
+
+	p1 = glm::ivec2(p2.x + 10, y);
+	p2 = glm::ivec2(p1.x + 10, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 10, p1.y - 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p3 = p2;
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 5, p1.y + 20);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 8, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p2 = p3;
+
 	//L
-	
-		p1 = glm::ivec2(p2.x + 10, y);
-		p2 = glm::ivec2(p1.x, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p2 = glm::ivec2(p1.x + 20, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-	
+
+	p1 = glm::ivec2(p2.x + 10, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p2 = glm::ivec2(p1.x + 20, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+
 	//L
-	
-		p1 = glm::ivec2(p2.x + 10, y);
-		p2 = glm::ivec2(p1.x, p1.y + 40);
-		Renderer::DrawLine(p1, p2, orange);
-		p2 = glm::ivec2(p1.x + 20, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-	
+
+	p1 = glm::ivec2(p2.x + 10, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p2 = glm::ivec2(p1.x + 20, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+
 	//O
-	
-		p1 = glm::ivec2(p2.x + 10, y);
-		p2 = glm::ivec2(p1.x - 2, p1.y + 3);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x, p1.y + 30);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 1, p1.y + 1);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 5, p1.y + 3);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x + 7, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 7, p1.y);
-		Renderer::DrawLine(p1, p2, orange);
-		p1 = p2;
-		p2 = glm::ivec2(p1.x - 5, p1.y - 3);
-		Renderer::DrawLine(p1, p2, orange);
+	p1 = glm::ivec2(p2.x + 10, y);
+	p3 = p1;
+	p2 = glm::ivec2(p1.x - 2, p1.y + 3);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y + 30);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 1, p1.y + 1);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 5, p1.y + 3);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 7, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 7, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 5, p1.y - 3);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y - 30);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 4, p1.y - 2);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 6, p1.y - 1);
+	Renderer::DrawLine(p1, p2, orange);
+	Renderer::DrawLine(p3, p2, orange);
+
+	//O
+	p1 = glm::ivec2(p2.x + 20, y);
+	p3 = p1;
+	p2 = glm::ivec2(p1.x - 2, p1.y + 3);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y + 30);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 1, p1.y + 1);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 5, p1.y + 3);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 7, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 7, p1.y);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 5, p1.y - 3);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y - 30);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 4, p1.y - 2);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x - 6, p1.y - 1);
+	Renderer::DrawLine(p1, p2, orange);
+	Renderer::DrawLine(p3, p2, orange);
+	//W
+	p1 = glm::ivec2(p2.x + 20, y + 40);
+	p2 = glm::ivec2(p1.x + 10, p1.y - 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 10, p1.y + 20);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 10, p1.y - 20);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 10, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+
+	//E
+
+	p1 = glm::ivec2(p2.x + 10, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p3 = glm::ivec2(p1.x + 20, p1.y);
+	Renderer::DrawLine(p1, p3, orange);
+	p3 = glm::ivec2(p2.x + 20, p2.y);
+	Renderer::DrawLine(p2, p3, orange);
+	p1 = glm::ivec2(p1.x, p1.y + 20);
+	p3 = glm::ivec2(p1.x + 20, p1.y);
+	Renderer::DrawLine(p1, p3, orange);
+
+	//E
+	p1 = glm::ivec2(p2.x + 30, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p3 = glm::ivec2(p1.x + 20, p1.y);
+	Renderer::DrawLine(p1, p3, orange);
+	p3 = glm::ivec2(p2.x + 20, p2.y);
+	Renderer::DrawLine(p2, p3, orange);
+	p1 = glm::ivec2(p1.x, p1.y + 20);
+	p3 = glm::ivec2(p1.x + 20, p1.y);
+	Renderer::DrawLine(p1, p3, orange);
+
+	//N 
+	p1 = glm::ivec2(p2.x + 30, y);
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x + 20, p1.y - 40);
+	Renderer::DrawLine(p1, p2, orange);
+	p1 = p2;
+	p2 = glm::ivec2(p1.x, p1.y + 40);
+	Renderer::DrawLine(p1, p2, orange);
 	
 }
 
