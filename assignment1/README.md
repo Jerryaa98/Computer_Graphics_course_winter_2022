@@ -88,7 +88,7 @@ void Renderer::DrawLine(const glm::ivec2& p1, const glm::ivec2& p2, const glm::v
 
 in order to test it's correctness we drew a circle of lines, then drew an actual circle as a circumference around them in a different color as shown in the image below:-
 
-![circle of lines in an actual circle](https://user-images.githubusercontent.com/82344133/200217029-be53f1e1-3a8e-4783-b4c6-1d7e9859e853.jpg)
+![circle of lines in an actual circle](pics/circle%20of%20lines%20in%20an%20actual%20circle.jpg)
 
 code for circles :-
 
