@@ -1,6 +1,6 @@
 # Assignment 1 Report - Bresenham's algorithm for line drawing
 
-using the provided wiki link as a refrence we also used 2 helping functions implement the algorithm.
+using the provided wiki link as a refrence we also used 2 helping functions to implement the algorithm.
 
 the algorithm's code :-
 
