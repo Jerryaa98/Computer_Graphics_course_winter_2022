@@ -70,7 +70,6 @@ void Renderer::PlotLineLow(const glm::ivec2& p1, const glm::ivec2& p2, const glm
 	float d = (2 * dy) - dx;
 	float y = p1.y;
 	for (int x = p1.x; x < p2.x; x++) {
-		// std::cout << "im here" << std::endl;
 		PutPixel(x, y, color);
 		if (d > 0) {
 			y += yi;
@@ -91,24 +90,20 @@ void Renderer::DrawLine(const glm::ivec2& p1, const glm::ivec2& p2, const glm::v
 
 	if (dy < dx) {
 		if (p1.x > p2.x) {
-			// std::cout << "draw line low 1" << std::endl;
 			PlotLineLow(p2, p1, color);
 			return;
 		}
 		else {
-			// std::cout << "draw line low 2" << std::endl;
 			PlotLineLow(p1, p2, color);
 			return;
 		}
 	}
 	else {
 		if (p1.y > p2.y) {
-			// std::cout << "draw line high 1" << std::endl;
 			PlotLineHigh(p2, p1, color);
 			return;
 		}
 		else {
-			// std::cout << "draw line high 2" << std::endl;
 			PlotLineHigh(p1, p2, color);
 			return;
 		}
