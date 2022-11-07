@@ -115,5 +115,5 @@ void Renderer::DrawActualCircle(int start_width, int start_height) {
 
 furthermore, we thought it would be cool to draw a pumpkin since it is halloween!
 
-![halloween_pumpkin](https://user-images.githubusercontent.com/82344133/200219226-0021186d-a41e-47da-a921-41063a433e8f.jpg)
+![halloween_pumpkin](pics/halloween_pumpkin.jpg)
 
