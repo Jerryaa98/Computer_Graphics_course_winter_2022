@@ -690,6 +690,7 @@ void Renderer::DrawPumpkin(int start_width, int start_height) {
 	p1 = p2;
 	p2 = glm::ivec2(p1.x, p1.y + 40);
 	Renderer::DrawLine(p1, p2, orange);
+	//lama'ss comment 
 	
 }
 
