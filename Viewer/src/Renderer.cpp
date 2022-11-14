@@ -719,13 +719,14 @@ void Renderer::Render(const Scene& scene)
 	{
 		for (int i = 0; i < scene.GetActiveModel().GetFacesCount(); i++)
 		{
+			int scaling_factor = 50;
 			point1 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(0)-1 );
 			point2 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(1)-1);
 			point3 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(2)-1);
 
-			point1.x *= 50;			point1.y *= 50;
-			point2.x *= 50;			point2.y *= 50;
-			point3.x *= 50;			point3.y *= 50;
+			point1.x *= scaling_factor;			point1.y *= scaling_factor;
+			point2.x *= scaling_factor;			point2.y *= scaling_factor;
+			point3.x *= scaling_factor;			point3.y *= scaling_factor;
 
 			point1 += glm::vec2(half_width, half_height);
 			point2 += glm::vec2(half_width, half_height);
