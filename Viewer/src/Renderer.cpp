@@ -711,8 +711,37 @@ void Renderer::Render(const Scene& scene)
 	// drawing pumpkin
 	start_width = 2 * viewport_width / 5;
 	start_height =  viewport_height / 10;
-	DrawPumpkin(start_width, start_height);
+	//DrawPumpkin(start_width, start_height);
 	
+
+	glm::vec2 point1, point2, point3;
+	if (scene.GetModelCount())
+	{
+		for (int i = 0; i < scene.GetActiveModel().GetFacesCount(); i++)
+		{
+			point1 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(0)-1 );
+			point2 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(1)-1);
+			point3 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(2)-1);
+
+			point1.x *= 50;			point1.y *= 50;
+			point2.x *= 50;			point2.y *= 50;
+			point3.x *= 50;			point3.y *= 50;
+
+			point1 += glm::vec2(half_width, half_height);
+			point2 += glm::vec2(half_width, half_height);
+			point3 += glm::vec2(half_width, half_height);
+
+			
+
+			DrawLine(point1, point2, glm::vec3(1.0f));
+			DrawLine(point1, point3, glm::vec3(1.0f));
+			DrawLine(point2, point3, glm::vec3(1.0f));
+
+		}
+	}
+	
+
+
 }
 
 int Renderer::GetViewportWidth() const

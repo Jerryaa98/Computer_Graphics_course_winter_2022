@@ -11,6 +11,7 @@ public:
 	const Face& GetFace(int index) const;
 	int GetFacesCount() const;
 	const std::string& GetModelName() const;
+	glm::vec2 MeshModel::GetVertixPoint(int i);
 
 private:
 	std::vector<Face> faces;
