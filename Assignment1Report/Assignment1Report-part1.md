@@ -88,7 +88,7 @@ void Renderer::DrawLine(const glm::ivec2& p1, const glm::ivec2& p2, const glm::v
 
 in order to test it's correctness we drew a circle of lines, then drew an actual circle as a circumference around them in a different color as shown in the image below:-
 
-![circle of lines in an actual circle](../assignment1/pics/circle%20of%20lines%20in%20an%20actual%20circle.jpg)
+![circle of lines in an actual circle](part1Pics/circle%20of%20lines%20in%20an%20actual%20circle.jpg)
 
 code for circles :-
 
@@ -115,5 +115,5 @@ void Renderer::DrawActualCircle(int start_width, int start_height) {
 
 furthermore, we thought it would be cool to draw a pumpkin since it is halloween!
 
-![halloween_pumpkin](../assignment1/pics/halloween_pumpkin.jpg)
+![halloween_pumpkin](part1Pics/halloween_pumpkin.jpg)
 
