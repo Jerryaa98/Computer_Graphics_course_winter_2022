@@ -33,3 +33,5 @@ if (lineType == "v")
 			// std::cout << "Found unknown line Type \"" << lineType << "\"";
 		}
 ```
+
+![VerticesAndFaces](part2Pics/VerticesAndFaces.jpg)
