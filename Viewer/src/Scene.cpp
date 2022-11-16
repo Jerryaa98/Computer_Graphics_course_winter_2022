@@ -12,6 +12,10 @@ Scene::Scene() :
 void Scene::AddModel(const std::shared_ptr<MeshModel>& mesh_model)
 {
 	mesh_models.push_back(mesh_model);
+	active_model_index = mesh_models.size() - 1;
+	std::string name = "Model" + std::to_string(active_model_index) + " " + (*mesh_model).GetModelName();
+	this->modelsList.push_back(name);
+
 }
 
 int Scene::GetModelCount() const

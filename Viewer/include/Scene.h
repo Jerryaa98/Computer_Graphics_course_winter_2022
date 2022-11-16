@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <iostream>
 
 #include "Camera.h"
 #include "MeshModel.h"
@@ -27,6 +28,8 @@ public:
 
 	void SetActiveModelIndex(int index);
 	int GetActiveModelIndex() const;
+
+	std::vector<std::string> modelsList;
 	
 private:
 	vector<shared_ptr<MeshModel>> mesh_models;

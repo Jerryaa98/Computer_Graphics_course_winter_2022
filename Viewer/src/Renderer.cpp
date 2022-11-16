@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "InitShader.h"
 #include <iostream>
+#include <glm/gtx/string_cast.hpp>
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 #define Z_INDEX(width,x,y) ((x)+(y)*(width))
@@ -713,13 +714,21 @@ void Renderer::Render(const Scene& scene)
 	start_height =  viewport_height / 10;
 	//DrawPumpkin(start_width, start_height);
 	
-
+	// scaling model
 	glm::vec2 point1, point2, point3;
 	if (scene.GetModelCount())
 	{
 		for (int i = 0; i < scene.GetActiveModel().GetFacesCount(); i++)
 		{
-			int scaling_factor = 50;
+			int scaling_factor;
+			if (scene.GetActiveModel().GetModelName() == "beethoven.obj") scaling_factor = 50;
+			if (scene.GetActiveModel().GetModelName() == "bunny.obj") scaling_factor = 400;
+			if (scene.GetActiveModel().GetModelName() == "bishop.obj") scaling_factor = 3500;
+			if (scene.GetActiveModel().GetModelName() == "dolphin.obj") scaling_factor = 2;
+			if (scene.GetActiveModel().GetModelName() == "blob.obj") scaling_factor = 15;
+			if (scene.GetActiveModel().GetModelName() == "banana.obj") scaling_factor = 3000;
+
+
 			point1 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(0)-1 );
 			point2 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(1)-1);
 			point3 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(2)-1);
@@ -740,8 +749,6 @@ void Renderer::Render(const Scene& scene)
 
 		}
 	}
-	
-
 
 }
 
@@ -753,4 +760,11 @@ int Renderer::GetViewportWidth() const
 int Renderer::GetViewportHeight() const
 {
 	return viewport_height;
+}
+
+void Renderer::setViewportWidth(const int width) {
+	this->viewport_width = width;
+}
+void Renderer::setViewportHeight(const int height) {
+	this->viewport_height = height;
 }
