@@ -177,7 +177,7 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Open", "CTRL+O"))
+			if (ImGui::MenuItem("Load Mesh", "CTRL+O"))
 			{
 				nfdchar_t* outPath = NULL;
 				nfdresult_t result = NFD_OpenDialog("obj;", NULL, &outPath);
@@ -254,7 +254,7 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 	if (modelCount) {
 		ImGui::Begin("Transformations Window");
 
-		ImGui::Text("Select Model:");
+		ImGui::Text("Loaded Models List:");
 
 		static int selected = 0;
 		for (int n = 0; n < modelCount; n++) {
@@ -267,31 +267,31 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 		scene.SetActiveModelIndex(selected);
 		MeshModel& model = scene.GetActiveModel();
 
-		ImGui::Text("--- LOCAL TRANSFORMATIONS ---");
-		ImGui::Text("Local Scale:");
-		ImGui::SliderFloat3("Local Scale", model.localScaleArray, 1, model.maxScale);
+		// scaling
+		ImGui::Text("Local Scaling:");
+		ImGui::SliderFloat3("Local X,Y,Z Axis Scaling", model.localScaleArray, 1, model.maxScale);
 
-		ImGui::Checkbox("Lock All Local Axis", &(model.lockLocalScale));
+		ImGui::Checkbox("Local Uniform Scaling", &(model.lockLocalScale));
 
-		ImGui::SliderFloat("Local Scale Locked", &(model.localScaleLocked), 1, model.maxScale);
+		ImGui::SliderFloat("Local Uniform Scale Bar", &(model.localScaleLocked), 1, model.maxScale);
 
+		ImGui::Text("World Scaling:");
+		ImGui::SliderFloat3("World X,Y,Z Axis Scaling", model.worldScaleArray, 1, 3000);
+
+		ImGui::Checkbox("World Uniform Scaling", &(model.lockWorldScale));
+		ImGui::SliderFloat("World Uniform Scale Bar", &(model.worldScaleLocked), 1, 1000);
+
+		// translates
 		ImGui::Text("Local Translate:");
-		ImGui::SliderFloat3("Local Translate", model.localTranslateArray, -500, 500);
+		ImGui::SliderFloat3("Local Translate", model.localTranslateArray, -1000, 1000);
 
+		ImGui::Text("World Translate:");
+		ImGui::SliderFloat3("World Translate", model.worldTranslateArray, -1000, 1000);
+
+		// rotation
 		ImGui::Text("Local Rotate:");
 		ImGui::SliderFloat3("Local Rotate", model.localRotateArray, -360, 360);
 
-
-		ImGui::Text("--- WORLD TRANSFORMATIONS ---");
-		ImGui::Text("World Scale:");
-		ImGui::SliderFloat3("World Scale", model.worldScaleArray, 1, 1000);
-
-		ImGui::Checkbox("Lock All World Axis", &(model.lockWorldScale));
-		ImGui::SliderFloat("World Scale Locked", &(model.worldScaleLocked), 1, 1000);
-
-
-		ImGui::Text("World Translate:");
-		ImGui::SliderFloat3("World Translate", model.worldTranslateArray, -500, 500);
 
 		ImGui::Text("World Rotate:");
 		ImGui::SliderFloat3("World Rotate", model.worldRotateArray, -360, 360);

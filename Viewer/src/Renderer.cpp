@@ -714,34 +714,23 @@ void Renderer::Render(const Scene& scene)
 	start_height =  viewport_height / 10;
 	//DrawPumpkin(start_width, start_height);
 	
-	// scaling model
+	// scaling model for assignment 1 part 2
+
 	glm::vec2 point1, point2, point3;
-	if (scene.GetModelCount())
-	{
-		for (int i = 0; i < scene.GetActiveModel().GetFacesCount(); i++)
-		{
-			int scaling_factor;
-			if (scene.GetActiveModel().GetModelName() == "beethoven.obj") scaling_factor = 50;
-			if (scene.GetActiveModel().GetModelName() == "bunny.obj") scaling_factor = 400;
-			if (scene.GetActiveModel().GetModelName() == "bishop.obj") scaling_factor = 3500;
-			if (scene.GetActiveModel().GetModelName() == "dolphin.obj") scaling_factor = 2;
-			if (scene.GetActiveModel().GetModelName() == "blob.obj") scaling_factor = 15;
-			if (scene.GetActiveModel().GetModelName() == "banana.obj") scaling_factor = 3000;
 
+	for (int i = 0; i < scene.GetModelCount(); i++) {
 
-			point1 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(0)-1 );
-			point2 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(1)-1);
-			point3 = scene.GetActiveModel().GetVertixPoint(scene.GetActiveModel().GetFace(i).GetVertexIndex(2)-1);
+		MeshModel& model = scene.GetModel(i);
 
-			point1.x *= scaling_factor;			point1.y *= scaling_factor;
-			point2.x *= scaling_factor;			point2.y *= scaling_factor;
-			point3.x *= scaling_factor;			point3.y *= scaling_factor;
+		for (int j = 0; j < model.GetFacesCount(); j++) {
+
+			point1 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(0) - 1);
+			point2 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(1) - 1);
+			point3 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(2) - 1);
 
 			point1 += glm::vec2(half_width, half_height);
 			point2 += glm::vec2(half_width, half_height);
 			point3 += glm::vec2(half_width, half_height);
-
-			
 
 			DrawLine(point1, point2, glm::vec3(1.0f));
 			DrawLine(point1, point3, glm::vec3(1.0f));
