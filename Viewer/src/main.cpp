@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <nfd.h>
+using namespace std;
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -127,14 +128,54 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 		// TODO: Set new aspect ratio
 	}
 
-	if (!io.WantCaptureKeyboard)
-	{
+	if (!io.WantCaptureKeyboard){
 		// TODO: Handle keyboard events here
-		if (io.KeysDown[65])
+		if (io.KeysDown[49]) //1
+				scene.GetActiveModel().localRotateArray[0] += 10;
+
+		if (io.KeysDown[50]) //2
+			scene.GetActiveModel().localRotateArray[0] -= 10;
+		
+		if (io.KeysDown[51]) //3
+			scene.GetActiveModel().localRotateArray[1] +=10 ;
+		
+		if (io.KeysDown[52]) //4
+			scene.GetActiveModel().localRotateArray[1] -=10;
+		
+		if (io.KeysDown[53]) //5
+			scene.GetActiveModel().localRotateArray[2] +=10;
+		
+		if(io.KeysDown[54]) //6
+			scene.GetActiveModel().localRotateArray[2] -=10;
+		if (io.KeysDown[45])// -
 		{
-			// A key is down
-			// Use the ASCII table for more key codes (https://www.asciitable.com/)
+			scene.GetActiveModel().localScaleArray[0] -= 10;
+			scene.GetActiveModel().localScaleArray[1] -= 10;
+			scene.GetActiveModel().localScaleArray[2] -= 10;
+
 		}
+
+		if (io.KeysDown[61])// +
+		{
+			scene.GetActiveModel().localScaleArray[0] += 10;
+			scene.GetActiveModel().localScaleArray[1] += 10;
+			scene.GetActiveModel().localScaleArray[2] += 10;
+		}
+
+		if (io.KeysDown[65])//a
+			scene.GetActiveModel().localTranslateArray[0] -= 10;
+		
+		if (io.KeysDown[68])//d
+			scene.GetActiveModel().localTranslateArray[0] += 10;
+		
+		if (io.KeysDown[83]) // s
+			scene.GetActiveModel().localTranslateArray[1] -= 10;
+		
+		if (io.KeysDown[87]) // w
+			scene.GetActiveModel().localTranslateArray[1] += 10;
+
+		// A key is down
+			// Use the ASCII table for more key codes (https://www.asciitable.com/)
 	}
 
 	if (!io.WantCaptureMouse)
