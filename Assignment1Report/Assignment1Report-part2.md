@@ -37,7 +37,7 @@ if (lineType == "v")
 ![VerticesAndFaces](part2Pics/VerticesAndFaces.jpg)
 
 We added a scaling factor and a transaltion to the object in order for it to fit the screen properly like so:-
-```
+```c++
 point1 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(0) - 1);
 			point2 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(1) - 1);
 			point3 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(2) - 1);
