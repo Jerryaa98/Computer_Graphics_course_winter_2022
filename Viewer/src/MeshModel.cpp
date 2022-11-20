@@ -8,7 +8,7 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 	model_name(model_name)
 {
     // init matrices
-    this->objectTransform = glm::mat4x4(1.0f);
+    this->localTransform = glm::mat4x4(1.0f);
     this->worldTransform = glm::mat4x4(1.0f);
 
     float max = -1.0f * FLT_MAX;
@@ -51,9 +51,9 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
         max = min;
 
     float scaleFactor = 500.0f / max;
-    localScaleArray[0] = scaleFactor;
-    localScaleArray[1] = scaleFactor;
-    localScaleArray[2] = scaleFactor;
+    localScaleVector[0] = scaleFactor;
+    localScaleVector[1] = scaleFactor;
+    localScaleVector[2] = scaleFactor;
     this->maxScale = 2 * scaleFactor;
 }
 
@@ -78,72 +78,72 @@ const std::string& MeshModel::GetModelName() const
 
 glm::mat4x4 MeshModel::GetTransform() {
     // calculate local transformations
-    if (lockLocalScale) {
-        localScaleMat[0][0] = localScaleLocked;
-        localScaleMat[1][1] = localScaleLocked;
-        localScaleMat[2][2] = localScaleLocked;
+    if (uniformLocalScale) {
+        localScaleMat[0][0] = localScale;
+        localScaleMat[1][1] = localScale;
+        localScaleMat[2][2] = localScale;
     }
     else {
-        localScaleMat[0][0] = localScaleArray[0];
-        localScaleMat[1][1] = localScaleArray[1];
-        localScaleMat[2][2] = localScaleArray[2];
+        localScaleMat[0][0] = localScaleVector[0];
+        localScaleMat[1][1] = localScaleVector[1];
+        localScaleMat[2][2] = localScaleVector[2];
     }
 
-    localTranslateMat[3][0] = localTranslateArray[0];
-    localTranslateMat[3][1] = localTranslateArray[1];
-    localTranslateMat[3][2] = localTranslateArray[2];
+    localTranslateMat[3][0] = localTranslateVector[0];
+    localTranslateMat[3][1] = localTranslateVector[1];
+    localTranslateMat[3][2] = localTranslateVector[2];
 
-    localRotateXMat[1][1] = cos(glm::radians(localRotateArray[0]));
-    localRotateXMat[1][2] = sin(glm::radians(localRotateArray[0]));
-    localRotateXMat[2][1] = -sin(glm::radians(localRotateArray[0]));
-    localRotateXMat[2][2] = cos(glm::radians(localRotateArray[0]));
+    localRotateXMat[1][1] = cos(glm::radians(localRotateVector[0]));
+    localRotateXMat[1][2] = sin(glm::radians(localRotateVector[0]));
+    localRotateXMat[2][1] = -sin(glm::radians(localRotateVector[0]));
+    localRotateXMat[2][2] = cos(glm::radians(localRotateVector[0]));
 
-    localRotateYMat[0][0] = cos(glm::radians(localRotateArray[1]));
-    localRotateYMat[0][2] = sin(glm::radians(localRotateArray[1]));
-    localRotateYMat[2][0] = -sin(glm::radians(localRotateArray[1]));
-    localRotateYMat[2][2] = cos(glm::radians(localRotateArray[1]));
+    localRotateYMat[0][0] = cos(glm::radians(localRotateVector[1]));
+    localRotateYMat[0][2] = sin(glm::radians(localRotateVector[1]));
+    localRotateYMat[2][0] = -sin(glm::radians(localRotateVector[1]));
+    localRotateYMat[2][2] = cos(glm::radians(localRotateVector[1]));
 
-    localRotateZMat[0][0] = cos(glm::radians(localRotateArray[2]));
-    localRotateZMat[0][1] = sin(glm::radians(localRotateArray[2]));
-    localRotateZMat[1][0] = -sin(glm::radians(localRotateArray[2]));
-    localRotateZMat[1][1] = cos(glm::radians(localRotateArray[2]));
+    localRotateZMat[0][0] = cos(glm::radians(localRotateVector[2]));
+    localRotateZMat[0][1] = sin(glm::radians(localRotateVector[2]));
+    localRotateZMat[1][0] = -sin(glm::radians(localRotateVector[2]));
+    localRotateZMat[1][1] = cos(glm::radians(localRotateVector[2]));
 
 
     // calculate world transformations
-    if (lockWorldScale) {
-        worldScaleMat[0][0] = worldScaleLocked;
-        worldScaleMat[1][1] = worldScaleLocked;
-        worldScaleMat[2][2] = worldScaleLocked;
+    if (uniformWorldScale) {
+        worldScaleMat[0][0] = worldScale;
+        worldScaleMat[1][1] = worldScale;
+        worldScaleMat[2][2] = worldScale;
     }
     else {
-        worldScaleMat[0][0] = worldScaleArray[0];
-        worldScaleMat[1][1] = worldScaleArray[1];
-        worldScaleMat[2][2] = worldScaleArray[2];
+        worldScaleMat[0][0] = worldScaleVector[0];
+        worldScaleMat[1][1] = worldScaleVector[1];
+        worldScaleMat[2][2] = worldScaleVector[2];
     }
 
-    worldTranslateMat[3][0] = worldTranslateArray[0];
-    worldTranslateMat[3][1] = worldTranslateArray[1];
-    worldTranslateMat[3][2] = worldTranslateArray[2];
+    worldTranslateMat[3][0] = worldTranslateVector[0];
+    worldTranslateMat[3][1] = worldTranslateVector[1];
+    worldTranslateMat[3][2] = worldTranslateVector[2];
 
-    worldRotateXMat[1][1] = cos(glm::radians(worldRotateArray[0]));
-    worldRotateXMat[1][2] = sin(glm::radians(worldRotateArray[0]));
-    worldRotateXMat[2][1] = -sin(glm::radians(worldRotateArray[0]));
-    worldRotateXMat[2][2] = cos(glm::radians(worldRotateArray[0]));
+    worldRotateXMat[1][1] = cos(glm::radians(worldRotateVector[0]));
+    worldRotateXMat[1][2] = sin(glm::radians(worldRotateVector[0]));
+    worldRotateXMat[2][1] = -sin(glm::radians(worldRotateVector[0]));
+    worldRotateXMat[2][2] = cos(glm::radians(worldRotateVector[0]));
 
-    worldRotateYMat[0][0] = cos(glm::radians(worldRotateArray[1]));
-    worldRotateYMat[0][2] = sin(glm::radians(worldRotateArray[1]));
-    worldRotateYMat[2][0] = -sin(glm::radians(worldRotateArray[1]));
-    worldRotateYMat[2][2] = cos(glm::radians(worldRotateArray[1]));
+    worldRotateYMat[0][0] = cos(glm::radians(worldRotateVector[1]));
+    worldRotateYMat[0][2] = sin(glm::radians(worldRotateVector[1]));
+    worldRotateYMat[2][0] = -sin(glm::radians(worldRotateVector[1]));
+    worldRotateYMat[2][2] = cos(glm::radians(worldRotateVector[1]));
 
-    worldRotateZMat[0][0] = cos(glm::radians(worldRotateArray[2]));
-    worldRotateZMat[0][1] = sin(glm::radians(worldRotateArray[2]));
-    worldRotateZMat[1][0] = -sin(glm::radians(worldRotateArray[2]));
-    worldRotateZMat[1][1] = cos(glm::radians(worldRotateArray[2]));
+    worldRotateZMat[0][0] = cos(glm::radians(worldRotateVector[2]));
+    worldRotateZMat[0][1] = sin(glm::radians(worldRotateVector[2]));
+    worldRotateZMat[1][0] = -sin(glm::radians(worldRotateVector[2]));
+    worldRotateZMat[1][1] = cos(glm::radians(worldRotateVector[2]));
 
 
-    objectTransform = localTranslateMat * localRotateXMat * localRotateYMat * localRotateZMat * localScaleMat;
+    localTransform = localTranslateMat * localRotateXMat * localRotateYMat * localRotateZMat * localScaleMat;
     worldTransform = worldTranslateMat * worldScaleMat * worldRotateXMat * worldRotateYMat * worldRotateZMat;
-    glm::mat4x4 transform = worldTransform * objectTransform;
+    glm::mat4x4 transform = worldTransform * localTransform;
     return transform;
 
 }
