@@ -35,3 +35,25 @@ if (lineType == "v")
 ```
 
 ![VerticesAndFaces](part2Pics/VerticesAndFaces.jpg)
+
+We added a scaling factor and a transaltion to the object in order for it to fit the screen properly like so:-
+```
+point1 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(0) - 1);
+			point2 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(1) - 1);
+			point3 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(2) - 1);
+
+			point1 += glm::vec2(half_width, half_height);
+			point2 += glm::vec2(half_width, half_height);
+			point3 += glm::vec2(half_width, half_height);
+			
+			DrawLine(point1, point2, glm::vec3(1.0f));
+			DrawLine(point1, point3, glm::vec3(1.0f));
+			DrawLine(point2, point3, glm::vec3(1.0f));
+```
+where in getTransformedVertices() we cut the w coordinate and divide each coordinate by it, then we drew it using the DrawLine() function we implimented the previous task.
+
+this is the result, object used in the demonstration: bishop and teapot
+
+
+
+
