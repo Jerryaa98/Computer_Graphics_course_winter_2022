@@ -57,5 +57,10 @@ this is the result, object used in the demonstration: bishop and teapot
 ![bishop](part2Pics/bishop.jpg)
 ![teapot](part2Pics/teapot.jpg)
 
+### Transformation Gui
+we can control each transformation individually by this window
+![tranformation_gui](part2Pics/transformation_gui.jpg)
+
+
 
 
