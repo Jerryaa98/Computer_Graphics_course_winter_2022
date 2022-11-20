@@ -50,27 +50,28 @@ point1 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(0) - 
 			DrawLine(point1, point3, glm::vec3(1.0f));
 			DrawLine(point2, point3, glm::vec3(1.0f));
 ```
-
-
-In getTransformedVertices() we cut the w coordinate and divide each coordinate by it, then we drew it using the DrawLine() function we implimented the previous task.
-
-this is the result, object used in the demonstration: bishop and teapot
-
-![bishop](part2Pics/bishop.jpg)
-![teapot](part2Pics/teapot.jpg)
-
 ### Transformation Gui
 we can control each transformation individually by this window
-
 ![tranformation_gui](part2Pics/transformation_gui.jpg)
 
-we have 3 slidebars for each axis to scale and stretch out for both world & local scalings and 1 checkbox to scale the entire object on the 3D plane uniformly,
-3 slidebars to translate acorss the 3 axis independantly for both world & local translations, and 3 slidebars for the rotations as well (same concept).
+
+
+we implemented the keyboard and the mouse interactions on the object.
+keyboard:
+if the user presses 1 or 2 or 3... 6 this will rotate the object
+if the user presses on - or + this will scale the object,
+if the user presses on a or s or d or w this will translate the object.
+
+the mouse:
+if the user click on the right click on the mouse on hold the object
+(that says he keeps his finger on the mouse) this will translate the object.
+if 
+
 
 
 ### Scaling:
 first we calculated the scale factor by this code:
-``` c++
+--- c++
 for (int i = 0; i < vertices.size(); i++) {
         x = vertices[i].x;
         y = vertices[i].y;
@@ -104,27 +105,27 @@ for (int i = 0; i < vertices.size(); i++) {
 
     float scaleFactor = 500.0f / max;
 
-```
+---
 and then we saved the scalingfactor as the value of the local scaling vector.
 
-```C++
+---C++
 
     localScaleVector[0] = scaleFactor;
     localScaleVector[1] = scaleFactor;
     localScaleVector[2] = scaleFactor;
     this->maxScale = 2 * scaleFactor;
-```
+---
 
 we calculate the transform matrix by mutiplying the local transfrom matrix with the world transform matrix, the code does not need any explaination of how we calculate the world transform matrix nd the local transform matrix:
-```c++
+---c++
     localTransform = localTranslateMat * localRotateXMat * localRotateYMat *     localRotateZMat * localScaleMat;
     worldTransform = worldTranslateMat * worldScaleMat * worldRotateXMat *       worldRotateYMat * worldRotateZMat;
     glm::mat4x4 transform = worldTransform * localTransform;
     return transform;
- ```   
+ ---   
 we used the function GetTransform to calculate the local scale matrix, the rotate matrix.....
 
-```c++
+---c++
 glm::mat4x4 MeshModel::GetTransform() {
     // calculate local transformations
     if (uniformLocalScale) {
@@ -189,8 +190,13 @@ glm::mat4x4 MeshModel::GetTransform() {
     worldRotateZMat[1][0] = -sin(glm::radians(worldRotateVector[2]));
     worldRotateZMat[1][1] = cos(glm::radians(worldRotateVector[2]));
 
-```
+---
 we sort the value of the vectors in the GUI code. 
 
+now in getTransformedVertices() we cut the w coordinate and divide each coordinate by it, then we drew it using the DrawLine() function we implimented the previous task.
 
+this is the result, object used in the demonstration: bishop and teapot
+
+![bishop](part2Pics/bishop.jpg)
+![teapot](part2Pics/teapot.jpg)
 
