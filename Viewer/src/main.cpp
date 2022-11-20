@@ -150,16 +150,14 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 			scene.GetActiveModel().localRotateVector[2] -=10;
 		if (io.KeysDown[45])// -
 		{
-			scene.GetActiveModel().localScaleVector[0] -= 10;
-			scene.GetActiveModel().localScaleVector[1] -= 10;
-			scene.GetActiveModel().localScaleVector[2] -= 10;
+			scene.GetActiveModel().uniformLocalScale = true;
+			scene.GetActiveModel().localScale -= 175;
 		}
 
 		if (io.KeysDown[61])// +
 		{
-			scene.GetActiveModel().localScaleVector[0] += 10;
-			scene.GetActiveModel().localScaleVector[1] += 10;
-			scene.GetActiveModel().localScaleVector[2] += 10;
+			scene.GetActiveModel().uniformLocalScale = true;
+			scene.GetActiveModel().localScale += 175;
 		}
 
 		if (io.KeysDown[65])//a
@@ -187,20 +185,18 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 
 			ImVec2 newCoordinates = io.MousePos;
 			if (scene.GetModelCount() > 0) {
-				MeshModel& model = scene.GetActiveModel();
-				model.localTranslateVector[0] += newCoordinates[0] - oldCoordinates[0];
-				model.localTranslateVector[1] += -1 * (newCoordinates[1] - oldCoordinates[1]);
+				scene.GetActiveModel().localTranslateVector[0] += newCoordinates[0] - oldCoordinates[0];
+				scene.GetActiveModel().localTranslateVector[1] += -1 * (newCoordinates[1] - oldCoordinates[1]);
 			}
 		}
 		if (io.MouseDown[1])
 		{
-			// Rigth mouse button is down
+			// Right mouse button is down
 
 			ImVec2 newCoordinates = io.MousePos;
 			if (scene.GetModelCount() > 0) {
-				MeshModel& model = scene.GetActiveModel();
-				model.localRotateVector[1] += newCoordinates[0] - oldCoordinates[0];
-				model.localRotateVector[0] += newCoordinates[1] - oldCoordinates[1];
+				scene.GetActiveModel().localRotateVector[1] += newCoordinates[0] - oldCoordinates[0];
+				scene.GetActiveModel().localRotateVector[0] += newCoordinates[1] - oldCoordinates[1];
 			}
 		}
 		if (io.MouseDown[2])
@@ -209,11 +205,8 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 
 			ImVec2 newCoordinates = io.MousePos;
 			if (scene.GetModelCount() > 0) {
-				MeshModel& model = scene.GetActiveModel();
-				model.uniformLocalScale = true;
-				/*model.localScaleVector[1] += newCoordinates[0] - oldCoordinates[0];
-				model.localScaleVector[0] += newCoordinates[1] - oldCoordinates[1];*/
-				model.localScale += ((oldCoordinates[1] - newCoordinates[1]) +  (newCoordinates[0] - oldCoordinates[0]))* 5;
+				scene.GetActiveModel().uniformLocalScale = true;
+				scene.GetActiveModel().localScale += ((oldCoordinates[1] - newCoordinates[1]) +  (newCoordinates[0] - oldCoordinates[0]))* 5;
 			}
 		}
 
