@@ -61,6 +61,17 @@ this is the result, object used in the demonstration: bishop and teapot
 we can control each transformation individually by this window
 ![tranformation_gui](part2Pics/transformation_gui.jpg)
 
+## Transformations
+### Scaling
+
+
+
+### Translation
+
+
+
+### Rotation
+
 
 
 
