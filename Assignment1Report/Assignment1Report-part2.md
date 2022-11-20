@@ -61,7 +61,11 @@ this is the result, object used in the demonstration: bishop and teapot
 
 ### Transformation Gui
 we can control each transformation individually by this window
+
 ![tranformation_gui](part2Pics/transformation_gui.jpg)
+
+we have 3 slidebars for each axis to scale and stretch out for both world & local scalings and 1 checkbox to scale the entire object on the 3D plane uniformly,
+3 slidebars to translate acorss the 3 axis independantly for both world & local translations, and 3 slidebars for the rotations as well (same concept).
 
 
 ### Scaling:
