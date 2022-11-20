@@ -18,17 +18,17 @@ public:
     const std::vector<glm::vec3> getTransformedVertices();
 
 
-    float localTranslateArray[3] = { 0, 0, 0 };
-    float localRotateArray[3] = { 0, 0, 0 };
-    float localScaleArray[3] = { 1, 1, 1 };
-    bool lockLocalScale = false;
-    float localScaleLocked = 1;
+    float localTranslateVector[3] = { 0, 0, 0 };
+    float localRotateVector[3] = { 0, 0, 0 };
+    float localScaleVector[3] = { 1, 1, 1 };
+    bool uniformLocalScale = false;
+    float localScale = 1;
 
-    float worldTranslateArray[3] = { 0, 0, 0 };
-    float worldRotateArray[3] = { 0, 0, 0 };
-    float worldScaleArray[3] = { 1, 1, 1 };
-    bool lockWorldScale = false;
-    float worldScaleLocked = 1;
+    float worldTranslateVector[3] = { 0, 0, 0 };
+    float worldRotateVector[3] = { 0, 0, 0 };
+    float worldScaleVector[3] = { 1, 1, 1 };
+    bool uniformWorldScale = false;
+    float worldScale = 1;
 
     int maxScale = 0;
 
@@ -51,6 +51,6 @@ private:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
 	std::string model_name;
-    glm::mat4x4 objectTransform;
+    glm::mat4x4 localTransform;
     glm::mat4x4 worldTransform;
 };

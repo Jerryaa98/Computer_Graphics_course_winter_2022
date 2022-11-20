@@ -20,6 +20,7 @@ using namespace std;
 bool show_demo_window = false;
 bool show_another_window = false;
 glm::vec4 clear_color = glm::vec4(0.0f, 0.0f, 0.0f, 1.00f);
+ImVec2 oldCoordinates;
 
 /**
  * Function declarations
@@ -131,47 +132,47 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 	if (!io.WantCaptureKeyboard){
 		// TODO: Handle keyboard events here
 		if (io.KeysDown[49]) //1
-				scene.GetActiveModel().localRotateArray[0] += 10;
+				scene.GetActiveModel().localRotateVector[0] += 10;
 
 		if (io.KeysDown[50]) //2
-			scene.GetActiveModel().localRotateArray[0] -= 10;
+			scene.GetActiveModel().localRotateVector[0] -= 10;
 		
 		if (io.KeysDown[51]) //3
-			scene.GetActiveModel().localRotateArray[1] +=10 ;
+			scene.GetActiveModel().localRotateVector[1] +=10 ;
 		
 		if (io.KeysDown[52]) //4
-			scene.GetActiveModel().localRotateArray[1] -=10;
+			scene.GetActiveModel().localRotateVector[1] -=10;
 		
 		if (io.KeysDown[53]) //5
-			scene.GetActiveModel().localRotateArray[2] +=10;
+			scene.GetActiveModel().localRotateVector[2] +=10;
 		
 		if(io.KeysDown[54]) //6
-			scene.GetActiveModel().localRotateArray[2] -=10;
+			scene.GetActiveModel().localRotateVector[2] -=10;
 		if (io.KeysDown[45])// -
 		{
-			scene.GetActiveModel().localScaleArray[0] -= 10;
-			scene.GetActiveModel().localScaleArray[1] -= 10;
-			scene.GetActiveModel().localScaleArray[2] -= 10;
+			scene.GetActiveModel().localScaleVector[0] -= 10;
+			scene.GetActiveModel().localScaleVector[1] -= 10;
+			scene.GetActiveModel().localScaleVector[2] -= 10;
 		}
 
 		if (io.KeysDown[61])// +
 		{
-			scene.GetActiveModel().localScaleArray[0] += 10;
-			scene.GetActiveModel().localScaleArray[1] += 10;
-			scene.GetActiveModel().localScaleArray[2] += 10;
+			scene.GetActiveModel().localScaleVector[0] += 10;
+			scene.GetActiveModel().localScaleVector[1] += 10;
+			scene.GetActiveModel().localScaleVector[2] += 10;
 		}
 
 		if (io.KeysDown[65])//a
-			scene.GetActiveModel().localTranslateArray[0] -= 10;
+			scene.GetActiveModel().localTranslateVector[0] -= 10;
 		
 		if (io.KeysDown[68])//d
-			scene.GetActiveModel().localTranslateArray[0] += 10;
+			scene.GetActiveModel().localTranslateVector[0] += 10;
 		
 		if (io.KeysDown[83]) // s
-			scene.GetActiveModel().localTranslateArray[1] -= 10;
+			scene.GetActiveModel().localTranslateVector[1] -= 10;
 		
 		if (io.KeysDown[87]) // w
-			scene.GetActiveModel().localTranslateArray[1] += 10;
+			scene.GetActiveModel().localTranslateVector[1] += 10;
 
 		// A key is down
 			// Use the ASCII table for more key codes (https://www.asciitable.com/)
@@ -183,7 +184,40 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 		if (io.MouseDown[0])
 		{
 			// Left mouse button is down
+
+			ImVec2 newCoordinates = io.MousePos;
+			if (scene.GetModelCount() > 0) {
+				MeshModel& model = scene.GetActiveModel();
+				model.localTranslateVector[0] += newCoordinates[0] - oldCoordinates[0];
+				model.localTranslateVector[1] += -1 * (newCoordinates[1] - oldCoordinates[1]);
+			}
 		}
+		if (io.MouseDown[1])
+		{
+			// Rigth mouse button is down
+
+			ImVec2 newCoordinates = io.MousePos;
+			if (scene.GetModelCount() > 0) {
+				MeshModel& model = scene.GetActiveModel();
+				model.localRotateVector[1] += newCoordinates[0] - oldCoordinates[0];
+				model.localRotateVector[0] += newCoordinates[1] - oldCoordinates[1];
+			}
+		}
+		if (io.MouseDown[2])
+		{
+			// Scroll Wheel button is down
+
+			ImVec2 newCoordinates = io.MousePos;
+			if (scene.GetModelCount() > 0) {
+				MeshModel& model = scene.GetActiveModel();
+				model.uniformLocalScale = true;
+				/*model.localScaleVector[1] += newCoordinates[0] - oldCoordinates[0];
+				model.localScaleVector[0] += newCoordinates[1] - oldCoordinates[1];*/
+				model.localScale += ((oldCoordinates[1] - newCoordinates[1]) +  (newCoordinates[0] - oldCoordinates[0]))* 5;
+			}
+		}
+
+		oldCoordinates = io.MousePos;
 	}
 
 	renderer.ClearColorBuffer(clear_color);
@@ -309,32 +343,32 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 		// scaling
 		ImGui::Text("Local Scaling:");
-		ImGui::SliderFloat3("Local X,Y,Z Axis Scaling", model.localScaleArray, 1, model.maxScale);
+		ImGui::SliderFloat3("Local X,Y,Z Axis Scaling", model.localScaleVector, 1, model.maxScale);
 
-		ImGui::Checkbox("Local Uniform Scaling", &(model.lockLocalScale));
+		ImGui::Checkbox("Local Uniform Scaling", &(model.uniformLocalScale));
 
-		ImGui::SliderFloat("Local Uniform Scale Bar", &(model.localScaleLocked), 1, model.maxScale);
+		ImGui::SliderFloat("Local Uniform Scale Bar", &(model.localScale), 1, model.maxScale);
 
 		ImGui::Text("World Scaling:");
-		ImGui::SliderFloat3("World X,Y,Z Axis Scaling", model.worldScaleArray, 1, 3000);
+		ImGui::SliderFloat3("World X,Y,Z Axis Scaling", model.worldScaleVector, 1, 3000);
 
-		ImGui::Checkbox("World Uniform Scaling", &(model.lockWorldScale));
-		ImGui::SliderFloat("World Uniform Scale Bar", &(model.worldScaleLocked), 1, 1000);
+		ImGui::Checkbox("World Uniform Scaling", &(model.uniformWorldScale));
+		ImGui::SliderFloat("World Uniform Scale Bar", &(model.worldScale), 1, 1000);
 
 		// translates
 		ImGui::Text("Local Translate:");
-		ImGui::SliderFloat3("Local Translate", model.localTranslateArray, -1000, 1000);
+		ImGui::SliderFloat3("Local Translate", model.localTranslateVector, -1000, 1000);
 
 		ImGui::Text("World Translate:");
-		ImGui::SliderFloat3("World Translate", model.worldTranslateArray, -1000, 1000);
+		ImGui::SliderFloat3("World Translate", model.worldTranslateVector, -1000, 1000);
 
 		// rotation
 		ImGui::Text("Local Rotate:");
-		ImGui::SliderFloat3("Local Rotate", model.localRotateArray, -360, 360);
+		ImGui::SliderFloat3("Local Rotate", model.localRotateVector, -360, 360);
 
 
 		ImGui::Text("World Rotate:");
-		ImGui::SliderFloat3("World Rotate", model.worldRotateArray, -360, 360);
+		ImGui::SliderFloat3("World Rotate", model.worldRotateVector, -360, 360);
 
 		ImGui::End();
 	}
