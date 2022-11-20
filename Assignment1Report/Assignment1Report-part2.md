@@ -54,7 +54,11 @@ point1 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(0) - 
 we can control each transformation individually by this window
 ![tranformation_gui](part2Pics/transformation_gui.jpg)
 
+the first item in the GUI will give the user the opportunity to choose which object we want to move/rotate/scale.
 
+this GUI will give the user the chance to scale the object and rotate it, as local and as the world. the first item in the GUI will give the user the opportunity to choose which object we want to move/rotate/scale.
+
+this GUI will give the user the chance to scale the object and rotate it, as local and as the world. 
 
 
 
