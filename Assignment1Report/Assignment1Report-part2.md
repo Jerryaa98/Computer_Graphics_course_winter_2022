@@ -54,6 +54,8 @@ where in getTransformedVertices() we cut the w coordinate and divide each coordi
 
 this is the result, object used in the demonstration: bishop and teapot
 
+![bishop](part2Pics/bishop.jpg)
+![teapot](part2Pics/teapot.jpg)
 
 
 
