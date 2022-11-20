@@ -153,7 +153,6 @@ const std::vector<glm::vec3> MeshModel::getTransformedVertices() {
         glm::vec4 vector = matrix * glm::vec4(this->vertices.at(i), 1.0f);
 
         // cut the w coordinate
-        //newVertices.push_back(glm::vec3(vector.x, vector.y, vector.z));
         newVertices.push_back(glm::vec3(vector.x / vector.w, vector.y / vector.w, vector.z / vector.w));
     }
     return newVertices;
