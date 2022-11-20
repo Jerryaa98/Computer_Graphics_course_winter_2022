@@ -153,7 +153,6 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 			scene.GetActiveModel().localScaleVector[0] -= 10;
 			scene.GetActiveModel().localScaleVector[1] -= 10;
 			scene.GetActiveModel().localScaleVector[2] -= 10;
-
 		}
 
 		if (io.KeysDown[61])// +

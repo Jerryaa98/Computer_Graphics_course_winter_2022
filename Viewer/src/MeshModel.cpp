@@ -22,26 +22,23 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
         z = vertices[i].z;
 
         // get maximum
-        if (x > max) {
+        if (x > y) 
             max = x;
-        }
-        if (y > max) {
+        else 
             max = y;
-        }
-        if (z > max) {
+        if (z > max) 
             max = z;
-        }
+        
 
         // get minimum
-        if (x < min) {
+        if (x < y) 
             min = x;
-        }
-        if (y < min) {
+        else
             min = y;
-        }
-        if (z < min) {
+
+        if (z < min) 
             min = z;
-        }
+        
     }
 
     max = abs(max);
