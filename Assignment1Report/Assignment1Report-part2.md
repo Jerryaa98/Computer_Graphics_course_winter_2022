@@ -50,6 +50,16 @@ point1 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(0) - 
 			DrawLine(point1, point3, glm::vec3(1.0f));
 			DrawLine(point2, point3, glm::vec3(1.0f));
 ```
+
+we sort the value of the vectors in the GUI code. 
+
+now in getTransformedVertices() we cut the w coordinate and divide each coordinate by it, then we drew it using the DrawLine() function we implimented the previous task.
+
+this is the result, object used in the demonstration: bishop and teapot
+
+![bishop](part2Pics/bishop.jpg)
+![teapot](part2Pics/teapot.jpg)
+
 ### Transformation Gui
 we can control each transformation individually by this window
 ![tranformation_gui](part2Pics/transformation_gui.jpg)
@@ -177,12 +187,5 @@ glm::mat4x4 MeshModel::GetTransform() {
     worldRotateZMat[1][1] = cos(glm::radians(worldRotateVector[2]));
 
 ```
-we sort the value of the vectors in the GUI code. 
 
-now in getTransformedVertices() we cut the w coordinate and divide each coordinate by it, then we drew it using the DrawLine() function we implimented the previous task.
-
-this is the result, object used in the demonstration: bishop and teapot
-
-![bishop](part2Pics/bishop.jpg)
-![teapot](part2Pics/teapot.jpg)
 
