@@ -207,18 +207,20 @@ loading several models and switching between them is also an option, in the demo
 
 ![twoModels](part2Pics/twoModels.gif)
 
+## Keyboard and Mouse Transformations
+we implemented keyboard and mouse interactions on the object.
+### Keyboard Controls:
+- buttons 1 to 6 on the number line above the letters will rotate the object
+- buttons - or + will scale the object
+- buttons w,a,s,d will translate the object.
 
-we implemented the keyboard and the mouse interactions on the object.
-keyboard:
-if the user presses 1 or 2 or 3... 6 this will rotate the object
-if the user presses on - or + this will scale the object,
-if the user presses on a or s or d or w this will translate the object.
+![KeyboardOps](part2Pics/KeyboardOps.gif)
 
-the mouse:
-if the user click on the left click on the mouse on hold the object
-(that says he keeps his finger on the mouse) this will translate the object.
-if the user click on the right click on the mouse on hold the object
-(that says he keeps his finger on the mouse) this will rotate the object.
-if the user click on the scroll and moved the mouse it will scale the object.
 
+### Mouse Controls:
+- Left click transaltes the object.
+- Right click rotates the object.
+- Middle button click (scroll wheel) scales the object.
+
+![MouseOps](part2Pics/MouseOps.gif)
 
