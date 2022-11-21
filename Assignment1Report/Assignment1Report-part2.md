@@ -201,7 +201,7 @@ glm::mat4x4 MeshModel::GetTransform() {
 ![Translations](part2Pics/Translations.gif)
 
 ## Loading Several Models
-loading several models and switching between them is also an option, in the demonstration below we can different models loaded with the list beside them and underneath them how we switch between models and preform transformations on each one seperately.
+loading several models and switching between them is also an option, in the demonstration below we can see different models loaded with the list beside them and underneath them how we can switch between models and preform transformations on each one seperately.
 
 ![multiple_objects](part2Pics/multiple_objects.jpg)
 
