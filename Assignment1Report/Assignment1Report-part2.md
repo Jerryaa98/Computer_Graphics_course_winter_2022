@@ -207,7 +207,7 @@ loading several models and switching between them is also an option, in the demo
 
 ![twoModels](part2Pics/twoModels.gif)
 
-## Keyboard and Mouse Transformations
+## Keyboard and Mouse Operations
 we implemented keyboard and mouse interactions on the object.
 ### Keyboard Controls:
 - buttons 1 to 6 on the number line above the letters will rotate the object
