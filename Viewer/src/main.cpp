@@ -151,7 +151,8 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 		if (io.KeysDown[45])// -
 		{
 			scene.GetActiveModel().uniformLocalScale = true;
-			scene.GetActiveModel().localScale -= 175;
+			if (scene.GetActiveModel().localScale > 175)
+				scene.GetActiveModel().localScale -= 175;
 		}
 
 		if (io.KeysDown[61])// +
