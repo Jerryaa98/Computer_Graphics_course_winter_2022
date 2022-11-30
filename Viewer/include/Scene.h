@@ -30,6 +30,7 @@ public:
 	int GetActiveModelIndex() const;
 
 	std::vector<std::string> modelsList;
+	std::vector<std::string> camerasList;
 	
 private:
 	vector<shared_ptr<MeshModel>> mesh_models;
