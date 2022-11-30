@@ -6,7 +6,7 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 	vertices(vertices),
 	normals(normals),
 	model_name(model_name)
-{
+{ /*
     // init matrices
     this->localTransform = glm::mat4x4(1.0f);
     this->worldTransform = glm::mat4x4(1.0f);
@@ -15,7 +15,7 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
     float min = FLT_MAX;
 
     float x, y, z;
-
+    
     for (int i = 0; i < vertices.size(); i++) {
         x = vertices[i].x;
         y = vertices[i].y;
@@ -46,12 +46,12 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 
     if (min > max)
         max = min;
-
+    
     float scaleFactor = 500.0f / max;
     localScaleVector[0] = scaleFactor;
     localScaleVector[1] = scaleFactor;
     localScaleVector[2] = scaleFactor;
-    this->maxScale = 2 * scaleFactor;
+    this->maxScale = 2 * scaleFactor;*/
 }
 
 MeshModel::~MeshModel()

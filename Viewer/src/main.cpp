@@ -318,21 +318,33 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 	//}
 
 	int modelCount = scene.GetModelCount();
+	int cameraCount = scene.GetCameraCount();
 	// display transformations window if at least one model is loaded
 	if (modelCount) {
+	
+
 		ImGui::Begin("Transformations Window");
 
 		ImGui::Text("Loaded Models List:");
+		ImGui::Text("Loaded Cameras List:");
 
-		static int selected = 0;
+		static int selected_camera = 0;
+		for (int n = 0; n < cameraCount; n++) {
+			char buf[64];
+			sprintf(buf, scene.camerasList[n].c_str(), n);
+			if (ImGui::Selectable(buf, selected_camera == n))
+				selected_camera = n;
+		}
+
+		static int selected_model = 0;
 		for (int n = 0; n < modelCount; n++) {
 			char buf[64];
 			sprintf(buf, scene.modelsList[n].c_str(), n);
-			if (ImGui::Selectable(buf, selected == n))
-				selected = n;
+			if (ImGui::Selectable(buf, selected_model == n))
+				selected_model = n;
 		}
 
-		scene.SetActiveModelIndex(selected);
+		scene.SetActiveModelIndex(selected_model);
 		MeshModel& model = scene.GetActiveModel();
 
 		// scaling
@@ -363,6 +375,7 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 		ImGui::Text("World Rotate:");
 		ImGui::SliderFloat3("World Rotate", model.worldRotateVector, -360, 360);
+
 
 		ImGui::End();
 	}
