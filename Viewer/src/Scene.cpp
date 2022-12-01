@@ -38,6 +38,7 @@ void Scene::AddCamera(const std::shared_ptr<Camera>& camera)
 	cameras.push_back(camera);
 	active_camera_index = cameras.size() - 1;
 	std::string name = "Camera" + std::to_string(active_camera_index); 
+	SetActiveCameraIndex(active_camera_index);
 }
 
 int Scene::GetCameraCount() const

@@ -399,11 +399,11 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 			// scaling
 			ImGui::Text("Local Scaling:");
-			ImGui::SliderFloat3("Local X,Y,Z Axis Scaling", model.localScaleVector, 1, model.maxScale);
+			ImGui::SliderFloat3("Local X,Y,Z Axis Scaling", model.localScaleVector, 1, 3000);
 
 			ImGui::Checkbox("Local Uniform Scaling", &(model.uniformLocalScale));
 
-			ImGui::SliderFloat("Local Uniform Scale Bar", &(model.localScale), 1, model.maxScale);
+			ImGui::SliderFloat("Local Uniform Scale Bar", &(model.localScale), 1, 4000);
 
 			ImGui::Text("World Scaling:");
 			ImGui::SliderFloat3("World X,Y,Z Axis Scaling", model.worldScaleVector, 1, 3000);
