@@ -719,7 +719,7 @@ void Renderer::Render(const Scene& scene)
 	glm::vec2 point1, point2, point3;
 
 	for (int i = 0; i < scene.GetModelCount(); i++) {
-
+		
 		MeshModel& model = scene.GetModel(i);
 
 		for (int j = 0; j < model.GetFacesCount(); j++) {
