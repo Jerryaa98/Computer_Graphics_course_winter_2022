@@ -887,18 +887,6 @@ void Renderer::Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel
 		axis.push_back(z1Transformed);
 		axis.push_back(z2Transformed);
 
-		//axis.at(0).x += half_width;
-		//axis.at(0).y += half_height;
-		//axis.at(1).x += half_width;
-		//axis.at(1).y += half_height;
-		//axis.at(2).x += half_width;
-		//axis.at(2).y += half_height;
-		//axis.at(3).x += half_width;
-		//axis.at(3).y += half_height;
-		//axis.at(4).x += half_width;
-		//axis.at(4).y += half_height;
-		//axis.at(5).x += half_width;
-		//axis.at(5).y += half_height;
 
 		//X axis
 		DrawLine(axis.at(0), axis.at(1), glm::vec3(255, 0, 0));

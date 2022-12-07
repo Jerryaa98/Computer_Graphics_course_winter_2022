@@ -304,6 +304,7 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 	// Controls
 	ImGui::ColorEdit3("Clear Color", (float*)&clear_color);
+	ImGui::Text("FPS %.1f", ImGui::GetIO().Framerate);
 	// TODO: Add more controls as needed
 
 	ImGui::End();
@@ -352,16 +353,11 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 	int modelCount = scene.GetModelCount();
 	int cameraCount = scene.GetCameraCount();
-	// display transformations window if at least one model is loaded
+
+	ImGui::Begin("Transformation Window");
 
 
-	ImGui::Begin("Window");
-
-	if (ImGui::BeginTabBar("Transformations"))
-	{
-
-
-		if (ImGui::BeginTabItem("Camera")) {
+		if (ImGui::CollapsingHeader("Camera")) {
 			if (ImGui::Button("Add Camera")) {
 				shared_ptr<Camera>& newCam = std::make_shared<Camera>();
 				scene.AddCamera(newCam);
@@ -382,32 +378,26 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 			ImGui::Separator();
 			ImGui::Separator();
-			ImGui::Separator();
-			ImGui::Separator();
 
-			ImGui::InputFloat("Camera Scale", &(*cameraModel).localScale, 0.01, 0.01, "%.2f");
+			ImGui::SliderFloat("Camera Scale", &(*cameraModel).localScale, 0.01, 10);
 
-			ImGui::Separator();
-			ImGui::Separator();
 			ImGui::Separator();
 			ImGui::Separator();
 
 			ImGui::Text("--- CAMERA LOCATION (EYE) ---");
 
-			ImGui::InputFloat("Location X", &camera.eye[0], 0.1, 5, "%.2f");
-			ImGui::InputFloat("Location Y", &camera.eye[1], 0.1, 5, "%.2f");
-			ImGui::InputFloat("Location Z", &camera.eye[2], 0.1, 5, "%.2f");
+			ImGui::SliderFloat("X Axis - eye", &camera.eye[0], -0.3, 0.3);
+			ImGui::SliderFloat("Y Axis - eye", &camera.eye[1], -0.3, 0.3);
+			ImGui::SliderFloat("Z Axis - eye", &camera.eye[2], -0.3, 10);
 
 			ImGui::Separator();
 
 			ImGui::Text("--- CAMERA TARGET (AT) ---");
 
-			ImGui::InputFloat("Target X", &camera.at[0], 0.1, 1, "%.2f");
-			ImGui::InputFloat("Target Y", &camera.at[1], 0.1, 1, "%.2f");
-			ImGui::InputFloat("Target Z", &camera.at[2], 0.1, 1, "%.2f");
+			ImGui::SliderFloat("X Axis - at", &camera.at[0], -0.3, 0.3);
+			ImGui::SliderFloat("Y Axis - at", &camera.at[1], -0.3, 0.3);
+			ImGui::SliderFloat("Z Axis - at", &camera.at[2], -0.3, 0.3);
 
-			ImGui::Separator();
-			ImGui::Separator();
 			ImGui::Separator();
 			ImGui::Separator();
 
@@ -421,40 +411,38 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				ImGui::Text("--- LOCAL TRANSFORMATIONS ---");
 
 				ImGui::Text("Local Translate:");
-				ImGui::InputFloat("Local Translate X", &camera.localTranslateArray[0], 0.1, 5, "%.2f");
-				ImGui::InputFloat("Local Translate Y", &camera.localTranslateArray[1], 0.1, 5, "%.2f");
-				ImGui::InputFloat("Local Translate Z", &camera.localTranslateArray[2], 0.1, 5, "%.2f");
+				ImGui::SliderFloat("Local Translate X", &camera.localTranslateArray[0], -0.3, 0.3);
+				ImGui::SliderFloat("Local Translate Y", &camera.localTranslateArray[1], -0.3, 0.3);
+				ImGui::SliderFloat("Local Translate Z", &camera.localTranslateArray[2], -0.3, 0.3);
 
 				ImGui::Separator();
 
 				ImGui::Text("Local Rotate:");
-				ImGui::InputFloat("Rotate X", &camera.localRotateArray[0], 0.1, 1, "%.2f");
-				ImGui::InputFloat("Rotate Y", &camera.localRotateArray[1], 0.1, 1, "%.2f");
-				ImGui::InputFloat("Rotate Z", &camera.localRotateArray[2], 0.1, 1, "%.2f");
+				ImGui::SliderFloat("Local Rotate X", &camera.localRotateArray[0], 0.0, 10000);
+				ImGui::SliderFloat("Local Rotate Y", &camera.localRotateArray[1], 0.0, 10000);
+				ImGui::SliderFloat("Local Rotate Z", &camera.localRotateArray[2], 0.0, 10000);
 
 				ImGui::Separator();
 				ImGui::Separator();
-				ImGui::Separator();
-				ImGui::Separator();
+
 			}
 			else {
 				ImGui::Text("--- WORLD TRANSFORMATIONS ---");
 				ImGui::Text("World Translate:");
-				ImGui::InputFloat("World Translate X", &camera.worldTranslateArray[0], 0.1, 5, "%.2f");
-				ImGui::InputFloat("World Translate Y", &camera.worldTranslateArray[1], 0.1, 5, "%.2f");
-				ImGui::InputFloat("World Translate Z", &camera.worldTranslateArray[2], 0.1, 5, "%.2f");
+				ImGui::SliderFloat("World Translate X", &camera.worldTranslateArray[0], 0.1, 10);
+				ImGui::SliderFloat("World Translate Y", &camera.worldTranslateArray[1], 0.1, 10);
+				ImGui::SliderFloat("World Translate Z", &camera.worldTranslateArray[2], 0.1, 10);
 
 				ImGui::Separator();
 
 				ImGui::Text("World Rotate:");
-				ImGui::InputFloat("Rotate X", &camera.worldRotateArray[0], 0.1, 1, "%.2f");
-				ImGui::InputFloat("Rotate Y", &camera.worldRotateArray[1], 0.1, 1, "%.2f");
-				ImGui::InputFloat("Rotate Z", &camera.worldRotateArray[2], 0.1, 1, "%.2f");
+				ImGui::SliderFloat("Rotate X", &camera.worldRotateArray[0], 0.1, 10);
+				ImGui::SliderFloat("Rotate Y", &camera.worldRotateArray[1], 0.1, 10);
+				ImGui::SliderFloat("Rotate Z", &camera.worldRotateArray[2], 0.1, 10);
 
 				ImGui::Separator();
 				ImGui::Separator();
-				ImGui::Separator();
-				ImGui::Separator();
+
 			}
 
 			ImGui::Text("View Type:");
@@ -479,18 +467,13 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 			}
 
 			ImGui::Separator();
-			ImGui::Separator();
-			ImGui::Separator();
-			ImGui::Separator();
-
 
 			ImGui::Text("Addons:");
 			ImGui::Checkbox("Draw World Axis", &(scene.drawWorldAxis));
 
-			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem("Object"))
+		if (ImGui::CollapsingHeader("Object"))
 		{
 			// display transformations window if at least one model is loaded
 			if (modelCount) {
@@ -516,74 +499,68 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				if (model.LocalWorldEditObject) {
 					ImGui::Text("--- LOCAL TRANSFORMATIONS ---");
 					ImGui::Text("Local Scale:");
-					ImGui::InputFloat("Local Scale X", &model.localScaleVector[0], 0.1f, 1.0f, "%.3f");
-					ImGui::InputFloat("Local Scale Y", &model.localScaleVector[1], 0.1f, 1.0f, "%.3f");
-					ImGui::InputFloat("Local Scale Z", &model.localScaleVector[2], 0.1f, 1.0f, "%.3f");
+					ImGui::SliderFloat("Local Scale X", &model.localScaleVector[0], 0.1, 10);
+					ImGui::SliderFloat("Local Scale Y", &model.localScaleVector[1], 0.1, 10);
+					ImGui::SliderFloat("Local Scale Z", &model.localScaleVector[2], 0.1, 10);
 
 					ImGui::Separator();
 
 					ImGui::Checkbox("Lock All Local Axis", &(model.uniformLocalScale));
-					ImGui::InputFloat("Local Scale Locked", &(model.localScale), 0.1f, 1.0f, "%.3f");
+					ImGui::SliderFloat("Local Scale Locked", &(model.localScale), 0.1, 10);
 
 					ImGui::Separator();
 					ImGui::Separator();
-					ImGui::Separator();
-					ImGui::Separator();
+
 
 					ImGui::Text("Local Translate:");
-					ImGui::InputFloat("Local Translate X", &model.localTranslateVector[0], 0.05, 1, "%.2f");
-					ImGui::InputFloat("Local Translate Y", &model.localTranslateVector[1], 0.05, 1, "%.2f");
-					ImGui::InputFloat("Local Translate Z", &model.localTranslateVector[2], 0.05, 1, "%.2f");
+					ImGui::SliderFloat("Local Translate X", &model.localTranslateVector[0], 0.0, 0.3);
+					ImGui::SliderFloat("Local Translate Y", &model.localTranslateVector[1], 0.0, 0.3);
+					ImGui::SliderFloat("Local Translate Z", &model.localTranslateVector[2], 0.0, 0.3);
 
 					ImGui::Separator();
 					ImGui::Separator();
-					ImGui::Separator();
-					ImGui::Separator();
+
 
 					ImGui::Text("Local Rotate:");
-					ImGui::InputFloat("Local Rotate X", &model.localRotateVector[0], 1, 1, "%.0f");
-					ImGui::InputFloat("Local Rotate Y", &model.localRotateVector[1], 1, 1, "%.0f");
-					ImGui::InputFloat("Local Rotate Z", &model.localRotateVector[2], 1, 1, "%.0f");
+					ImGui::SliderFloat("Local Rotate X", &model.localRotateVector[0],1 ,100);
+					ImGui::SliderFloat("Local Rotate Y", &model.localRotateVector[1],1 ,100);
+					ImGui::SliderFloat("Local Rotate Z", &model.localRotateVector[2],1 ,100);
 
 					ImGui::Separator();
 					ImGui::Separator();
-					ImGui::Separator();
-					ImGui::Separator();
+
 				}
 				else {
 					ImGui::Text("--- WORLD TRANSFORMATIONS ---");
 					ImGui::Text("World Scale:");
-					ImGui::InputFloat("World Scale X", &model.worldScaleVector[0], 0.1f, 1.0f, "%.3f");
-					ImGui::InputFloat("World Scale Y", &model.worldScaleVector[1], 0.1f, 1.0f, "%.3f");
-					ImGui::InputFloat("World Scale Z", &model.worldScaleVector[2], 0.1f, 1.0f, "%.3f");
+					ImGui::SliderFloat("World Scale X", &model.worldScaleVector[0], 0.1, 10);
+					ImGui::SliderFloat("World Scale Y", &model.worldScaleVector[1], 0.1, 10);
+					ImGui::SliderFloat("World Scale Z", &model.worldScaleVector[2], 0.1, 10);
 					ImGui::Separator();
 					ImGui::Checkbox("Lock All World Axis", &(model.uniformWorldScale));
-					ImGui::InputFloat("World Scale Locked", &(model.worldScale), 0.1f, 1.0f, "%.3f");
+					ImGui::SliderFloat("World Scale Locked", &(model.worldScale), 0.1, 10);
 
 					ImGui::Separator();
 					ImGui::Separator();
-					ImGui::Separator();
-					ImGui::Separator();
+
 
 					ImGui::Text("World Translate:");
-					ImGui::InputFloat("World Translate X", &model.worldTranslateVector[0], 0.05, 1, "%.2f");
-					ImGui::InputFloat("World Translate Y", &model.worldTranslateVector[1], 0.05, 1, "%.2f");
-					ImGui::InputFloat("World Translate Z", &model.worldTranslateVector[2], 0.05, 1, "%.2f");
+					ImGui::SliderFloat("World Translate X", &model.worldTranslateVector[0], 0.05, 10);
+					ImGui::SliderFloat("World Translate Y", &model.worldTranslateVector[1], 0.05, 10);
+					ImGui::SliderFloat("World Translate Z", &model.worldTranslateVector[2], 0.05, 10);
 
 					ImGui::Separator();
 					ImGui::Separator();
-					ImGui::Separator();
-					ImGui::Separator();
+
 
 					ImGui::Text("World Rotate:");
-					ImGui::InputFloat("World Rotate X", &model.worldRotateVector[0], 1, 1, "%.0f");
-					ImGui::InputFloat("World Rotate Y", &model.worldRotateVector[1], 1, 1, "%.0f");
-					ImGui::InputFloat("World Rotate Z", &model.worldRotateVector[2], 1, 1, "%.0f");
+					ImGui::SliderFloat("World Rotate X", &model.worldRotateVector[0], 1, 10);
+					ImGui::SliderFloat("World Rotate Y", &model.worldRotateVector[1], 1, 10);
+					ImGui::SliderFloat("World Rotate Z", &model.worldRotateVector[2], 1, 10);
 
 					ImGui::Separator();
 					ImGui::Separator();
-					ImGui::Separator();
-					ImGui::Separator();
+
 
 				}
 				ImGui::Text("Object Addons:");
@@ -597,11 +574,9 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				ImGui::Checkbox("Draw Face Normals", &(model.drawFaceNormals));
 				ImGui::InputFloat("Face Normals Scale", &(model.faceNormalsScale), 0.0001, 1, "%.4f");
 			}
-			ImGui::EndTabItem();
 		}
 
 		ImGui::EndTabBar();
-	}
 
 	ImGui::End();
 }
