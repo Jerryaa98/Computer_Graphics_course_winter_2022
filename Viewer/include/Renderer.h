@@ -9,6 +9,7 @@ public:
 	Renderer(int viewportWidth, int viewportHeight);
 	virtual ~Renderer();
 	void Render(const Scene& scene);
+	void Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel);
 	void SwapBuffers();
 	void ClearColorBuffer(const glm::vec3& color);
 	int GetViewportWidth() const;
