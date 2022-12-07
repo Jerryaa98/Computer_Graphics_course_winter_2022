@@ -6,6 +6,7 @@
 
 #include "Camera.h"
 #include "MeshModel.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -31,6 +32,8 @@ public:
 
 	std::vector<std::string> modelsList;
 	std::vector<std::string> camerasList;
+
+	bool drawWorldAxis = false;
 	
 private:
 	vector<shared_ptr<MeshModel>> mesh_models;

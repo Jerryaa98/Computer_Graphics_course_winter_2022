@@ -695,8 +695,10 @@ void Renderer::DrawPumpkin(int start_width, int start_height) {
 	
 }
 
-void Renderer::Render(const Scene& scene)
-{
+void Renderer::Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel) {
+
+	Scene scene1 = scene;
+
 	// TODO: Replace this code with real scene rendering code
 	int half_width = viewport_width / 2;
 	int half_height = viewport_height / 2;
@@ -716,27 +718,231 @@ void Renderer::Render(const Scene& scene)
 	
 	// scaling model for assignment 1 part 2
 
+	scene1.GetActiveCamera().half_height = half_height;
+	scene1.GetActiveCamera().half_width = half_width;
+	glm::mat4x4 cameraTransform = scene1.GetActiveCamera().GetTransform();
+
 	glm::vec2 point1, point2, point3;
 
 	for (int i = 0; i < scene.GetModelCount(); i++) {
 		
 		MeshModel& model = scene.GetModel(i);
 
-		for (int j = 0; j < model.GetFacesCount(); j++) {
+		glm::mat4x4 trans = glm::mat4x4(1.0f);
+		trans[3][0] = 0;
+		trans[3][1] = 0;
+		trans[3][2] = 1;
 
-			point1 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(0) - 1);
-			point2 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(1) - 1);
-			point3 = model.getTransformedVertices().at(model.GetFace(j).GetVertexIndex(2) - 1);
+		//if (model.cameraIndex > -1)
+		//    model.objectTransform = scene1.GetCamera(model.cameraIndex).drawTransformation;
 
-			point1 += glm::vec2(half_width, half_height);
-			point2 += glm::vec2(half_width, half_height);
-			point3 += glm::vec2(half_width, half_height);
+		std::vector<std::vector<glm::vec2>> pairs = model.Draw(cameraTransform);
 
-			DrawLine(point1, point2, glm::vec3(1.0f));
-			DrawLine(point1, point3, glm::vec3(1.0f));
-			DrawLine(point2, point3, glm::vec3(1.0f));
+		for each (std::vector<glm::vec2> pair in pairs) {
+			pair.at(0).x = (pair.at(0).x + 1) * half_width;
+			pair.at(0).y = (pair.at(0).y + 1) * half_height;
 
+			pair.at(1).x = (pair.at(1).x + 1) * half_width;
+			pair.at(1).y = (pair.at(1).y + 1) * half_height;
+
+			DrawLine(pair.at(0), pair.at(1), glm::vec3(255,255,255));
 		}
+
+		if (model.drawAxis) {
+			std::vector<glm::vec2> points = model.transformedAxis;
+
+			points.at(0).x = (points.at(0).x + 1) * half_width;
+			points.at(0).y = (points.at(0).y + 1) * half_height;
+			points.at(1).x = (points.at(1).x + 1) * half_width;
+			points.at(1).y = (points.at(1).y + 1) * half_height;
+
+			points.at(2).x = (points.at(2).x + 1) * half_width;
+			points.at(2).y = (points.at(2).y + 1) * half_height;
+
+			points.at(3).x = (points.at(3).x + 1) * half_width;
+			points.at(3).y = (points.at(3).y + 1) * half_height;
+
+			points.at(4).x = (points.at(4).x + 1) * half_width;
+			points.at(4).y = (points.at(4).y + 1) * half_height;
+
+			points.at(5).x = (points.at(5).x + 1) * half_width;
+			points.at(5).y = (points.at(5).y + 1) * half_height;
+
+			//X axis
+			DrawLine(points.at(0), points.at(1), glm::vec3(255, 0, 0));
+			//Y axis
+			DrawLine(points.at(2), points.at(3), glm::vec3(0, 255, 0));
+			//Z axis
+			DrawLine(points.at(4), points.at(5), glm::vec3(0, 0, 255));
+		}
+		if (model.drawBoundingBox) {
+			std::vector<glm::vec2> points = model.transformedBoundingBox;
+
+			points.at(0).x = (points.at(0).x + 1) * half_width;
+			points.at(0).y = (points.at(0).y + 1) * half_height;
+
+			points.at(1).x = (points.at(1).x + 1) * half_width;
+			points.at(1).y = (points.at(1).y + 1) * half_height;
+
+			points.at(2).x = (points.at(2).x + 1) * half_width;
+			points.at(2).y = (points.at(2).y + 1) * half_height;
+
+			points.at(3).x = (points.at(3).x + 1) * half_width;
+			points.at(3).y = (points.at(3).y + 1) * half_height;
+
+			points.at(4).x = (points.at(4).x + 1) * half_width;
+			points.at(4).y = (points.at(4).y + 1) * half_height;
+
+			points.at(5).x = (points.at(5).x + 1) * half_width;
+			points.at(5).y = (points.at(5).y + 1) * half_height;
+
+			points.at(6).x = (points.at(6).x + 1) * half_width;
+			points.at(6).y = (points.at(6).y + 1) * half_height;
+
+			points.at(7).x = (points.at(7).x + 1) * half_width;
+			points.at(7).y = (points.at(7).y + 1) * half_height;
+
+			DrawLine(points.at(0), points.at(1), glm::vec3(255, 0, 0));
+			DrawLine(points.at(0), points.at(3), glm::vec3(255, 0, 0));
+			DrawLine(points.at(0), points.at(4), glm::vec3(255, 0, 0));
+			DrawLine(points.at(1), points.at(2), glm::vec3(255, 0, 0));
+			DrawLine(points.at(1), points.at(5), glm::vec3(255, 0, 0));
+			DrawLine(points.at(2), points.at(3), glm::vec3(255, 0, 0));
+			DrawLine(points.at(2), points.at(6), glm::vec3(255, 0, 0));
+			DrawLine(points.at(3), points.at(7), glm::vec3(255, 0, 0));
+			DrawLine(points.at(4), points.at(5), glm::vec3(255, 0, 0));
+			DrawLine(points.at(4), points.at(7), glm::vec3(255, 0, 0));
+			DrawLine(points.at(5), points.at(6), glm::vec3(255, 0, 0));
+			DrawLine(points.at(6), points.at(7), glm::vec3(255, 0, 0));
+		}
+
+		if (model.drawVertexNormals) {
+			for each (std::vector<glm::vec2> pair in model.transformedVertexNormals) {
+				pair.at(0).x = (pair.at(0).x + 1) * half_width;
+				pair.at(0).y = (pair.at(0).y + 1) * half_height;
+
+				pair.at(1).x = (pair.at(1).x + 1) * half_width;
+				pair.at(1).y = (pair.at(1).y + 1) * half_height;
+
+				DrawLine(pair.at(0), pair.at(1), glm::vec3(0, 0, 255));
+			}
+		}
+
+		if (model.drawFaceNormals) {
+			for each (std::vector<glm::vec2> pair in model.transformedFaceNormals) {
+				pair.at(0).x = (pair.at(0).x + 1) * half_width;
+				pair.at(0).y = (pair.at(0).y + 1) * half_height;
+
+				pair.at(1).x = (pair.at(1).x + 1) * half_width;
+				pair.at(1).y = (pair.at(1).y + 1) * half_height;
+
+				DrawLine(pair.at(0), pair.at(1), glm::vec3(0, 255, 0));
+			}
+		}
+
+
+	}
+
+	if (scene.drawWorldAxis) {
+		std::vector<glm::vec2> axis;
+		// X axis
+		glm::vec4 x1 = cameraTransform * glm::vec4(0, 0, 0, 1);
+		glm::vec4 x2 = cameraTransform * glm::vec4(half_height / 2, 0, 0, 1);
+
+		glm::vec2 x1Transformed = glm::vec2(x1 / x1.w);
+		x1Transformed.x = (x1Transformed.x + 1) * half_width;
+		x1Transformed.y = (x1Transformed.y + 1) * half_height;
+		glm::vec2 x2Transformed = glm::vec2(x2 / x2.w);
+		x2Transformed.x = (x2Transformed.x + 1) * half_width;
+		x2Transformed.y = (x2Transformed.y + 1) * half_height;
+
+		axis.push_back(x1Transformed);
+		axis.push_back(x2Transformed);
+
+
+
+		// Y axis
+		glm::vec4 y1 = cameraTransform * glm::vec4(0, 0, 0, 1);
+		glm::vec4 y2 = cameraTransform * glm::vec4(0, half_width / 2, 0, 1);
+		glm::vec2 y1Transformed = glm::vec2(y1 / y1.w);
+		y1Transformed.x = (y1Transformed.x + 1) * half_width;
+		y1Transformed.y = (y1Transformed.y + 1) * half_height;
+		glm::vec2 y2Transformed = glm::vec2(y2 / y2.w);
+		y2Transformed.x = (y2Transformed.x + 1) * half_width;
+		y2Transformed.y = (y2Transformed.y + 1) * half_height;
+
+		axis.push_back(y1Transformed);
+		axis.push_back(y2Transformed);
+
+		// Z axis
+		glm::vec4 z1 = cameraTransform * glm::vec4(0, 0, 0, 1);
+		glm::vec4 z2 = cameraTransform * glm::vec4(0, 0, half_width / 2, 1);
+		glm::vec2 z1Transformed = glm::vec2(z1 / z1.w);
+		z1Transformed.x = (z1Transformed.x + 1) * half_width;
+		z1Transformed.y = (z1Transformed.y + 1) * half_height;
+		glm::vec2 z2Transformed = glm::vec2(z2 / z2.w);
+		z2Transformed.x = (z2Transformed.x + 1) * half_width;
+		z2Transformed.y = (z2Transformed.y + 1) * half_height;
+
+		axis.push_back(z1Transformed);
+		axis.push_back(z2Transformed);
+
+		//axis.at(0).x += half_width;
+		//axis.at(0).y += half_height;
+		//axis.at(1).x += half_width;
+		//axis.at(1).y += half_height;
+		//axis.at(2).x += half_width;
+		//axis.at(2).y += half_height;
+		//axis.at(3).x += half_width;
+		//axis.at(3).y += half_height;
+		//axis.at(4).x += half_width;
+		//axis.at(4).y += half_height;
+		//axis.at(5).x += half_width;
+		//axis.at(5).y += half_height;
+
+		//X axis
+		DrawLine(axis.at(0), axis.at(1), glm::vec3(255, 0, 0));
+		//Y axis
+		DrawLine(axis.at(2), axis.at(3), glm::vec3(0, 255, 0));
+		//Z axis
+		DrawLine(axis.at(4), axis.at(5), glm::vec3(0, 0, 255));
+	}
+	int current_camera = scene.GetActiveCameraIndex();
+	int camera_num = scene.GetCameraCount();
+	if (camera_num > 1) {
+		for (int i = 0; i < camera_num; i++) {
+			if (i == current_camera)
+				continue;
+
+			(*cameraModel).localTranslateVector[0] = scene1.GetCamera(i).localTranslateArray[0] + scene1.GetCamera(i).eye[0];
+			(*cameraModel).localTranslateVector[1] = scene1.GetCamera(i).localTranslateArray[1] + scene1.GetCamera(i).eye[1];
+			(*cameraModel).localTranslateVector[2] = scene1.GetCamera(i).localTranslateArray[2] + scene1.GetCamera(i).eye[2];
+
+			(*cameraModel).localRotateVector[0] = scene1.GetCamera(i).localRotateArray[0];
+			(*cameraModel).localRotateVector[1] = scene1.GetCamera(i).localRotateArray[1];
+			(*cameraModel).localRotateVector[2] = scene1.GetCamera(i).localRotateArray[2];
+
+			(*cameraModel).worldTranslateVector[0] = scene1.GetCamera(i).worldTranslateArray[0];
+			(*cameraModel).worldTranslateVector[1] = scene1.GetCamera(i).worldTranslateArray[1];
+			(*cameraModel).worldTranslateVector[2] = scene1.GetCamera(i).worldTranslateArray[2];
+
+			(*cameraModel).worldRotateVector[0] = scene1.GetCamera(i).worldRotateArray[0];
+			(*cameraModel).worldRotateVector[1] = scene1.GetCamera(i).worldRotateArray[1];
+			(*cameraModel).worldRotateVector[2] = scene1.GetCamera(i).worldRotateArray[2];
+
+			std::vector<std::vector<glm::vec2>> pairs = (*cameraModel).Draw(cameraTransform);
+
+			for each (std::vector<glm::vec2> pair in pairs) {
+				pair.at(0).x = (pair.at(0).x + 1) * half_width;
+				pair.at(0).y = (pair.at(0).y + 1) * half_height;
+
+				pair.at(1).x = (pair.at(1).x + 1) * half_width;
+				pair.at(1).y = (pair.at(1).y + 1) * half_height;
+
+				DrawLine(pair.at(0), pair.at(1), glm::vec3(255, 255, 255));;
+			}
+		}
+
 	}
 
 }
