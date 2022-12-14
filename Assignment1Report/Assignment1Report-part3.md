@@ -6,12 +6,23 @@ gifs and screenshots will make it easier to understand down the page.
 
 ## Cameras
 
+#### Orthographic Perspective
 we implimented a camera with an orthographic projection, and gave the user the ability to change the view volume in different directions using the UI.
-we also let the user move the camera around in the space (this will be shown vividly in later gifs)
+we also let the user move the camera around in the space.
 
 ** near and far don't affect the projection here **
 
+#### Projection
+
 ![N|Solid](part3Pics/OrthographicProjections.gif)
+
+#### Camera Location
+
+![N|Solid](part3Pics/camLocation.gif)
+
+#### Rotations
+
+![N|Solid](part3Pics/CamRotationsLocalVsWorld.gif)
 
 ### Resizing windows
 
@@ -65,8 +76,53 @@ float x = (U.y * V.z) - (U.z * V.y);
 float y = (U.z * V.x) - (U.x * V.z);
 float z = (U.x * V.y) - (U.y * V.x);
 ```
+Vertex normals are already in the OBJ file.
 
+### Perspective Projection
 
+In the UI, like the orthographic projection, the user can change field of view including near and far which have effect here.
+here is a gif showing the comparison between the 2 persepctives.
+in the perspective we can see the object coming closer to the camera.
 
+#### Perspective
 
+![N|Solid](part3Pics/PerspectiveZTranslate.gif)
+
+#### Orthographic
+
+![N|Solid](part3Pics/orthographicZTranslate.gif)
+
+### Frustum Small
+
+the 3D effect is pretty strong here, we can look at the head and the tail of the bunny to fully comprehend.
+
+![N|Solid](part3Pics/smallFrustum.jpg)
+
+### Frustum Big
+
+the 3D effect is pretty weak here, it is almost like a 2D drawing, we can look at the head and the tail of the bunny and see that the distance is negligible.
+
+![N|Solid](part3Pics/smallFrustum.jpg)
+
+### Position at (1,1,1)
+
+We set the camera at position (1,1,1) and se the view volume at the object so we can get a point of view from that particular point.
+
+![N|Solid](part3Pics/111position.jpg)
+
+### Multiple Objects And Cameras
+
+we can load multiple objects and cameras to the scene and switch between the cameras to get different point of views as shown below.
+
+![N|Solid](part3Pics/multipleObjs.gif)
+
+### GUI
+
+here is a small tutorial on the Gui we implimented
+
+**Note** we also added a FPS measurer in the window where we change the background color.
+
+![N|Solid](part3Pics/guiTutorial.gif)
+
+![N|Solid](part3Pics/gui1.jpg)
 
