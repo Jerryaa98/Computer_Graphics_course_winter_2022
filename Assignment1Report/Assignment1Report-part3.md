@@ -53,7 +53,7 @@ we drew a bounding box around the model such that it is the minimal rectangular 
 
 We added Vertex and Faces normal vectors, you can use the checkbox in the GUI to display them on screen and scale them accordingly using the slider.
 
-![N|Solid](part3Pics/normalVecotrs.jpg)
+![N|Solid](part3Pics/normalVecotrs.gif)
 
 code for face normal calculations:-
 
