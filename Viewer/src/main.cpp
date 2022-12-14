@@ -218,8 +218,8 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 				// scene.GetActiveModel().localTranslateVector[0] += newCoordinates[0] - oldCoordinates[0];
 				// scene.GetActiveModel().localTranslateVector[1] += -1 * (newCoordinates[1] - oldCoordinates[1]);
 
-				scene.GetActiveCamera().worldRotateArray[1] += (newCoordinates[0] - oldCoordinates[0]) / 10;
-				scene.GetActiveCamera().worldRotateArray[0] += (newCoordinates[1] - oldCoordinates[1]) / 10;
+				scene.GetActiveCamera().worldRotateArray[1] += -1*(newCoordinates[0] - oldCoordinates[0]) / 10;
+				scene.GetActiveCamera().worldRotateArray[0] += -1*(newCoordinates[1] - oldCoordinates[1]) / 10;
 			}
 		}
 		if (io.MouseDown[1])
@@ -386,17 +386,17 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 			ImGui::Text("--- CAMERA LOCATION (EYE) ---");
 
-			ImGui::SliderFloat("X Axis - eye", &camera.eye[0], -0.3, 0.3);
-			ImGui::SliderFloat("Y Axis - eye", &camera.eye[1], -0.3, 0.3);
-			ImGui::SliderFloat("Z Axis - eye", &camera.eye[2], -0.3, 10);
+			ImGui::SliderFloat("X Axis - eye", &camera.eye[0], -30, 30);
+			ImGui::SliderFloat("Y Axis - eye", &camera.eye[1], -30, 30);
+			ImGui::SliderFloat("Z Axis - eye", &camera.eye[2], -10, 10);
 
 			ImGui::Separator();
 
 			ImGui::Text("--- CAMERA TARGET (AT) ---");
 
-			ImGui::SliderFloat("X Axis - at", &camera.at[0], -0.3, 0.3);
-			ImGui::SliderFloat("Y Axis - at", &camera.at[1], -0.3, 0.3);
-			ImGui::SliderFloat("Z Axis - at", &camera.at[2], -0.3, 0.3);
+			ImGui::SliderFloat("X Axis - at", &camera.at[0], -100, 100);
+			ImGui::SliderFloat("Y Axis - at", &camera.at[1], -100, 100);
+			ImGui::SliderFloat("Z Axis - at", &camera.at[2], -100, 100);
 
 			ImGui::Separator();
 			ImGui::Separator();
@@ -418,9 +418,9 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				ImGui::Separator();
 
 				ImGui::Text("Local Rotate:");
-				ImGui::SliderFloat("Local Rotate X", &camera.localRotateArray[0], 0.0, 10000);
-				ImGui::SliderFloat("Local Rotate Y", &camera.localRotateArray[1], 0.0, 10000);
-				ImGui::SliderFloat("Local Rotate Z", &camera.localRotateArray[2], 0.0, 10000);
+				ImGui::SliderFloat("Local Rotate X", &camera.localRotateArray[0], 0.0, 10);
+				ImGui::SliderFloat("Local Rotate Y", &camera.localRotateArray[1], 0.0, 30);
+				ImGui::SliderFloat("Local Rotate Z", &camera.localRotateArray[2], 0.0, 10);
 
 				ImGui::Separator();
 				ImGui::Separator();
@@ -430,7 +430,7 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				ImGui::Text("--- WORLD TRANSFORMATIONS ---");
 				ImGui::Text("World Translate:");
 				ImGui::SliderFloat("World Translate X", &camera.worldTranslateArray[0], 0.1, 10);
-				ImGui::SliderFloat("World Translate Y", &camera.worldTranslateArray[1], 0.1, 10);
+				ImGui::SliderFloat("World Translate Y", &camera.worldTranslateArray[1], 0.1, 30);
 				ImGui::SliderFloat("World Translate Z", &camera.worldTranslateArray[2], 0.1, 10);
 
 				ImGui::Separator();
@@ -452,18 +452,19 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 			ImGui::RadioButton("Perspective", &(camera.OrthoPerspective), 0);
 
 			if (camera.OrthoPerspective) {
-				ImGui::Text("Orthographic Settings:");
-				ImGui::InputFloat("Camera near", &(camera.nearVal), 0.01f, 1.0f, "%.3f");
-				ImGui::InputFloat("Camera far", &(camera.farVal), 0.01f, 1.0f, "%.3f");
-				ImGui::InputFloat("Camera top", &(camera.top), 0.01f, 1.0f, "%.3f");
-				ImGui::InputFloat("Camera bottom", &(camera.bottom), 0.01f, 1.0f, "%.3f");
-				ImGui::InputFloat("Camera right", &(camera.right), 0.01f, 1.0f, "%.3f");
-				ImGui::InputFloat("Camera left", &(camera.left), 0.01f, 1.0f, "%.3f");
+				ImGui::Text("Orthographic View:");
+				ImGui::SliderFloat("Camera top", &(camera.top), -200, 200, "%.3f");
+				ImGui::SliderFloat("Camera bottom", &(camera.bottom), -200, 200, "%.3f");
+				ImGui::SliderFloat("Camera right", &(camera.right), -200, 200, "%.3f");
+				ImGui::SliderFloat("Camera left", &(camera.left), -200, 200, "%.3f");
+				ImGui::SliderFloat("Camera near", &(camera.nearVal), -200, 200, "%.3f");
+				ImGui::SliderFloat("Camera far", &(camera.farVal), -200, 200, "%.3f");
 			}
 			else {
-				ImGui::InputFloat("Camera near", &(camera.nearVal), 0.01f, 1.0f, "%.3f");
-				ImGui::InputFloat("Camera far", &(camera.farVal), 0.01f, 1.0f, "%.3f");
-				ImGui::InputFloat("Camera FOV", &(camera.fov), 1, 1, "%.0f");
+				ImGui::Text("Perspective View:");
+				ImGui::SliderFloat("Camera near", &(camera.nearVal), 0.01f, 1.0f, "%.3f");
+				ImGui::SliderFloat("Camera far", &(camera.farVal), 0.01f, 1.0f, "%.3f");
+				ImGui::SliderFloat("Camera FOV", &(camera.fov), 1, 1, "%.0f");
 			}
 
 			ImGui::Separator();
@@ -499,23 +500,23 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				if (model.LocalWorldEditObject) {
 					ImGui::Text("--- LOCAL TRANSFORMATIONS ---");
 					ImGui::Text("Local Scale:");
-					ImGui::SliderFloat("Local Scale X", &model.localScaleVector[0], 0.1, 10);
-					ImGui::SliderFloat("Local Scale Y", &model.localScaleVector[1], 0.1, 10);
-					ImGui::SliderFloat("Local Scale Z", &model.localScaleVector[2], 0.1, 10);
+					ImGui::SliderFloat("Local Scale X", &model.localScaleVector[0], -1, 1);
+					ImGui::SliderFloat("Local Scale Y", &model.localScaleVector[1], -1, 1);
+					ImGui::SliderFloat("Local Scale Z", &model.localScaleVector[2], -1, 1);
 
 					ImGui::Separator();
 
 					ImGui::Checkbox("Lock All Local Axis", &(model.uniformLocalScale));
-					ImGui::SliderFloat("Local Scale Locked", &(model.localScale), 0.1, 10);
+					ImGui::SliderFloat("Local Scale Locked", &(model.localScale), 0.1, 1000);
 
 					ImGui::Separator();
 					ImGui::Separator();
 
 
 					ImGui::Text("Local Translate:");
-					ImGui::SliderFloat("Local Translate X", &model.localTranslateVector[0], 0.0, 0.3);
-					ImGui::SliderFloat("Local Translate Y", &model.localTranslateVector[1], 0.0, 0.3);
-					ImGui::SliderFloat("Local Translate Z", &model.localTranslateVector[2], 0.0, 0.3);
+					ImGui::SliderFloat("Local Translate X", &model.localTranslateVector[0], -1, 1);
+					ImGui::SliderFloat("Local Translate Y", &model.localTranslateVector[1], -1, 1);
+					ImGui::SliderFloat("Local Translate Z", &model.localTranslateVector[2], -10, 10);
 
 					ImGui::Separator();
 					ImGui::Separator();
@@ -545,18 +546,18 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 
 					ImGui::Text("World Translate:");
-					ImGui::SliderFloat("World Translate X", &model.worldTranslateVector[0], 0.05, 10);
-					ImGui::SliderFloat("World Translate Y", &model.worldTranslateVector[1], 0.05, 10);
-					ImGui::SliderFloat("World Translate Z", &model.worldTranslateVector[2], 0.05, 10);
+					ImGui::SliderFloat("World Translate X", &model.worldTranslateVector[0], -1, 1);
+					ImGui::SliderFloat("World Translate Y", &model.worldTranslateVector[1], -1, 1);
+					ImGui::SliderFloat("World Translate Z", &model.worldTranslateVector[2], -1, 1);
 
 					ImGui::Separator();
 					ImGui::Separator();
 
 
 					ImGui::Text("World Rotate:");
-					ImGui::SliderFloat("World Rotate X", &model.worldRotateVector[0], 1, 10);
-					ImGui::SliderFloat("World Rotate Y", &model.worldRotateVector[1], 1, 10);
-					ImGui::SliderFloat("World Rotate Z", &model.worldRotateVector[2], 1, 10);
+					ImGui::SliderFloat("World Rotate X", &model.worldRotateVector[0], 0, 400);
+					ImGui::SliderFloat("World Rotate Y", &model.worldRotateVector[1], 0, 400);
+					ImGui::SliderFloat("World Rotate Z", &model.worldRotateVector[2], 0, 400);
 
 					ImGui::Separator();
 					ImGui::Separator();
@@ -569,10 +570,10 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				ImGui::Checkbox("Draw Bounding Box", &(model.drawBoundingBox));
 				ImGui::Separator();
 				ImGui::Checkbox("Draw Vertex Normals", &(model.drawVertexNormals));
-				ImGui::InputFloat("Vertex Normals Scale", &(model.vertexNormalsScale), 0.05, 1, "%.2f");
+				ImGui::SliderFloat("Vertex Normals Scale", &(model.vertexNormalsScale), 0, 1);
 				ImGui::Separator();
 				ImGui::Checkbox("Draw Face Normals", &(model.drawFaceNormals));
-				ImGui::InputFloat("Face Normals Scale", &(model.faceNormalsScale), 0.0001, 1, "%.4f");
+				ImGui::SliderFloat("Face Normals Scale", &(model.faceNormalsScale),0, 30);
 			}
 		}
 
