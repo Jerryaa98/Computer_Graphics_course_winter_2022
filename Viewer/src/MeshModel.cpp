@@ -218,10 +218,6 @@ std::vector<std::vector<glm::vec2>> MeshModel::Draw(glm::mat4x4 cameraTransform)
             glm::vec2 n2 = this->normals.at(n2Index);
             glm::vec2 n3 = this->normals.at(n3Index);
 
-            //glm::vec2 n1 = newNormals.at(n1Index);
-            //glm::vec2 n2 = newNormals.at(n2Index);
-            //glm::vec2 n3 = newNormals.at(n3Index);
-
             std::vector<glm::vec2> pairN1;
             pairN1.push_back(v1);
             pairN1.push_back(v1 + (vertexNormalsScale * n1));
