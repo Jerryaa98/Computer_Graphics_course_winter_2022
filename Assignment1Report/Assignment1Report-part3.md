@@ -38,6 +38,11 @@ We can now draw the world and model Axes in the meshview and display them on the
 
 ![N|Solid](part3Pics/axisRot.gif)
 
+here we clearly see hpw the transforms are done relative to the axes as well
+
+![N|Solid](part3Pics/axisTransforms2.gif)
+
+
 ### Non-Commuting Transformations
 
 let's show 2 different transformations and see that they are not commutative, first we'll apply local translate then world rotation, and then we'll apply world translation and local rotation.
@@ -102,7 +107,7 @@ the 3D effect is pretty strong here, we can look at the head and the tail of the
 
 the 3D effect is pretty weak here, it is almost like a 2D drawing, we can look at the head and the tail of the bunny and see that the distance is negligible.
 
-![N|Solid](part3Pics/smallFrustum.jpg)
+![N|Solid](part3Pics/bigFrustum.jpg)
 
 ### Position at (1,1,1)
 
