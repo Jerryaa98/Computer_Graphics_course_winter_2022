@@ -1,7 +1,7 @@
 # Assignmnet1Report_Part3
 
 #### Overview
-this is part 3 of assignment 1, basically we added a couple of features to the previous part, we modified the GUI such that now it can also draw all axis for different models and the world, also now we have the ability to add cameras and do different operations using these cameras like rotations and translations, and because we can add multiple cameras we can also change out "eye" and our point of view on the models.
+this is part 3 of assignment 1, basically we added a couple of features to the previous part, we modified the GUI such that now it can also draw all axess for different models and the world axes, also now we have the ability to add cameras and do different operations using these cameras like rotations and translations, and because we can add multiple cameras we can also change our "eye" and our point of view on the models.
 gifs and screenshots will make it easier to understand down the page.
 
 ## Cameras
@@ -22,30 +22,32 @@ we also let the user move the camera around in the space.
 
 #### Rotations
 
+here we can see the difference between camera rotaions in local form and in world form.
+
 ![N|Solid](part3Pics/CamRotationsLocalVsWorld.gif)
 
 ### Resizing windows
 
 the user can now change and resize the meshviewer window with the model staying in the relative position as it was, for example if the model was in the center it will still be in the center relative to the new window size.
 
-we did that by calling the render function again witht the new dimensions.
+we did that by calling the render function again with the new dimensions.
 
 ![N|Solid](part3Pics/screenResizee.gif)
 
 ### Axis Drawings and Relative Transforms
 
-We can now draw the world and model Axes in the meshview and display them on the screen so it is easier for us to understand the transform, in the gif below we see transformations and how they are relative on different axes for the model and the world.
+We can now draw the world and model Axes in the meshview and display them on the screen so it is easier for us to understand the transform, in the gif below we see transformations and how they appear reatively between the different axes for the model and the world.
 
 ![N|Solid](part3Pics/axisRot.gif)
 
-here we clearly see hpw the transforms are done relative to the axes as well
+here we clearly see how the transforms are done relative to the axes as well
 
 ![N|Solid](part3Pics/axisTransforms2.gif)
 
 
 ### Non-Commuting Transformations
 
-let's show 2 different transformations and see that they are not commutative, first we'll apply local translate then world rotation, and then we'll apply world translation and local rotation.
+let's show 2 different transformations and see that they are not commutative, first we'll apply local translate then world rotation, and then we'll apply world translation then local rotation.
 
 #### Local Translate And World Rotation
 
@@ -85,8 +87,10 @@ Vertex normals are already in the OBJ file.
 
 ### Perspective Projection
 
-In the UI, like the orthographic projection, the user can change field of view including near and far which have effect here.
+In the UI, like the orthographic projection, the user can change the field of view including near and far which have effect here.
+
 here is a gif showing the comparison between the 2 persepctives.
+
 in the perspective we can see the object coming closer to the camera.
 
 #### Perspective
@@ -111,7 +115,7 @@ the 3D effect is pretty weak here, it is almost like a 2D drawing, we can look a
 
 ### Position at (1,1,1)
 
-We set the camera at position (1,1,1) and se the view volume at the object so we can get a point of view from that particular point.
+We set the camera at position (1,1,1) and set the view volume to look at the object so we can get a point of view from that particular point.
 
 ![N|Solid](part3Pics/111position.jpg)
 
