@@ -121,6 +121,11 @@ we can load multiple objects and cameras to the scene and switch between the cam
 
 ![N|Solid](part3Pics/multipleObjs.gif)
 
+here we can see the cameras as objects from the other camera's view (behind the banana)
+we switch the view between cam0 and cam1 and the cameras actually appear in the background
+
+![N|Solid](part3Pics/multiplecameras.gif)
+
 ### GUI
 
 here is a small tutorial on the Gui we implimented
