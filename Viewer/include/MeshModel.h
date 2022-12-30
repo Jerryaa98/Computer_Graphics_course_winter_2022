@@ -42,6 +42,8 @@ public:
     int LocalWorldEditObject = 1;
 
     bool trianglesBoundingBoxes = false;
+    bool coloredTriangles = false;
+    bool trianglesOutlines = true;
 
     std::vector<glm::vec3> boundingBox;
     std::vector<glm::vec3> axis;
@@ -57,7 +59,7 @@ public:
     glm::mat4x4 objectTransform;
     glm::mat4x4 objectTransformation = glm::mat4x4(1.0f);
 
-
+    glm::vec3 color = glm::vec3((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);
 
 private:
 

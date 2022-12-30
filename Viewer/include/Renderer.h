@@ -20,8 +20,11 @@ public:
 	void PlotLineLow(const glm::ivec3& p1, const glm::ivec3& p2, const glm::vec3& color);
 	void DrawLine(const glm::ivec3& p1, const glm::ivec3& p2, const glm::vec3& color);
 	void CreateBuffers(int w, int h);
-	void DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::vec3& color, bool trianglesBoundingBoxes);
-	
+	bool pointInTriangle(const glm::ivec2& curr_point, const glm::ivec2& p1, const glm::ivec2& p2, const glm::ivec2& p3);
+	float triangleArea(glm::vec3 v, glm::vec3 u, glm::vec2 w);
+	void DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::vec3& color, MeshModel& model);
+
+
 private:
 	void PutPixel(const int i, const int j, const glm::vec3& color, float depth);
 	void Renderer::DrawCircleOfLines(int start_width, int start_height);
