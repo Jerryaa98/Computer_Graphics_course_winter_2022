@@ -154,11 +154,9 @@ void MeshModel::GetTransform() {
 
 }
 
-std::vector<std::vector<glm::vec2>> MeshModel::Draw(glm::mat4x4 cameraTransform) {
+std::vector<glm::vec3> MeshModel::Draw(glm::mat4x4 cameraTransform) {
     this->GetTransform();
-    std::vector<std::vector<glm::vec2>> pairs;
     std::vector<glm::vec3> newVertices;
-    std::vector<glm::vec3> newNormals;
     glm::mat4x4 matrix = cameraTransform * this->objectTransform;
     int verticesCount = this->vertices.size();
     for (int i = 0; i < verticesCount; i++) {
@@ -168,109 +166,91 @@ std::vector<std::vector<glm::vec2>> MeshModel::Draw(glm::mat4x4 cameraTransform)
         newVertices.push_back(glm::vec3(vector.x / vector.w, vector.y / vector.w, vector.z / vector.w));
     }
 
-    int normalsCount = this->normals.size();
-    for (int i = 0; i < normalsCount; i++) {
-        glm::vec4 vector = matrix * glm::vec4(this->normals.at(i), 1.0f);
-
-        // cut the w coordinate
-        newNormals.push_back(glm::vec3(vector.x / vector.w, vector.y / vector.w, vector.z / vector.w));
-    }
 
     int facesCount = this->GetFacesCount();
     int counter = 0;
-    std::vector<std::vector<glm::vec2>> vertexNormalsPairs;
-    std::vector<std::vector<glm::vec2>> faceNormalsPairs;
-    for (int j = 0; j < facesCount; j++) {
-        Face face = GetFace(j);
 
-        // VERTICES
-        int v1Index = face.GetVertexIndex(0) - 1;
-        int v2Index = face.GetVertexIndex(1) - 1;
-        int v3Index = face.GetVertexIndex(2) - 1;
+    std::vector<std::vector<glm::vec3>> vertexNormalsPairs;
+    std::vector<std::vector<glm::vec3>> faceNormalsPairs;
+    if (drawVertexNormals || drawFaceNormals) {
+        for (int j = 0; j < facesCount; j++) {
+            Face face = GetFace(j);
 
-        glm::vec2 v1 = newVertices.at(v1Index);
-        glm::vec2 v2 = newVertices.at(v2Index);
-        glm::vec2 v3 = newVertices.at(v3Index);
+            // VERTICES
+            int v1Index = face.GetVertexIndex(0) - 1;
+            int v2Index = face.GetVertexIndex(1) - 1;
+            int v3Index = face.GetVertexIndex(2) - 1;
 
-        std::vector<glm::vec2> pair1;
-        pair1.push_back(v1);
-        pair1.push_back(v2);
+            glm::vec3 v1 = newVertices.at(v1Index);
+            glm::vec3 v2 = newVertices.at(v2Index);
+            glm::vec3 v3 = newVertices.at(v3Index);
 
-        std::vector<glm::vec2> pair2;
-        pair2.push_back(v2);
-        pair2.push_back(v3);
+            if (drawVertexNormals) {
+                // NORMALS
+                int n1Index = face.GetNormalIndex(0) - 1;
+                int n2Index = face.GetNormalIndex(1) - 1;
+                int n3Index = face.GetNormalIndex(2) - 1;
 
-        std::vector<glm::vec2> pair3;
-        pair3.push_back(v1);
-        pair3.push_back(v3);
+                glm::vec3 n1 = this->normals.at(n1Index);
+                glm::vec3 n2 = this->normals.at(n2Index);
+                glm::vec3 n3 = this->normals.at(n3Index);
 
-        pairs.push_back(pair1);
-        pairs.push_back(pair2);
-        pairs.push_back(pair3);
+                std::vector<glm::vec3> pairN1;
+                pairN1.push_back(v1);
+                pairN1.push_back(v1 + (vertexNormalsScale * n1));
 
-        if (drawVertexNormals) {
-            // NORMALS
-            int n1Index = face.GetNormalIndex(0) - 1;
-            int n2Index = face.GetNormalIndex(1) - 1;
-            int n3Index = face.GetNormalIndex(2) - 1;
+                std::vector<glm::vec3> pairN2;
+                pairN2.push_back(v2);
+                pairN2.push_back(v2 + (vertexNormalsScale * n2));
 
-            glm::vec2 n1 = this->normals.at(n1Index);
-            glm::vec2 n2 = this->normals.at(n2Index);
-            glm::vec2 n3 = this->normals.at(n3Index);
+                std::vector<glm::vec3> pairN3;
+                pairN3.push_back(v3);
+                pairN3.push_back(v3 + (vertexNormalsScale * n3));
 
-            std::vector<glm::vec2> pairN1;
-            pairN1.push_back(v1);
-            pairN1.push_back(v1 + (vertexNormalsScale * n1));
+                vertexNormalsPairs.push_back(pairN1);
+                vertexNormalsPairs.push_back(pairN2);
+                vertexNormalsPairs.push_back(pairN3);
 
-            std::vector<glm::vec2> pairN2;
-            pairN2.push_back(v2);
-            pairN2.push_back(v2 + (vertexNormalsScale * n2));
+                this->transformedVertexNormals = vertexNormalsPairs;
+            }
 
-            std::vector<glm::vec2> pairN3;
-            pairN3.push_back(v3);
-            pairN3.push_back(v3 + (vertexNormalsScale * n3));
+            if (drawFaceNormals) {
+                glm::vec3 p1 = newVertices.at(v1Index);
+                glm::vec3 p2 = newVertices.at(v2Index);
+                glm::vec3 p3 = newVertices.at(v3Index);
 
-            vertexNormalsPairs.push_back(pairN1);
-            vertexNormalsPairs.push_back(pairN2);
-            vertexNormalsPairs.push_back(pairN3);
+                glm::vec3 U = p2 - p1;
+                glm::vec3 V = p3 - p1;
 
-            this->transformedVertexNormals = vertexNormalsPairs;
-        }
+                float x = (U.y * V.z) - (U.z * V.y);
+                float y = (U.z * V.x) - (U.x * V.z);
+                float z = (U.x * V.y) - (U.y * V.x);
 
-        if (drawFaceNormals) {
-            glm::vec3 p1 = newVertices.at(v1Index);
-            glm::vec3 p2 = newVertices.at(v2Index);
-            glm::vec3 p3 = newVertices.at(v3Index);
+                glm::vec3 normal = glm::vec3(x, y, z);
 
-            glm::vec3 U = p2 - p1;
-            glm::vec3 V = p3 - p1;
+                glm::vec3 faceCenter = glm::vec3((v1.x + v2.x + v3.x) / 3, (v1.y + v2.y + v3.y) / 3, 1);
 
-            float x = (U.y * V.z) - (U.z * V.y);
-            float y = (U.z * V.x) - (U.x * V.z);
-            float z = (U.x * V.y) - (U.y * V.x);
+                std::vector<glm::vec3> pairFN;
+                pairFN.push_back(faceCenter);
+                pairFN.push_back(faceCenter + glm::vec3(-1 * faceNormalsScale * normal));
 
-            glm::vec3 normal = glm::vec3(x, y, z);
+                faceNormalsPairs.push_back(pairFN);
 
-            glm::vec2 faceCenter = glm::vec2((v1.x + v2.x + v3.x) / 3, (v1.y + v2.y + v3.y) / 3);
-
-            std::vector<glm::vec2> pairFN;
-            pairFN.push_back(faceCenter);
-            pairFN.push_back(faceCenter + glm::vec2(-1 * faceNormalsScale * normal));
-
-            faceNormalsPairs.push_back(pairFN);
-
-            this->transformedFaceNormals = faceNormalsPairs;
+                this->transformedFaceNormals = faceNormalsPairs;
+            }
         }
     }
 
+
+
     if (drawBoundingBox) {
         int count = this->boundingBox.size();
-        std::vector<glm::vec2> newTransformed;
+        std::vector<glm::vec3> newTransformed;
         for (int i = 0; i < count; i++) {
             glm::vec4 vector = matrix * glm::vec4(this->boundingBox.at(i), 1.0f);
 
             // cut the w coordinate
-            newTransformed.push_back(glm::vec2(vector.x / vector.w, vector.y / vector.w));
+            newTransformed.push_back(glm::vec3(vector.x / vector.w, vector.y / vector.w, 1));
             transformedBoundingBox = newTransformed;
         }
     }
@@ -281,17 +261,17 @@ std::vector<std::vector<glm::vec2>> MeshModel::Draw(glm::mat4x4 cameraTransform)
 
     if (drawAxis) {
         int count = this->axis.size();
-        std::vector<glm::vec2> newTransformed;
+        std::vector<glm::vec3> newTransformed;
         for (int i = 0; i < count; i++) {
             glm::vec4 vector = matrix * glm::vec4(this->axis.at(i), 1.0f);
 
             // cut the w coordinate
-            newTransformed.push_back(glm::vec2(vector.x / vector.w, vector.y / vector.w));
+            newTransformed.push_back(glm::vec3(vector.x / vector.w, vector.y / vector.w, 1));
             transformedAxis = newTransformed;
         }
     }
 
-    return pairs;
+    return newVertices;
 }
 
 glm::vec2 MeshModel::GetVertixPoint(int i)

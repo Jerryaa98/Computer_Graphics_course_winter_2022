@@ -15,8 +15,7 @@ public:
 	glm::vec2 MeshModel::GetVertixPoint(int i);
 
     void GetTransform();
-    std::vector<std::vector<glm::vec2>> Draw(glm::mat4x4 transformMat);
-
+    std::vector<glm::vec3> Draw(glm::mat4x4 transformMat);
 
     float localTranslateVector[3] = { 0, 0, 0 };
     float localRotateVector[3] = { 0, 0, 0 };
@@ -42,13 +41,15 @@ public:
 
     int LocalWorldEditObject = 1;
 
+    bool trianglesBoundingBoxes = false;
+
     std::vector<glm::vec3> boundingBox;
     std::vector<glm::vec3> axis;
 
-    std::vector<glm::vec2> transformedBoundingBox;
-    std::vector<glm::vec2> transformedAxis;
-    std::vector<std::vector<glm::vec2>> transformedVertexNormals;
-    std::vector<std::vector<glm::vec2>> transformedFaceNormals;
+    std::vector<glm::vec3> transformedBoundingBox;
+    std::vector<glm::vec3> transformedAxis;
+    std::vector<std::vector<glm::vec3>> transformedVertexNormals;
+    std::vector<std::vector<glm::vec3>> transformedFaceNormals;
 
     std::vector<Face> faces;
     std::vector<glm::vec3> vertices;

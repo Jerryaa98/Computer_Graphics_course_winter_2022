@@ -574,6 +574,8 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				ImGui::Separator();
 				ImGui::Checkbox("Draw Face Normals", &(model.drawFaceNormals));
 				ImGui::SliderFloat("Face Normals Scale", &(model.faceNormalsScale),0, 30);
+				ImGui::Separator();
+				ImGui::Checkbox("Triangles Bounding Boxes", &(model.trianglesBoundingBoxes));
 			}
 		}
 
