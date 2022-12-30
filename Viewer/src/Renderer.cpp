@@ -709,17 +709,56 @@ void Renderer::DrawActualCircle(int start_width, int start_height) {
 //	
 //}
 
-void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::vec3& color, bool trianglesBoundingBoxes) {
+bool Renderer::pointInTriangle(const glm::ivec2& point, const glm::ivec2& p1, const glm::ivec2& p2, const glm::ivec2& p3){
+	float val1 = (p1.x - p3.x) * (point.y - p3.y) - (p1.y - p3.y) * (point.x - p3.x);
+	float val2 = (p2.x - p1.x) * (point.y - p1.y) - (p2.y - p1.y) * (point.x - p1.x);
+	if ((val1 < 0) != (val2 < 0) && val1 != 0 && val2 != 0)
+		return false;
+	float val3 = (p3.x - p2.x) * (point.y - p2.y) - (p3.y - p2.y) * (point.x - p2.x);
+	if (val3 == 0 || ((val3 < 0) == (val1 + val2 <= 0)))
+		return true;
+	return false;
+}
 
-	float avgZ = (p1.z + p2.z + p3.z) / 3;
+float Renderer::triangleArea(glm::vec3 p1, glm::vec3 p2, glm::vec2 w) {
+	float vu, uw, vw, dx, dy, s;
+	dx = p1.x - w.x;
+	dy = p1.y - w.y;
+	vw = sqrt(dx * dx + dy * dy);
+	dx = p2.x - w.x;
+	dy = p2.y - w.y;
+	uw = sqrt(dx * dx + dy * dy);
+	dx = p1.x - p2.x;
+	dy = p1.y - p2.y;
+	vu = sqrt(dx * dx + dy * dy);
+	s = (vu + uw + vw) / 2;
+	return  sqrt(s * (s - vu) * (s - uw) * (s - vw));
+}
 
-	if (trianglesBoundingBoxes) {
-		glm::vec3 randomColor = glm::vec3(0.5, 0.5, 0.5);
-		float xMin = min(min(p1.x, p2.x), p3.x);
-		float yMin = min(min(p1.y, p2.y), p3.y);
 
-		float xMax = max(max(p1.x, p2.x), p3.x);
-		float yMax = max(max(p1.y, p2.y), p3.y);
+
+void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::vec3& color, MeshModel& model) {
+	if (model.trianglesOutlines) {
+		DrawLine(p1, p2, glm::vec3(1, 1, 1));
+		DrawLine(p2, p3, glm::vec3(1, 1, 1));
+		DrawLine(p1, p3, glm::vec3(1, 1, 1));
+	}
+
+	glm::vec3 randomColor = glm::vec3((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);
+	float xMin = min(min(p1.x, p2.x), p3.x);
+	float yMin = min(min(p1.y, p2.y), p3.y);
+
+	float xMax = max(max(p1.x, p2.x), p3.x);
+	float yMax = max(max(p1.y, p2.y), p3.y);
+
+	if (model.trianglesBoundingBoxes) {
+		DrawLine(glm::vec3(xMin, yMin, 100), glm::vec3(xMin, yMax, 100), randomColor);
+		DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMax, yMax, 100), randomColor);
+		DrawLine(glm::vec3(xMin, yMax, 100), glm::vec3(xMax, yMax, 100), randomColor);
+		DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMin, yMin, 100), randomColor);
+	}
+
+	if (model.coloredTriangles) {
 
 		// line equations: y = mx + b
 		float m1, m2, m3, b1, b2, b3;
@@ -732,26 +771,21 @@ void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::ve
 		b2 = (-1 * m2 * p2.x) + p2.y;
 		b3 = (-1 * m3 * p3.x) + p3.y;
 
-		for (int y = yMax - 1; y > yMin; y--) {
+		for (int y = yMax; y >= yMin; y--) {
 			bool cutFlag = false;
-			for (int x = xMin - 1; x < xMax; x++) {
-				int lineCut1 = (m1 * x) + b1;
-				int lineCut2 = (m2 * x) + b2;
-				int lineCut3 = (m3 * x) + b3;
+			for (int x = xMin; x <= xMax; x++) {
+				glm::ivec2 point = glm::ivec2(x, y);
+				if (pointInTriangle(point, p1, p2, p3)) {
+					float a1 = triangleArea(p1, p2, point);
+					float a2 = triangleArea(p2, p3, point);
+					float a3 = triangleArea(p1, p3, point);
 
-				if ((lineCut1 == y || lineCut2 == y || lineCut3 == y) && cutFlag) {
-					break;
-				}
-				else if (lineCut1 == y || lineCut2 == y || lineCut3 == y) {
-					PutPixel(x, y, randomColor, avgZ);
-					cutFlag = true;
-				}
-				else if (cutFlag) {
-					PutPixel(x, y, randomColor, avgZ);
+					float A = a1 + a2 + a3;
+					float z = ((a1 * p3.z) / A) + ((a2 * p1.z) / A) + ((a3 * p2.z) / A);
+					PutPixel(x, y, randomColor, z);
 				}
 			}
 		}
-
 	}
 }
 
@@ -821,7 +855,7 @@ void Renderer::Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel
 			v3.x = (v3.x + 1) * half_width;
 			v3.y = (v3.y + 1) * half_height;
 
-			DrawTriangle(v1, v2, v3, color, model.trianglesBoundingBoxes);
+			DrawTriangle(v1, v2, v3, color, model);
 		}
 
 		if (model.drawAxis) {
