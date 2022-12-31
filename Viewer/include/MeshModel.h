@@ -31,6 +31,9 @@ public:
 
     int maxScale = 0;
 
+    float maxZ = -1.0f * FLT_MAX;
+    float minZ = FLT_MAX;
+
     bool drawAxis = false;
     bool drawBoundingBox = false;
     bool drawVertexNormals = false;

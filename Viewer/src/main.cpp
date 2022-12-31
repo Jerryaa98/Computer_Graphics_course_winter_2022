@@ -500,9 +500,9 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				if (model.LocalWorldEditObject) {
 					ImGui::Text("--- LOCAL TRANSFORMATIONS ---");
 					ImGui::Text("Local Scale:");
-					ImGui::SliderFloat("Local Scale X", &model.localScaleVector[0], -1, 1);
-					ImGui::SliderFloat("Local Scale Y", &model.localScaleVector[1], -1, 1);
-					ImGui::SliderFloat("Local Scale Z", &model.localScaleVector[2], -1, 1);
+					ImGui::SliderFloat("Local Scale X", &model.localScaleVector[0], -1, 5);
+					ImGui::SliderFloat("Local Scale Y", &model.localScaleVector[1], -1, 5);
+					ImGui::SliderFloat("Local Scale Z", &model.localScaleVector[2], -1, 5);
 
 					ImGui::Separator();
 

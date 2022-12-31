@@ -24,6 +24,9 @@ public:
 	float triangleArea(glm::vec3 v, glm::vec3 u, glm::vec2 w);
 	void DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::vec3& color, MeshModel& model);
 
+	float maxZ = -1.0f * FLT_MAX;
+	float minZ = FLT_MAX;
+
 
 private:
 	void PutPixel(const int i, const int j, const glm::vec3& color, float depth);
