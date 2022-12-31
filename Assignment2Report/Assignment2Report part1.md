@@ -18,10 +18,10 @@ here showcase the beethoven model, we used this because it is easy to see when t
 
 **With Z-Buffer**
 
-![beethovenwithzbuffer](part1Pics/beethovenwithzbuffer.jpg)
+![beethovenwithzbuffer](part1Pics/beethovenwithzbuffer.gif)
 
 **Linear Interpolation and 1 color coloring**
 
-![banana1color](part1Pics/banana1color.jpg)
+![banana1color](part1Pics/banana1color.gif)
 
-![bunny1color](part1Pics/bunny1color.jpg)
+![bunny1color](part1Pics/bunny1color.gif)
