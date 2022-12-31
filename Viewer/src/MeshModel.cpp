@@ -1,6 +1,7 @@
 #include "MeshModel.h"
 #include <iostream>
 #include <glm\gtx\string_cast.hpp>
+#include <algorithm>
 
 MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, const std::string& model_name) :
 	faces(faces),
@@ -158,12 +159,16 @@ std::vector<glm::vec3> MeshModel::Draw(glm::mat4x4 cameraTransform) {
     this->GetTransform();
     std::vector<glm::vec3> newVertices;
     glm::mat4x4 matrix = cameraTransform * this->objectTransform;
+    maxZ = -1.0f * FLT_MAX;
+    minZ = FLT_MAX;
     int verticesCount = this->vertices.size();
     for (int i = 0; i < verticesCount; i++) {
         glm::vec4 vector = matrix * glm::vec4(this->vertices.at(i), 1.0f);
 
         // cut the w coordinate
         newVertices.push_back(glm::vec3(vector.x / vector.w, vector.y / vector.w, vector.z / vector.w));
+        minZ = std::min(minZ, (vector.z / vector.w));
+        maxZ = std::max(maxZ, vector.z / vector.w);
     }
 
 
