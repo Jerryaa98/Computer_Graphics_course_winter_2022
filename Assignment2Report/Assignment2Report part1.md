@@ -10,7 +10,7 @@ The user can now draw a bounding box around each triangle in the model and color
 
 We implemented the z-buffer such that we prioritized the triangles that are closer to the camera, also we implemented the gray scale approach we talked about in the lecture where pixels are colored using linear interpolation between the chosen color and a darker color as we get further back from the camera.
 
-here showcase the beethoven model, we used this because it is easy to see when the triangles in the face and the back of the head overalp.
+here we showcase the beethoven model, we used this because it is easy to see when the triangles in the face and the back of the head overalp.
 
 **Without Z-Buffer**
 
