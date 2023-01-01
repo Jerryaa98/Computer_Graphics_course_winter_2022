@@ -2,7 +2,7 @@
 
 The user can now draw a bounding box around each triangle in the model and color them using the **Scan Line approach**, we made the colors appear randomly in the renderer, we can  toggle them off and on via checkboxes in the GUI.
 
-GIF example:
+**GIF example:**
 
 ![TriangleBoundingBoxAndColoring](part1Pics/TriangleBoundingBoxAndColoring-min.gif)
 
