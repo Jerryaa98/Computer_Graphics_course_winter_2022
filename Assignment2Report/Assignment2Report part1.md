@@ -2,6 +2,8 @@
 
 The user can now draw a bounding box around each triangle in the model and color them using the **Scan Line approach**, we made the colors appear randomly in the renderer, we can  toggle them off and on via checkboxes in the GUI.
 
+**Note: We fixed the fading of the bounding boxes after we finished the exersize so thats why the linear interpolation works on the random coloring of the triangles.
+
 **GIF example:**
 
 ![TriangleBoundingBoxAndColoring](part1Pics/TriangleBoundingBoxAndColoring-min.gif)
