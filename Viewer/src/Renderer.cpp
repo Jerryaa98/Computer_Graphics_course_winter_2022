@@ -10,6 +10,7 @@
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 #define Z_INDEX(width,x,y) ((x)+(y)*(width))
 
+
 Renderer::Renderer(int viewport_width, int viewport_height) :
 	viewport_width(viewport_width),
 	viewport_height(viewport_height)
@@ -744,21 +745,10 @@ void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::ve
 		DrawLine(p1, p3, glm::vec3(1, 1, 1));
 	}
 
-	//glm::vec3 randomColor = glm::vec3((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);
-	glm::vec3 randomColor = glm::vec3(1, 0, 0);
+	glm::vec3 randomColor = glm::vec3((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);
+	//glm::vec3 randomColor = glm::vec3(1, 1, 1);
 
-	float xMin = min(min(p1.x, p2.x), p3.x);
-	float yMin = min(min(p1.y, p2.y), p3.y);
-
-	float xMax = max(max(p1.x, p2.x), p3.x);
-	float yMax = max(max(p1.y, p2.y), p3.y);
-
-	if (model.trianglesBoundingBoxes) {
-		DrawLine(glm::vec3(xMin, yMin, 100), glm::vec3(xMin, yMax, 100), randomColor);
-		DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMax, yMax, 100), randomColor);
-		DrawLine(glm::vec3(xMin, yMax, 100), glm::vec3(xMax, yMax, 100), randomColor);
-		DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMin, yMin, 100), randomColor);
-	}
+	
 
 	if (model.coloredTriangles) {
 
@@ -772,6 +762,12 @@ void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::ve
 		b1 = (-1 * m1 * p1.x) + p1.y;
 		b2 = (-1 * m2 * p2.x) + p2.y;
 		b3 = (-1 * m3 * p3.x) + p3.y;
+
+		float xMin = min(min(p1.x, p2.x), p3.x);
+		float yMin = min(min(p1.y, p2.y), p3.y);
+
+		float xMax = max(max(p1.x, p2.x), p3.x);
+		float yMax = max(max(p1.y, p2.y), p3.y);
 
 		for (int y = yMax; y >= yMin; y--) {
 			bool cutFlag = false;
@@ -827,8 +823,8 @@ void Renderer::Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel
 
 	for (int i = 0; i < scene.GetModelCount(); i++) {
 		MeshModel& model = scene.GetModel(i);
-		this->maxZ = max(this->maxZ, model.maxZ);
-		this->minZ = min(this->minZ, model.minZ);
+		this->maxZ = std::max(this->maxZ, model.maxZ);
+		this->minZ = std::min(this->minZ, model.minZ);
 	}
 
 	for (int i = 0; i < scene.GetModelCount(); i++) {
@@ -865,6 +861,29 @@ void Renderer::Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel
 
 			v3.x = (v3.x + 1) * half_width;
 			v3.y = (v3.y + 1) * half_height;
+
+			if (model.trianglesBoundingBoxes) {
+
+				float xMin = min(min(v1.x, v2.x), v3.x);
+				float yMin = min(min(v1.y, v2.y), v3.y);
+									 	   	  
+				float xMax = max(max(v1.x, v2.x), v3.x);
+				float yMax = max(max(v1.y, v2.y), v3.y);
+
+				glm::vec3 faceCenter = (model.GetVertex(j, 0) + model.GetVertex(j, 1) + model.GetVertex(j, 2))/3.0f;
+				glm::mat4x4 MeshModelRotation = model.GetRotation();
+
+				faceCenter = glm::vec3(MeshModelRotation * glm::vec4(faceCenter, 1.0f));
+
+
+				float colordepth = glm::clamp((faceCenter.z), model.minCoordinates[2] , abs(model.maxCoordinates[2]));
+				colordepth *= 1.3;
+				glm::vec3 createdcolor = glm::vec3(colordepth, 0, 0);
+				DrawLine(glm::vec3(xMin, yMin, 100), glm::vec3(xMin, yMax, 100), createdcolor);
+				DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMax, yMax, 100), createdcolor);
+				DrawLine(glm::vec3(xMin, yMax, 100), glm::vec3(xMax, yMax, 100), createdcolor);
+				DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMin, yMin, 100), createdcolor);
+			}
 
 			DrawTriangle(v1, v2, v3, color, model);
 		}

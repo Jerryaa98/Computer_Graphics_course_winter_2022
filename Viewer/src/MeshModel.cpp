@@ -28,11 +28,15 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
         if (y > maxCoordinates[1]) maxCoordinates[1] = y;
         if (z > maxCoordinates[2]) maxCoordinates[2] = z;
         
+        Z_Max = glm::max(Z_Max, z);
+        Z_Min = glm::max(Z_Min, z);
+
+
 
         // get minimum
-        if (x < maxCoordinates[0]) maxCoordinates[0] = x;
-        if (y < maxCoordinates[1]) maxCoordinates[1] = y;
-        if (z < maxCoordinates[2]) maxCoordinates[2] = z;
+        if (x < minCoordinates[0]) minCoordinates[0] = x;
+        if (y < minCoordinates[1]) minCoordinates[1] = y;
+        if (z < minCoordinates[2]) minCoordinates[2] = z;
         
     }
 
@@ -81,6 +85,14 @@ int MeshModel::GetFacesCount() const
 const std::string& MeshModel::GetModelName() const
 {
 	return model_name;
+}
+
+glm::mat4x4& MeshModel::GetRotation()
+{
+    glm::mat4x4 Local = localRotateXMat * localRotateYMat * localRotateZMat;
+    glm::mat4x4 World = worldRotateXMat * worldRotateYMat * worldRotateZMat;
+
+    return Local * World;
 }
 
 void MeshModel::GetTransform() {
@@ -282,4 +294,8 @@ std::vector<glm::vec3> MeshModel::Draw(glm::mat4x4 cameraTransform) {
 glm::vec2 MeshModel::GetVertixPoint(int i)
 {
 	return vertices[i];
+}
+
+glm::vec3& MeshModel::GetVertex(int i, int j) {
+    return vertices[this->GetFace(i).GetVertexIndex(j) - float(1)];
 }
