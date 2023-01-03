@@ -481,9 +481,9 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 
 					ImGui::Text("Local Rotate:");
-					ImGui::SliderFloat("Local Rotate X", &model.localRotateVector[0],1 ,100);
-					ImGui::SliderFloat("Local Rotate Y", &model.localRotateVector[1],1 ,100);
-					ImGui::SliderFloat("Local Rotate Z", &model.localRotateVector[2],1 ,100);
+					ImGui::SliderFloat("Local Rotate X", &model.localRotateVector[0],1 ,360);
+					ImGui::SliderFloat("Local Rotate Y", &model.localRotateVector[1],1 ,360);
+					ImGui::SliderFloat("Local Rotate Z", &model.localRotateVector[2],1 ,360);
 
 					ImGui::Separator();
 					ImGui::Separator();

@@ -13,7 +13,8 @@ public:
 	int GetFacesCount() const;
 	const std::string& GetModelName() const;
 	glm::vec2 MeshModel::GetVertixPoint(int i);
-
+    glm::vec3& MeshModel::GetVertex(int i, int j);
+    glm::mat4x4& MeshModel::GetRotation();
     void GetTransform();
     std::vector<glm::vec3> Draw(glm::mat4x4 transformMat);
 
@@ -64,11 +65,13 @@ public:
 
     glm::vec3 color = glm::vec3((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);
 
-private:
+    float Z_Min =  static_cast<float>(INFINITY);
+    float Z_Max = -1 * static_cast<float>(INFINITY);
+
 
     float maxCoordinates[3] = { -1.0f * FLT_MAX, -1.0f * FLT_MAX, -1.0f * FLT_MAX };
     float minCoordinates[3] = { FLT_MAX, FLT_MAX, FLT_MAX };
-
+private:
     // local matrices (init with identity matrix)
     glm::mat4x4 localTranslateMat = glm::mat4x4(1.0f);
     glm::mat4x4 localRotateXMat = glm::mat4x4(1.0f);
