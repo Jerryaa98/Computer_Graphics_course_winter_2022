@@ -21,6 +21,11 @@ here we showcase the beethoven model, we used this because it is easy to see whe
 ![beethovenwithzbuffer](part1Pics/beethovenwithzbuffer-min.gif)
 
 **Linear Interpolation and 1 color coloring**
+the models are loaded in both gray scale and red coloring, might add a color changer later on.
+
+![banana1color](part1Pics/banana1color.gif)
+
+![bunny1color](part1Pics/bunny1color.gif)
 
 ![banana1color](part1Pics/banana1color-min.gif)
 
