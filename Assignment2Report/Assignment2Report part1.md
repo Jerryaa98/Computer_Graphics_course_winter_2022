@@ -2,7 +2,8 @@
 
 The user can now draw a bounding box around each triangle in the model and color them using the **Scan Line approach**, we made the colors appear randomly in the renderer, we can  toggle them off and on via checkboxes in the GUI.
 
-**Note: We fixed the fading of the bounding boxes after we finished the exersize so thats why the linear interpolation works on the random coloring of the triangles.
+**Note: We fixed the fading of the bounding boxes after we finished the exersize so thats why the linear interpolation and the black shading works on the random coloring of the triangles.
+you can see how it used to be on the beethoven model in the GIF attached later down wwith the Z-buffer.
 
 **GIF example:**
 
