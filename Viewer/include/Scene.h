@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "MeshModel.h"
 #include "Utils.h"
+#include "Light.h"
 
 using namespace std;
 
@@ -33,11 +34,16 @@ public:
 	std::vector<std::string> modelsList;
 	std::vector<std::string> camerasList;
 
+	void Scene::AddLight(const std::shared_ptr<Light>& light);
+	int GetLightCount() const;
+	Light& GetLight(int index);
+
 	bool drawWorldAxis = false;
 	
 private:
 	vector<shared_ptr<MeshModel>> mesh_models;
 	vector<shared_ptr<Camera>> cameras;
+	vector<shared_ptr<Light>> lights;
 
 	int active_camera_index;
 	int active_model_index;

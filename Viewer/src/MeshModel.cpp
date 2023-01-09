@@ -87,13 +87,13 @@ const std::string& MeshModel::GetModelName() const
 	return model_name;
 }
 
-glm::mat4x4& MeshModel::GetRotation()
-{
-    glm::mat4x4 Local = localRotateXMat * localRotateYMat * localRotateZMat;
-    glm::mat4x4 World = worldRotateXMat * worldRotateYMat * worldRotateZMat;
-
-    return Local * World;
-}
+//glm::mat4x4& MeshModel::GetRotation()
+//{
+//    glm::mat4x4 Local = localRotateXMat * localRotateYMat * localRotateZMat;
+//    glm::mat4x4 World = worldRotateXMat * worldRotateYMat * worldRotateZMat;
+//
+//    return Local * World;
+//}
 
 void MeshModel::GetTransform() {
     // calculate local transformations
@@ -296,6 +296,6 @@ glm::vec2 MeshModel::GetVertixPoint(int i)
 	return vertices[i];
 }
 
-glm::vec3& MeshModel::GetVertex(int i, int j) {
-    return vertices[this->GetFace(i).GetVertexIndex(j) - float(1)];
-}
+//glm::vec3& MeshModel::GetVertex(int i, int j) {
+//    return vertices[this->GetFace(i).GetVertexIndex(j) - float(1)];
+//}

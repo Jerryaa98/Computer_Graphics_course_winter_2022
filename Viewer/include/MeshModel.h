@@ -13,8 +13,7 @@ public:
 	int GetFacesCount() const;
 	const std::string& GetModelName() const;
 	glm::vec2 MeshModel::GetVertixPoint(int i);
-    glm::vec3& MeshModel::GetVertex(int i, int j);
-    glm::mat4x4& MeshModel::GetRotation();
+
     void GetTransform();
     std::vector<glm::vec3> Draw(glm::mat4x4 transformMat);
 
