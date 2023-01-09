@@ -738,50 +738,74 @@ float Renderer::triangleArea(glm::vec3 p1, glm::vec3 p2, glm::vec2 w) {
 
 
 
-void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::vec3& color, MeshModel& model) {
+void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, MeshModel& model, int faceIndex, Scene& scene) {
 	if (model.trianglesOutlines) {
 		DrawLine(p1, p2, glm::vec3(1, 1, 1));
 		DrawLine(p2, p3, glm::vec3(1, 1, 1));
 		DrawLine(p1, p3, glm::vec3(1, 1, 1));
 	}
 
-	glm::vec3 randomColor = glm::vec3((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);
-	//glm::vec3 randomColor = glm::vec3(1, 1, 1);
 
-	
+	float xMin = min(min(p1.x, p2.x), p3.x);
+	float yMin = min(min(p1.y, p2.y), p3.y);
+
+	float xMax = max(max(p1.x, p2.x), p3.x);
+	float yMax = max(max(p1.y, p2.y), p3.y);
+
+	if (model.trianglesBoundingBoxes) {
+		glm::vec3 randomColor = glm::vec3((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);
+		DrawLine(glm::vec3(xMin, yMin, 100), glm::vec3(xMin, yMax, 100), randomColor);
+		DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMax, yMax, 100), randomColor);
+		DrawLine(glm::vec3(xMin, yMax, 100), glm::vec3(xMax, yMax, 100), randomColor);
+		DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMin, yMin, 100), randomColor);
+	}
+
 
 	if (model.coloredTriangles) {
+		float a1 = 0;
+		float a2 = 0;
+		float a3 = 0;
+		float A = 0;
+		float z = 0;
 
-		// line equations: y = mx + b
-		float m1, m2, m3, b1, b2, b3;
+		glm::vec3 U = p2 - p1;
+		glm::vec3 V = p3 - p1;
+		float x = (U.y * V.z) - (U.z * V.y);
+		float y = (U.z * V.x) - (U.x * V.z);
+		float z1 = (U.x * V.y) - (U.y * V.x);
 
-		m1 = (p1.y - p2.y) / (p1.x - p2.x);
-		m2 = (p2.y - p3.y) / (p2.x - p3.x);
-		m3 = (p1.y - p3.y) / (p1.x - p3.x);
-
-		b1 = (-1 * m1 * p1.x) + p1.y;
-		b2 = (-1 * m2 * p2.x) + p2.y;
-		b3 = (-1 * m3 * p3.x) + p3.y;
-
-		float xMin = min(min(p1.x, p2.x), p3.x);
-		float yMin = min(min(p1.y, p2.y), p3.y);
-
-		float xMax = max(max(p1.x, p2.x), p3.x);
-		float yMax = max(max(p1.y, p2.y), p3.y);
+		glm::vec3 normal = glm::vec3(x, y, z1);
 
 		for (int y = yMax; y >= yMin; y--) {
-			bool cutFlag = false;
 			for (int x = xMin; x <= xMax; x++) {
 				glm::ivec2 point = glm::ivec2(x, y);
 				if (pointInTriangle(point, p1, p2, p3)) {
-					float a1 = triangleArea(p1, p2, point);
-					float a2 = triangleArea(p2, p3, point);
-					float a3 = triangleArea(p1, p3, point);
-
-					float A = a1 + a2 + a3;
-					float z = ((a1 * p3.z) / A) + ((a2 * p1.z) / A) + ((a3 * p2.z) / A);
+					a1 = triangleArea(p1, p2, point);
+					a2 = triangleArea(p2, p3, point);
+					a3 = triangleArea(p1, p3, point);
+					A = a1 + a2 + a3;
+					z = ((a1 * p3.z) / A) + ((a2 * p1.z) / A) + ((a3 * p2.z) / A);
 					float interpolation = 1.0f - ((this->maxZ - z) / (this->maxZ - this->minZ));
-					PutPixel(x, y, randomColor * interpolation, z);
+					for (int i = 0; i < scene.GetLightCount(); i++) {
+						Light& light = scene.GetLight(i);
+						glm::vec3 finalColor = glm::vec3(0.0f, 0.0f, 0.0f);
+
+						// Ambient
+						glm::vec3 Ia = interpolation * light.ambientColor * model.color;
+
+						// Diffuse
+						glm::vec3 lightVector = glm::vec3(x, y, z) - light.updatedLocation;
+						glm::vec3 Id = interpolation * light.diffuseColor * glm::dot(normal, lightVector) * model.color;
+
+
+						// Specular
+						glm::vec3 I = glm::normalize(light.updatedLocation - glm::vec3(x, y, z));
+						glm::vec3 reflection = I - 2 * glm::dot(I, glm::normalize(normal)) * glm::normalize(normal);
+						float* arr = scene.GetActiveCamera().eye;
+						glm::vec3 Is = interpolation * light.specularColor * (float)pow(max(0.0f, glm::dot(glm::vec3(arr[0], arr[1], arr[2]) - glm::vec3(x, y, z), reflection)), 1) * model.color;
+
+						PutPixel(x, y, Ia + Id + Is, z);
+					}
 				}
 			}
 		}
@@ -822,10 +846,15 @@ void Renderer::Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel
 	minZ = FLT_MAX;
 
 	for (int i = 0; i < scene.GetModelCount(); i++) {
-		MeshModel& model = scene.GetModel(i);
-		this->maxZ = std::max(this->maxZ, model.maxZ);
-		this->minZ = std::min(this->minZ, model.minZ);
+		MeshModel& model = scene.GetModel(i);        
+		this->maxZ = max(this->maxZ, model.maxZ);
+		this->minZ = min(this->minZ, model.minZ);
 	}
+
+	for (int i = 0; i < scene.GetLightCount(); i++) {
+		scene1.GetLight(i).GetTransform(cameraTransform);
+	}
+
 
 	for (int i = 0; i < scene.GetModelCount(); i++) {
 		
@@ -835,9 +864,6 @@ void Renderer::Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel
 		trans[3][0] = 0;
 		trans[3][1] = 0;
 		trans[3][2] = 1;
-
-		//if (model.cameraIndex > -1)
-		//    model.objectTransform = scene1.GetCamera(model.cameraIndex).drawTransformation;
 
 		std::vector<glm::vec3> newVertices = model.Draw(cameraTransform);
 
@@ -862,30 +888,8 @@ void Renderer::Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel
 			v3.x = (v3.x + 1) * half_width;
 			v3.y = (v3.y + 1) * half_height;
 
-			if (model.trianglesBoundingBoxes) {
 
-				float xMin = min(min(v1.x, v2.x), v3.x);
-				float yMin = min(min(v1.y, v2.y), v3.y);
-									 	   	  
-				float xMax = max(max(v1.x, v2.x), v3.x);
-				float yMax = max(max(v1.y, v2.y), v3.y);
-
-				glm::vec3 faceCenter = (model.GetVertex(j, 0) + model.GetVertex(j, 1) + model.GetVertex(j, 2))/3.0f;
-				glm::mat4x4 MeshModelRotation = model.GetRotation();
-
-				faceCenter = glm::vec3(MeshModelRotation * glm::vec4(faceCenter, 1.0f));
-
-
-				float colordepth = glm::clamp((faceCenter.z), model.minCoordinates[2] , abs(model.maxCoordinates[2]));
-				colordepth *= 1.3;
-				glm::vec3 createdcolor = glm::vec3(colordepth, 0, 0);
-				DrawLine(glm::vec3(xMin, yMin, 100), glm::vec3(xMin, yMax, 100), createdcolor);
-				DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMax, yMax, 100), createdcolor);
-				DrawLine(glm::vec3(xMin, yMax, 100), glm::vec3(xMax, yMax, 100), createdcolor);
-				DrawLine(glm::vec3(xMax, yMin, 100), glm::vec3(xMin, yMin, 100), createdcolor);
-			}
-
-			DrawTriangle(v1, v2, v3, color, model);
+			DrawTriangle(v1, v2, v3, model, j, scene1);
 		}
 
 		if (model.drawAxis) {

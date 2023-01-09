@@ -75,3 +75,17 @@ int Scene::GetActiveModelIndex() const
 {
 	return active_model_index;
 }
+
+void Scene::AddLight(const std::shared_ptr<Light>& light)
+{
+	lights.push_back(light);
+}
+
+int Scene::GetLightCount() const
+{
+	return lights.size();
+}
+
+Light& Scene::GetLight(int index) {
+	return *lights[index];
+}

@@ -13,6 +13,7 @@ using namespace std;
 #include "Renderer.h"
 #include "Scene.h"
 #include "Utils.h"
+#include "Light.h"
 
 /**
  * Fields
@@ -538,8 +539,68 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				ImGui::Checkbox("Colored Triangles", &(model.coloredTriangles));
 				ImGui::Separator();
 				ImGui::Checkbox("Triangles Outline", &(model.trianglesOutlines));
+				ImGui::Separator();
+				ImGui::ColorEdit3("Object Color", (float*)&model.color);
 			}
 		}
+
+		if (ImGui::CollapsingHeader("Light"))
+		{
+			if (ImGui::Button("Add Light")) {
+				shared_ptr<Light>& newLight = std::make_shared<Light>();
+				scene.AddLight(newLight);
+			}
+			// display transformations window if at least one model is loaded
+			if (scene.GetLightCount()) {
+
+				ImGui::Text("Select Light:");
+
+				static int selectedLight = 0;
+				for (int n = 0; n < scene.GetLightCount(); n++) {
+					std::string camName = "Light ";
+					camName.append(std::to_string(n));
+					char bufc[64];
+					sprintf(bufc, camName.c_str(), n);
+					if (ImGui::Selectable(bufc, selectedLight == n))
+						selectedLight = n;
+				}
+
+				Light& light = scene.GetLight(selectedLight);
+
+				ImGui::Text("Local Translate:");
+				ImGui::InputFloat("Local Translate X", &light.localTranslateArray[0], 0.1, 5, "%.2f");
+				ImGui::InputFloat("Local Translate Y", &light.localTranslateArray[1], 0.1, 5, "%.2f");
+				ImGui::InputFloat("Local Translate Z", &light.localTranslateArray[2], 0.1, 5, "%.2f");
+
+				ImGui::Text("World Translate:");
+				ImGui::InputFloat("World Translate X", &light.worldTranslateArray[0], 0.1, 5, "%.2f");
+				ImGui::InputFloat("World Translate Y", &light.worldTranslateArray[1], 0.1, 5, "%.2f");
+				ImGui::InputFloat("World Translate Z", &light.worldTranslateArray[2], 0.1, 5, "%.2f");
+
+				ImGui::Text("Reflection Type:");
+				ImGui::SameLine();
+				ImGui::RadioButton("Ambient", &(light.reflectionType), 0);
+				ImGui::SameLine();
+				ImGui::RadioButton("Diffuse", &(light.reflectionType), 1);
+				ImGui::SameLine();
+				ImGui::RadioButton("Specular", &(light.reflectionType), 2);
+
+				if (light.reflectionType == 0) {
+					ImGui::Separator();
+					ImGui::ColorEdit3("Light Color", (float*)&light.ambientColor);
+				}
+				else if (light.reflectionType == 1) {
+					ImGui::Separator();
+					ImGui::ColorEdit3("Light Color", (float*)&light.diffuseColor);
+				}
+				else if (light.reflectionType == 2) {
+					ImGui::Separator();
+					ImGui::ColorEdit3("Light Color", (float*)&light.specularColor);
+				}
+
+			}
+		}
+
 
 	ImGui::End();
 }

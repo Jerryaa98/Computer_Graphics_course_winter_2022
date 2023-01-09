@@ -21,9 +21,8 @@ public:
 	void DrawLine(const glm::ivec3& p1, const glm::ivec3& p2, const glm::vec3& color);
 	void CreateBuffers(int w, int h);
 	bool pointInTriangle(const glm::ivec2& curr_point, const glm::ivec2& p1, const glm::ivec2& p2, const glm::ivec2& p3);
-	float triangleArea(glm::vec3 v, glm::vec3 u, glm::vec2 w);
-	void DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, glm::vec3& color, MeshModel& model);
-
+	float triangleArea(glm::vec3 v, glm::vec3 u, glm::vec2 w);    
+	void DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, MeshModel& model, int faceIndex, Scene& scene);
 	float maxZ = -1.0f * FLT_MAX;
 	float minZ = FLT_MAX;
 
