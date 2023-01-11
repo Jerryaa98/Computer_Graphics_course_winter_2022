@@ -27,7 +27,6 @@ public:
 	void phongLighting();
 	void gouraudShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, int faceIndex);
 	void flatShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, bool phong, int faceIndex);
-	void phongLighting(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, int faceIndex);
 	void MSAA(float minX, float maxX, float minY, float maxY);
 	float maxZ = -1.0f * FLT_MAX;
 	float minZ = FLT_MAX;

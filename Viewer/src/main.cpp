@@ -537,11 +537,6 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene, Renderer& renderer) {
 				ImGui::Separator();
 				ImGui::Checkbox("Triangles Outline", &(model.trianglesOutlines));
 				ImGui::Separator();
-				ImGui::Checkbox("Specular Reflection Vectors", &(model.specularReflection));
-				ImGui::InputFloat("Specular Reflection Scale", &(model.specularReflectionScale), 1, 1, "%.0f");
-				ImGui::Separator();
-				ImGui::ColorEdit3("Object Color", (float*)&model.color);
-				ImGui::Separator();
 				ImGui::ColorEdit3("Object ambient", (float*)&model.ambientColor);
 				ImGui::Separator();
 				ImGui::ColorEdit3("Object diffuse", (float*)&model.diffuseColor);

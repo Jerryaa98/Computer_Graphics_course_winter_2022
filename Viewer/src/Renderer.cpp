@@ -438,38 +438,36 @@ void Renderer::MSAA(float minX, float maxX, float minY, float maxY) {
 				if (i != 0 && j != 0 && i != (viewport_width - 1) && j != (viewport_height - 1))
 				{
 
-					if (z_buffer[Z_INDEX(viewport_width, i - 1, j)] == -1.0f * FLT_MAX || z_buffer[Z_INDEX(viewport_width, i, j - 1)] == -1.0f * FLT_MAX || z_buffer[Z_INDEX(viewport_width, i + 1, j)] == -1.0f * FLT_MAX || z_buffer[Z_INDEX(viewport_width, i, j + 1)] == -1.0f * FLT_MAX ||
-						z_buffer[Z_INDEX(viewport_width, i - 1, j - 1)] == -1.0f * FLT_MAX || z_buffer[Z_INDEX(viewport_width, i + 1, j + 1)] == -1.0f * FLT_MAX || z_buffer[Z_INDEX(viewport_width, i - 1, j + 1)] == -1.0f * FLT_MAX || z_buffer[Z_INDEX(viewport_width, i + 1, j - 1)] == -1.0f * FLT_MAX)
-
-					{
-						glm::vec3 point = glm::vec3(color_buffer[INDEX(viewport_width, i, j, 0)], color_buffer[INDEX(viewport_width, i, j, 1)], color_buffer[INDEX(viewport_width, i, j, 2)]) / 4.0f;
-						glm::vec3 point1 = glm::vec3(color_buffer[INDEX(viewport_width, i, j - 1, 0)], color_buffer[INDEX(viewport_width, i, j - 1, 1)], color_buffer[INDEX(viewport_width, i, j - 1, 2)]) / 8.0f;
-						glm::vec3 point2 = glm::vec3(color_buffer[INDEX(viewport_width, i, j + 1, 0)], color_buffer[INDEX(viewport_width, i, j + 1, 1)], color_buffer[INDEX(viewport_width, i, j + 1, 2)]) / 8.0f;
-						glm::vec3 point3 = glm::vec3(color_buffer[INDEX(viewport_width, i - 1, j, 0)], color_buffer[INDEX(viewport_width, i - 1, j, 1)], color_buffer[INDEX(viewport_width, i - 1, j, 2)]) / 8.0f;
-						glm::vec3 point4 = glm::vec3(color_buffer[INDEX(viewport_width, i + 1, j, 0)], color_buffer[INDEX(viewport_width, i + 1, j, 1)], color_buffer[INDEX(viewport_width, i + 1, j, 2)]) / 8.0f;
-						glm::vec3 point5 = glm::vec3(color_buffer[INDEX(viewport_width, i + 1, j - 1, 0)], color_buffer[INDEX(viewport_width, i + 1, j - 1, 1)], color_buffer[INDEX(viewport_width, i + 1, j - 1, 2)]) / 16.0f;
-						glm::vec3 point6 = glm::vec3(color_buffer[INDEX(viewport_width, i + 1, j + 1, 0)], color_buffer[INDEX(viewport_width, i + 1, j + 1, 1)], color_buffer[INDEX(viewport_width, i + 1, j + 1, 2)]) / 16.0f;
-						glm::vec3 point7 = glm::vec3(color_buffer[INDEX(viewport_width, i - 1, j - 1, 0)], color_buffer[INDEX(viewport_width, i - 1, j - 1, 1)], color_buffer[INDEX(viewport_width, i - 1, j - 1, 2)]) / 16.0f;
-						glm::vec3 point8 = glm::vec3(color_buffer[INDEX(viewport_width, i - 1, j + 1, 0)], color_buffer[INDEX(viewport_width, i - 1, j + 1, 1)], color_buffer[INDEX(viewport_width, i - 1, j + 1, 2)]) / 16.0f;
-
-
-						glm::vec3 sum = point + point1 + point2 + point3 + point4 + point5 + point6 + point7 + point8;
-
-						PutPixel(i, j, sum, 100.0f);
+					bool yesFlag = false;
+					for (int i1 = i - 1; i1 <= i + 1; i1++) {
+						for (int j1 = j - 1; j1 <= j + 1; j1++) {
+							if (z_buffer[Z_INDEX(viewport_width, i1, j1)] == -1.0f * FLT_MAX)
+								yesFlag = true;
+						}
 					}
-					else {
-						PutPixel(i, j, glm::vec3(color_buffer[INDEX(viewport_width, i, j, 0)], color_buffer[INDEX(viewport_width, i, j, 1)], color_buffer[INDEX(viewport_width, i, j, 2)]), 100.0f);
-					}
+					glm::vec3 finalColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
+					if (yesFlag) {
+						for (int i1 = i - 1; i1 <= i + 1; i1++) {
+							for (int j1 = j - 1; j1 <= j + 1; j1++) {
+								glm::vec3 pointColor = glm::vec3(color_buffer[INDEX(viewport_width, i1, j1, 0)], color_buffer[INDEX(viewport_width, i1, j1, 1)], color_buffer[INDEX(viewport_width, i1, j1, 2)]);
+								int distance = pow((i - i1), 2) + pow((j - j1), 2);
+
+								// give different weights according to pixel distance
+								if (distance == 0)
+									finalColor += (pointColor / 4.0f);
+								if (distance == 1)
+									finalColor += (pointColor / 8.0f);
+								if (distance == 2)
+									finalColor += (pointColor / 16.0f);
+							}
+						}
+						PutPixel(i, j, finalColor, 100.0f);
+					}
 				}
-				else
-					PutPixel(i, j, glm::vec3(color_buffer[INDEX(viewport_width, i, j, 0)], color_buffer[INDEX(viewport_width, i, j, 1)], color_buffer[INDEX(viewport_width, i, j, 2)]), 100.0f);
-
 			}
 		}
 	}
-
-
 }
 
 
@@ -964,57 +962,6 @@ float Renderer::triangleArea(glm::vec3 p1, glm::vec3 p2, glm::vec2 w) {
 	return  sqrt(s * (s - vu) * (s - uw) * (s - vw));
 }
 
-void Renderer::phongLighting(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, int faceIndex) {
-	float a1 = 0;
-	float a2 = 0;
-	float a3 = 0;
-	float A = 0;
-	float z = 0;
-
-	const Face& face = model.GetFace(faceIndex);
-	int p1Index = face.GetVertexIndex(0) - 1;
-	int p2Index = face.GetVertexIndex(1) - 1;
-	int p3Index = face.GetVertexIndex(2) - 1;
-
-	int p1NormalIndex = face.GetNormalIndex(0) - 1;
-	int p2NormalIndex = face.GetNormalIndex(1) - 1;
-	int p3NormalIndex = face.GetNormalIndex(2) - 1;
-
-	glm::vec3 p1normal = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 p2normal = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 p3normal = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	for (int i = 0; i < model.verticesToNormals[p1Index].size(); i++)
-		p1normal += model.transformedNormals[model.verticesToNormals[p1Index][i]];
-	//p1normal /= model.verticesToNormals[p1Index].size();
-
-	for (int i = 0; i < model.verticesToNormals[p2Index].size(); i++)
-		p2normal += model.transformedNormals[model.verticesToNormals[p2Index][i]];
-	//p2normal /= model.verticesToNormals[p2Index].size();
-
-	for (int i = 0; i < model.verticesToNormals[p3Index].size(); i++)
-		p3normal += model.transformedNormals[model.verticesToNormals[p3Index][i]];
-	//p3normal /= model.verticesToNormals[p3Index].size();
-
-	p1normal = glm::normalize(p1normal);
-	p2normal = glm::normalize(p2normal);
-	p3normal = glm::normalize(p3normal);
-
-	p1normal = model.normals[p1NormalIndex];
-	p2normal = model.normals[p2NormalIndex];
-	p3normal = model.normals[p3NormalIndex];
-
-	glm::vec4 normalTemp = model.objectTransform * glm::vec4(p1normal, 1.0f);
-	p1normal = glm::vec3(normalTemp) / normalTemp.w;
-
-	normalTemp = model.objectTransform * glm::vec4(p2normal, 1.0f);
-	p2normal = glm::vec3(normalTemp) / normalTemp.w;
-
-	normalTemp = model.objectTransform * glm::vec4(p3normal, 1.0f);
-	p3normal = glm::vec3(normalTemp) / normalTemp.w;
-
-
-}
 
 void Renderer::flatShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, bool phong, int faceIndex) {
 	float a1 = 0;
@@ -1100,31 +1047,6 @@ void Renderer::flatShading(Scene& scene, MeshModel& model, Light& light, float x
 			}
 		}
 	}
-
-	if (model.specularReflection) {
-		glm::vec3 faceCenter = glm::vec3((p1.x + p2.x + p3.x) / 3, (p1.y + p2.y + p3.y) / 3, 1);
-		glm::ivec2 point = glm::ivec2(faceCenter.x, faceCenter.y);
-		a1 = triangleArea(p1, p2, point);
-		a2 = triangleArea(p2, p3, point);
-		a3 = triangleArea(p1, p3, point);
-
-
-
-		A = a1 + a2 + a3;
-		faceCenter.z = ((a1 * p3.z) / A) + ((a2 * p1.z) / A) + ((a3 * p2.z) / A);
-
-		float* arr = scene.GetActiveCamera().eye;
-		glm::vec3 cameraLocation = glm::vec3(arr[0], arr[1], arr[2]);
-		glm::vec3 V = glm::normalize(cameraLocation - faceCenter);
-		glm::vec3 lightVector = glm::normalize(light.updatedLocation - faceCenter);
-		glm::vec3 R = model.specularReflectionScale * glm::normalize(V - (2 * glm::dot(normal, V) * normal));
-
-		lightVector *= model.specularReflectionScale;
-
-		DrawLine(faceCenter, faceCenter + lightVector, glm::vec3(0, 0, 1));
-		DrawLine(faceCenter, faceCenter + R, glm::vec3(1, 0, 0));
-	}
-
 }
 
 void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, int faceIndex) {
@@ -1234,15 +1156,6 @@ void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, floa
 		for (int x = xMin; x <= xMax; x++) {
 			glm::ivec2 point = glm::ivec2(x, y);
 
-			//if (x == p1.x && y == p1.y)
-			//    continue;
-			//
-			//if (x == p2.x && y == p2.y)
-			//    continue;
-			//
-			//if (x == p3.x && y == p3.y)
-			//    continue;
-
 			if (pointInTriangle(point, p1, p2, p3)) {
 				a1 = triangleArea(p1, p2, point);
 				a2 = triangleArea(p2, p3, point);
@@ -1256,31 +1169,6 @@ void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, floa
 				PutPixel(x, y, finalColor, z);
 			}
 		}
-	}
-
-	if (model.specularReflection) {
-		glm::vec3 U = p2 - p1;
-		glm::vec3 V = p3 - p1;
-
-		float x1 = (U.y * V.z) - (U.z * V.y);
-		float y1 = (U.z * V.x) - (U.x * V.z);
-		float z1 = (U.x * V.y) - (U.y * V.x);
-
-		glm::vec3 normal = glm::normalize(glm::vec3(x1, y1, z1));
-
-		glm::vec3 faceCenter = glm::vec3((p1.x + p2.x + p3.x) / 3, (p1.y + p2.y + p3.y) / 3, 1);
-		glm::ivec2 point = glm::ivec2(faceCenter.x, faceCenter.y);
-		a1 = triangleArea(p1, p2, point);
-		a2 = triangleArea(p2, p3, point);
-		a3 = triangleArea(p1, p3, point);
-
-		A = a1 + a2 + a3;
-		faceCenter.z = ((a1 * p3.z) / A) + ((a2 * p1.z) / A) + ((a3 * p2.z) / A);
-		glm::vec3 lightVector = model.specularReflectionScale * glm::normalize(light.updatedLocation - faceCenter);
-		glm::vec3 R = -1 * model.specularReflectionScale * glm::normalize((2 * glm::dot(lightVector, normal) * normal) - lightVector);
-
-		DrawLine(faceCenter, faceCenter + lightVector, glm::vec3(0, 0, 1));
-		DrawLine(faceCenter, faceCenter + R, glm::vec3(1, 0, 0));
 	}
 }
 

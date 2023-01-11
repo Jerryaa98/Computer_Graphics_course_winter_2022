@@ -41,14 +41,12 @@ class MeshModel
 
         float vertexNormalsScale = 0.05;
         float faceNormalsScale = 0.001;
-        float specularReflectionScale = 40.0f;
 
         int LocalWorldEditObject = 1;
 
         bool trianglesBoundingBoxes = false;
         bool coloredTriangles = true;
         bool trianglesOutlines = false;
-        bool specularReflection = false;
 
         float maxX = -1.0f * FLT_MAX;
         float minX = FLT_MAX;
@@ -69,7 +67,6 @@ class MeshModel
         std::vector<glm::vec3> vertices;
 
         glm::vec3 ambientColor = glm::vec3(1.0f, 1.0f, 1.0f);
-        //glm::vec3 diffuseColor = glm::vec3(95.0f / 256.0f, 59.0f / 256.0f, 59.0f / 256.0f);
         glm::vec3 diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
         glm::vec3 specularColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
