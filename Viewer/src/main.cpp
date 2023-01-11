@@ -38,8 +38,7 @@ ImGuiIO& SetupDearImgui(GLFWwindow* window);
 void StartFrame();
 void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& io);
 void Cleanup(GLFWwindow* window);
-void DrawImguiMenus(ImGuiIO& io, Scene& scene);
-
+void DrawImguiMenus(ImGuiIO& io, Scene& scene, Renderer& renderer);
 /**
  * Function implementation
  */
@@ -74,7 +73,7 @@ int main(int argc, char **argv)
     {
         glfwPollEvents();
 		StartFrame();
-	    DrawImguiMenus(io, scene);
+	    DrawImguiMenus(io, scene, renderer);
 		RenderFrame(window, scene, renderer, io);
     }
 
@@ -216,11 +215,10 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 
 			ImVec2 newCoordinates = io.MousePos;
 			if (scene.GetModelCount() > 0) {
-				// scene.GetActiveModel().localTranslateVector[0] += newCoordinates[0] - oldCoordinates[0];
-				// scene.GetActiveModel().localTranslateVector[1] += -1 * (newCoordinates[1] - oldCoordinates[1]);
-
-				scene.GetActiveCamera().worldRotateArray[1] += -1*(newCoordinates[0] - oldCoordinates[0]) / 10;
-				scene.GetActiveCamera().worldRotateArray[0] += -1*(newCoordinates[1] - oldCoordinates[1]) / 10;
+				MeshModel& model = scene.GetActiveModel();
+				model.localRotateVector[1] += (newCoordinates[0] - oldCoordinates[0]) / 10;
+				model.localRotateVector[0] += (newCoordinates[1] - oldCoordinates[1]) / 10;
+				
 			}
 		}
 		if (io.MouseDown[1])
@@ -267,8 +265,7 @@ void Cleanup(GLFWwindow* window)
 }
 
 
-void DrawImguiMenus(ImGuiIO& io, Scene& scene)
-{
+void DrawImguiMenus(ImGuiIO& io, Scene& scene, Renderer& renderer) {
 	/**
 	 * MeshViewer menu
 	 */
@@ -540,7 +537,12 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				ImGui::Separator();
 				ImGui::Checkbox("Triangles Outline", &(model.trianglesOutlines));
 				ImGui::Separator();
-				ImGui::ColorEdit3("Object Color", (float*)&model.color);
+				ImGui::ColorEdit3("Object ambient", (float*)&model.ambientColor);
+				ImGui::Separator();
+				ImGui::ColorEdit3("Object diffuse", (float*)&model.diffuseColor);
+				ImGui::Separator();
+				ImGui::ColorEdit3("Object specular", (float*)&model.specularColor);
+
 			}
 		}
 
@@ -567,40 +569,47 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 				Light& light = scene.GetLight(selectedLight);
 
-				ImGui::Text("Local Translate:");
-				ImGui::InputFloat("Local Translate X", &light.localTranslateArray[0], 0.1, 5, "%.2f");
-				ImGui::InputFloat("Local Translate Y", &light.localTranslateArray[1], 0.1, 5, "%.2f");
-				ImGui::InputFloat("Local Translate Z", &light.localTranslateArray[2], 0.1, 5, "%.2f");
+				ImGui::Text("Local Translate:");                
+				ImGui::InputFloat("Local Translate X", &light.localTranslateArray[0], 50.0f, 5, "%.2f");
+				ImGui::InputFloat("Local Translate Y", &light.localTranslateArray[1], 50.0f, 5, "%.2f");
+				ImGui::InputFloat("Local Translate Z", &light.localTranslateArray[2], 50.0f, 5, "%.2f");
 
-				ImGui::Text("World Translate:");
-				ImGui::InputFloat("World Translate X", &light.worldTranslateArray[0], 0.1, 5, "%.2f");
-				ImGui::InputFloat("World Translate Y", &light.worldTranslateArray[1], 0.1, 5, "%.2f");
-				ImGui::InputFloat("World Translate Z", &light.worldTranslateArray[2], 0.1, 5, "%.2f");
+				ImGui::InputFloat("high value1", &light.highValue1, 100, 5, "%.2f");
+				ImGui::InputFloat("high value2", &light.highValue2, 100, 5, "%.2f");
+				ImGui::InputFloat("high value3", &light.highValue3, 100, 5, "%.2f");
 
-				ImGui::Text("Reflection Type:");
+				ImGui::Text("Lighting Type:");
 				ImGui::SameLine();
-				ImGui::RadioButton("Ambient", &(light.reflectionType), 0);
+				ImGui::RadioButton("flat shading", &(light.lightingType), 0);
 				ImGui::SameLine();
-				ImGui::RadioButton("Diffuse", &(light.reflectionType), 1);
+				ImGui::RadioButton("gouraud", &(light.lightingType), 1);
 				ImGui::SameLine();
-				ImGui::RadioButton("Specular", &(light.reflectionType), 2);
+				ImGui::RadioButton("phong", &(light.lightingType), 2);
 
-				if (light.reflectionType == 0) {
-					ImGui::Separator();
-					ImGui::ColorEdit3("Light Color", (float*)&light.ambientColor);
-				}
-				else if (light.reflectionType == 1) {
-					ImGui::Separator();
-					ImGui::ColorEdit3("Light Color", (float*)&light.diffuseColor);
-				}
-				else if (light.reflectionType == 2) {
-					ImGui::Separator();
-					ImGui::ColorEdit3("Light Color", (float*)&light.specularColor);
-				}
+				ImGui::Separator();
+				ImGui::InputFloat("alpha for specular", &(light.alpha), 0.1, 0.1, "%.2f");
+				ImGui::Separator();
+				ImGui::ColorEdit3("Light ambient Color", (float*)&light.ambientColor);
 
+				ImGui::Separator();
+				ImGui::ColorEdit3("Light diffuse Color", (float*)&light.diffuseColor);
+
+				ImGui::Separator();
+				ImGui::ColorEdit3("Light specular Color", (float*)&light.specularColor);
 			}
 		}
 
+		if (ImGui::CollapsingHeader("Fog")) {
+			ImGui::Checkbox("Fog Effect", &(renderer.fogEffect));
+			ImGui::InputFloat("Fog Start", &(renderer.fogStart), 0.01, 0.01, "%.2f");
+			ImGui::InputFloat("Fog End", &(renderer.fogEnd), 0.01, 0.01, "%.2f");
+
+			ImGui::Separator();
+			ImGui::Separator();
+			ImGui::Checkbox("MSAA Effect", &(renderer.msaaFlag));
+			/*ImGui::Checkbox("blur Effect", &(renderer.blur));
+			ImGui::InputFloat("STD", &(renderer.std), 0.1, 0.01, "%.2f");*/
+		}
 
 	ImGui::End();
 }
