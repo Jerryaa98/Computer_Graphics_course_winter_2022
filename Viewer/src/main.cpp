@@ -611,8 +611,9 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene, Renderer& renderer) {
 
 			ImGui::Separator();
 			ImGui::Separator();
-			ImGui::Checkbox("blur Effect", &(renderer.blur));
-			ImGui::InputFloat("STD", &(renderer.std), 0.1, 0.01, "%.2f");
+			ImGui::Checkbox("MSAA Effect", &(renderer.msaaFlag));
+			/*ImGui::Checkbox("blur Effect", &(renderer.blur));
+			ImGui::InputFloat("STD", &(renderer.std), 0.1, 0.01, "%.2f");*/
 		}
 
 	ImGui::End();
