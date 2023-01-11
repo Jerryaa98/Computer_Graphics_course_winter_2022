@@ -41,12 +41,14 @@ class MeshModel
 
         float vertexNormalsScale = 0.05;
         float faceNormalsScale = 0.001;
+        float specularReflectionScale = 40.0f;
 
         int LocalWorldEditObject = 1;
 
         bool trianglesBoundingBoxes = false;
         bool coloredTriangles = true;
         bool trianglesOutlines = false;
+        bool specularReflection = false;
 
         std::vector<glm::vec3> boundingBox;
         std::vector<glm::vec3> axis;

@@ -38,8 +38,7 @@ ImGuiIO& SetupDearImgui(GLFWwindow* window);
 void StartFrame();
 void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& io);
 void Cleanup(GLFWwindow* window);
-void DrawImguiMenus(ImGuiIO& io, Scene& scene);
-
+void DrawImguiMenus(ImGuiIO& io, Scene& scene, Renderer& renderer);
 /**
  * Function implementation
  */
@@ -74,7 +73,7 @@ int main(int argc, char **argv)
     {
         glfwPollEvents();
 		StartFrame();
-	    DrawImguiMenus(io, scene);
+	    DrawImguiMenus(io, scene, renderer);
 		RenderFrame(window, scene, renderer, io);
     }
 
@@ -266,8 +265,7 @@ void Cleanup(GLFWwindow* window)
 }
 
 
-void DrawImguiMenus(ImGuiIO& io, Scene& scene)
-{
+void DrawImguiMenus(ImGuiIO& io, Scene& scene, Renderer& renderer) {
 	/**
 	 * MeshViewer menu
 	 */
@@ -539,6 +537,9 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 				ImGui::Separator();
 				ImGui::Checkbox("Triangles Outline", &(model.trianglesOutlines));
 				ImGui::Separator();
+				ImGui::Checkbox("Specular Reflection Vectors", &(model.specularReflection));
+				ImGui::InputFloat("Specular Reflection Scale", &(model.specularReflectionScale), 1, 1, "%.0f");
+				ImGui::Separator();
 				ImGui::ColorEdit3("Object Color", (float*)&model.color);
 				ImGui::Separator();
 				ImGui::ColorEdit3("Object ambient", (float*)&model.ambientColor);
@@ -573,10 +574,10 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 				Light& light = scene.GetLight(selectedLight);
 
-				ImGui::Text("Local Translate:");
-				ImGui::InputFloat("Local Translate X", &light.localTranslateArray[0], 0.1, 5, "%.2f");
-				ImGui::InputFloat("Local Translate Y", &light.localTranslateArray[1], 0.1, 5, "%.2f");
-				ImGui::InputFloat("Local Translate Z", &light.localTranslateArray[2], 0.1, 5, "%.2f");
+				ImGui::Text("Local Translate:");                
+				ImGui::InputFloat("Local Translate X", &light.localTranslateArray[0], 50.0f, 5, "%.2f");
+				ImGui::InputFloat("Local Translate Y", &light.localTranslateArray[1], 50.0f, 5, "%.2f");
+				ImGui::InputFloat("Local Translate Z", &light.localTranslateArray[2], 50.0f, 5, "%.2f");
 
 				ImGui::InputFloat("high value1", &light.highValue1, 100, 5, "%.2f");
 				ImGui::InputFloat("high value2", &light.highValue2, 100, 5, "%.2f");
@@ -603,6 +604,16 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 			}
 		}
 
+		if (ImGui::CollapsingHeader("Fog")) {
+			ImGui::Checkbox("Fog Effect", &(renderer.fogEffect));
+			ImGui::InputFloat("Fog Start", &(renderer.fogStart), 0.01, 0.01, "%.2f");
+			ImGui::InputFloat("Fog End", &(renderer.fogEnd), 0.01, 0.01, "%.2f");
+
+			ImGui::Separator();
+			ImGui::Separator();
+			ImGui::Checkbox("blur Effect", &(renderer.blur));
+			ImGui::InputFloat("STD", &(renderer.std), 0.1, 0.01, "%.2f");
+		}
 
 	ImGui::End();
 }

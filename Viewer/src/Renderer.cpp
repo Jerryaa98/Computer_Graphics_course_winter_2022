@@ -6,6 +6,8 @@
 #include "InitShader.h"
 #include <iostream>
 #include <glm/gtx/string_cast.hpp>
+#include <iostream>
+//#include "E:\opencv\build\include\opencv2\opencv.hpp"
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 #define Z_INDEX(width,x,y) ((x)+(y)*(width))
@@ -24,6 +26,142 @@ Renderer::~Renderer()
 	delete[] color_buffer;
 }
 
+glm::vec3 Renderer::fog(glm::vec3 color, float z) {
+	float f = (fogEnd - z) / (fogEnd / fogStart);
+	return (f * color) + ((1 - f) * glm::vec3(0.5f, 0.5f, 0.5f));
+}
+
+void Renderer::blurFilter() {
+	std::cout << 1 << std::endl;
+	float* newColorBuffer = new float[3 * viewport_width * viewport_height];
+
+	//float** GKernel = new float* [convolutionSize];
+	//for (int i = 0; i < convolutionSize; ++i)
+	//    GKernel[i] = new float[convolutionSize];
+
+	std::vector<std::vector<float>> GKernel;
+	for (int i = 0; i < convolutionSize; ++i) {
+		std::vector<float> arr;
+		for (int j = 0; j < convolutionSize; ++j) {
+			arr.push_back(0);
+		}
+		GKernel.push_back(arr);
+	}
+
+	double r, s = 2.0 * std * std;
+
+	float sum = 0.0;
+	std::cout << 2 << std::endl;
+
+	for (int x = -(convolutionSize - 1) / 2; x <= (convolutionSize - 1) / 2; x++) {
+		for (int y = (convolutionSize - 1) / 2; y <= (convolutionSize - 1) / 2; y++) {
+			r = sqrt(x * x + y * y);
+			GKernel[x + ((convolutionSize - 1) / 2)][y + ((convolutionSize - 1) / 2)] = (exp(-(r * r) / s)) / (M_PI * s);
+			sum += GKernel[x + ((convolutionSize - 1) / 2)][y + ((convolutionSize - 1) / 2)];
+		}
+	}
+	std::cout << 3 << std::endl;
+
+	for (int i = 0; i < convolutionSize; ++i)
+		for (int j = 0; j < convolutionSize; ++j)
+			GKernel[i][j] /= sum;
+
+	std::cout << 3.5 << std::endl;
+
+	int radius = (convolutionSize - 1) / 2;
+
+	//glm::vec3** window = new glm::vec3* [convolutionSize];
+	//for (int i = 0; i < convolutionSize; ++i) {
+	//    window[i] = new glm::vec3[convolutionSize];
+	//}
+
+	std::vector<std::vector<glm::vec3>> window;
+	for (int i = 0; i < convolutionSize; ++i) {
+		std::vector<glm::vec3> arr;
+		for (int j = 0; j < convolutionSize; ++j) {
+			arr.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+		}
+		window.push_back(arr);
+	}
+
+	std::cout << 4 << std::endl;
+	for (int i = 0; i < viewport_width; i++) {
+		for (int j = 0; j < radius; j++) {
+			newColorBuffer[INDEX(viewport_width, i, j, 0)] = color_buffer[INDEX(viewport_width, i, j, 0)];
+			newColorBuffer[INDEX(viewport_width, i, j, 1)] = color_buffer[INDEX(viewport_width, i, j, 1)];
+			newColorBuffer[INDEX(viewport_width, i, j, 2)] = color_buffer[INDEX(viewport_width, i, j, 2)];
+			newColorBuffer[INDEX(viewport_width, i, viewport_height - 1 - j, 0)] = color_buffer[INDEX(viewport_width, i, viewport_height - 1 - j, 0)];
+			newColorBuffer[INDEX(viewport_width, i, viewport_height - 1 - j, 1)] = color_buffer[INDEX(viewport_width, i, viewport_height - 1 - j, 1)];
+			newColorBuffer[INDEX(viewport_width, i, viewport_height - 1 - j, 2)] = color_buffer[INDEX(viewport_width, i, viewport_height - 1 - j, 2)];
+		}
+	}
+
+
+	for (int j = 0; j < viewport_height; j++) {
+		for (int i = 0; i < radius; i++) {
+			newColorBuffer[INDEX(viewport_width, i, j, 0)] = color_buffer[INDEX(viewport_width, i, j, 0)];
+			newColorBuffer[INDEX(viewport_width, i, j, 1)] = color_buffer[INDEX(viewport_width, i, j, 1)];
+			newColorBuffer[INDEX(viewport_width, i, j, 2)] = color_buffer[INDEX(viewport_width, i, j, 2)];
+			newColorBuffer[INDEX(viewport_width, viewport_width - 1 - i, j, 0)] = color_buffer[INDEX(viewport_width, viewport_width - 1 - i, j, 0)];
+			newColorBuffer[INDEX(viewport_width, viewport_width - 1 - i, j, 1)] = color_buffer[INDEX(viewport_width, viewport_width - 1 - i, j, 1)];
+			newColorBuffer[INDEX(viewport_width, viewport_width - 1 - i, j, 2)] = color_buffer[INDEX(viewport_width, viewport_width - 1 - i, j, 2)];
+
+		}
+	}
+	std::cout << 5 << std::endl;
+
+	for (int i = radius; i < viewport_width - radius; i++) {
+		for (int j = radius; j < viewport_height - radius; j++) {
+			// make window
+			int windowIndexI = 0;
+			int windowIndexJ = 0;
+			for (int indexI = i - radius; indexI <= i + radius; indexI++, windowIndexI++) {
+				for (int indexJ = j - radius; indexJ <= j + radius; indexJ++, windowIndexJ++) {
+					glm::vec3 color = glm::vec3(color_buffer[INDEX(viewport_width, indexI, indexJ, 0)], color_buffer[INDEX(viewport_width, indexI, indexJ, 1)], color_buffer[INDEX(viewport_width, indexI, indexJ, 2)]);
+					window[windowIndexI][windowIndexJ] = color;
+				}
+			}
+
+			glm::vec3 sum = glm::vec3(0.0f, 0.0f, 0.0f);
+			for (windowIndexI = 0; windowIndexI < convolutionSize; windowIndexI++) {
+				for (windowIndexJ = 0; windowIndexJ < convolutionSize; windowIndexJ++) {
+					sum += (window[windowIndexI][windowIndexJ] * GKernel[windowIndexI][windowIndexJ]);
+				}
+			}
+
+			//float maximum = max(max(sum.x, sum.y), sum.z);
+			float maximum = 1.0f;
+
+			newColorBuffer[INDEX(viewport_width, i, j, 0)] = sum.x / maximum;
+			newColorBuffer[INDEX(viewport_width, i, j, 1)] = sum.y / maximum;
+			newColorBuffer[INDEX(viewport_width, i, j, 2)] = sum.z / maximum;
+
+		}
+	}
+
+	//std::cout << 6 << std::endl;
+	//
+	//for (int i = 0; i < convolutionSize; ++i)
+	//    delete[] GKernel[i];
+	//std::cout << 7 << std::endl;
+	//
+	//delete[] GKernel;
+	//std::cout << 8 << std::endl;
+	//
+	//for (int i = 0; i < convolutionSize; ++i)
+	//    delete[] window[i];
+	//std::cout << 9 << std::endl;
+	//
+	//delete[] window;
+	//std::cout << 10 << std::endl;
+
+	//delete[] color_buffer;
+	std::cout << 11 << std::endl;
+	color_buffer = newColorBuffer;
+	std::cout << 12 << std::endl;
+}
+
+
 void Renderer::PutPixel(int i, int j, const glm::vec3& color, float depth) {
 	if (i < 0) return; if (i >= viewport_width) return;
 	if (j < 0) return; if (j >= viewport_height) return;
@@ -32,9 +170,15 @@ void Renderer::PutPixel(int i, int j, const glm::vec3& color, float depth) {
 		return;
 	
 	//std::cout << "i is " << i << ", j is " << j << std::endl;
-	color_buffer[INDEX(viewport_width, i, j, 0)] = color.x;
-	color_buffer[INDEX(viewport_width, i, j, 1)] = color.y;
-	color_buffer[INDEX(viewport_width, i, j, 2)] = color.z;
+	glm::vec3 newColor = glm::vec3(color);
+
+	if (fogEffect) {
+		newColor = fog(color, depth);
+	}
+
+	color_buffer[INDEX(viewport_width, i, j, 0)] = newColor.x;
+	color_buffer[INDEX(viewport_width, i, j, 1)] = newColor.y;
+	color_buffer[INDEX(viewport_width, i, j, 2)] = newColor.z;
 	z_buffer[Z_INDEX(viewport_width, i, j)] = depth;
 }
 
@@ -224,6 +368,47 @@ void Renderer::CreateOpenglBuffer()
 	glViewport(0, 0, viewport_width, viewport_height);
 }
 
+//void Renderer::blurFilter1() {
+//	cv::Mat R = cv::Mat::zeros(viewport_height, viewport_width, CV_8UC1);
+//	cv::Mat G = cv::Mat::zeros(viewport_height, viewport_width, CV_8UC1);
+//	cv::Mat B = cv::Mat::zeros(viewport_height, viewport_width, CV_8UC1);
+//	std::cout << 1 << std::endl;
+//
+//	for (int i = 0; i < viewport_width; i++) {
+//		for (int j = 0; j < viewport_height; j++) {
+//			std::cout << i << " " << j << std::endl;
+//			color_buffer[INDEX(viewport_width, i, j, 0)];
+//			std::cout << 1 << std::endl;
+//			R.at<float>(j, i);
+//			std::cout << 2 << std::endl;
+//			R.at<float>(j, i) = color_buffer[INDEX(viewport_width, i, j, 0)];
+//			G.at<float>(j, i) = color_buffer[INDEX(viewport_width, i, j, 1)];
+//			B.at<float>(j, i) = color_buffer[INDEX(viewport_width, i, j, 2)];
+//			std::cout << 3 << std::endl;
+//		}
+//	}
+//	std::cout << 2 << std::endl;
+//	cv::Mat Ro;
+//	cv::Mat Go;
+//	cv::Mat Bo;
+//
+//	cv::GaussianBlur(R, Ro, cv::Size(convolutionSize, convolutionSize), std);
+//	cv::GaussianBlur(G, Go, cv::Size(convolutionSize, convolutionSize), std);
+//	cv::GaussianBlur(B, Bo, cv::Size(convolutionSize, convolutionSize), std);
+//	std::cout << 3 << std::endl;
+//
+//	for (int i = 0; i < viewport_width; i++) {
+//		for (int j = 0; j < viewport_height; j++) {
+//			color_buffer[INDEX(viewport_width, i, j, 0)] = Ro.at<float>(i, j);
+//			color_buffer[INDEX(viewport_width, i, j, 1)] = Go.at<float>(i, j);
+//			color_buffer[INDEX(viewport_width, i, j, 2)] = Bo.at<float>(i, j);
+//		}
+//	}
+//	std::cout << 4 << std::endl;
+//
+//}
+
+
 void Renderer::SwapBuffers()
 {
 	// Makes GL_TEXTURE0 the current active texture unit
@@ -231,6 +416,11 @@ void Renderer::SwapBuffers()
 
 	// Makes glScreenTex (which was allocated earlier) the current texture.
 	glBindTexture(GL_TEXTURE_2D, gl_screen_tex);
+
+	/*if (blur) {
+		blurred = true;
+		blurFilter1();
+	}*/
 
 	// memcopy's colorBuffer into the gpu.
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, viewport_width, viewport_height, GL_RGB, GL_FLOAT, color_buffer);
@@ -736,60 +926,7 @@ float Renderer::triangleArea(glm::vec3 p1, glm::vec3 p2, glm::vec2 w) {
 	return  sqrt(s * (s - vu) * (s - uw) * (s - vw));
 }
 
-void Renderer::flatShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3) {
-	float a1 = 0;
-	float a2 = 0;
-	float a3 = 0;
-	float A = 0;
-	float z = 0;
-
-	glm::vec3 U = p2 - p1;
-	glm::vec3 V = p3 - p1;
-
-	float x = (U.y * V.z) - (U.z * V.y);
-	float y = (U.z * V.x) - (U.x * V.z);
-	float z1 = (U.x * V.y) - (U.y * V.x);
-
-	glm::vec3 normal = glm::normalize(glm::vec3(x, y, z1));
-
-	for (int y = yMax; y >= yMin; y--) {
-		for (int x = xMin; x <= xMax; x++) {
-			glm::ivec2 point = glm::ivec2(x, y);
-			if (pointInTriangle(point, p1, p2, p3)) {
-				a1 = triangleArea(p1, p2, point);
-				a2 = triangleArea(p2, p3, point);
-				a3 = triangleArea(p1, p3, point);
-
-				A = a1 + a2 + a3;
-				z = ((a1 * p3.z) / A) + ((a2 * p1.z) / A) + ((a3 * p2.z) / A);
-
-				// Ambient
-				glm::vec3 Ia = light.ambientColor * model.ambientColor;
-				//cout << glm::to_string(Ia) << endl;
-
-
-				// Diffuse
-				glm::vec3 lightVector = glm::normalize(light.updatedLocation - glm::vec3(x, y, z));
-				glm::vec3 Id = 1000.0f * light.diffuseColor * model.diffuseColor * max((float)glm::dot(normal, lightVector), 0.0f);
-				//cout << glm::to_string(Id) << endl;
-
-
-				// Specular
-				float* arr = scene.GetActiveCamera().eye;
-				glm::vec3 R = glm::normalize((2 * glm::dot(lightVector, normal) * normal) - lightVector);
-				glm::vec3 cameraLocation = glm::vec3(arr[0], arr[1], arr[2]);
-				glm::vec3 V = glm::normalize(cameraLocation - glm::vec3(x, y, z));
-				glm::vec3 Is = light.specularColor * model.specularColor * pow(max((float)glm::dot(R, V), 0.0f), light.alpha);
-
-				glm::vec3 finalColor = 0.3f * (Ia + Id + Is);
-				//finalColor /= max(max(finalColor.x, finalColor.y), finalColor.z);
-				PutPixel(x, y, finalColor, z);
-			}
-		}
-	}
-}
-
-void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, int faceIndex) {
+void Renderer::phongLighting(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, int faceIndex) {
 	float a1 = 0;
 	float a2 = 0;
 	float a3 = 0;
@@ -800,6 +937,10 @@ void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, floa
 	int p1Index = face.GetVertexIndex(0) - 1;
 	int p2Index = face.GetVertexIndex(1) - 1;
 	int p3Index = face.GetVertexIndex(2) - 1;
+
+	int p1NormalIndex = face.GetNormalIndex(0) - 1;
+	int p2NormalIndex = face.GetNormalIndex(1) - 1;
+	int p3NormalIndex = face.GetNormalIndex(2) - 1;
 
 	glm::vec3 p1normal = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 p2normal = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -821,14 +962,190 @@ void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, floa
 	p2normal = glm::normalize(p2normal);
 	p3normal = glm::normalize(p3normal);
 
+	p1normal = model.normals[p1NormalIndex];
+	p2normal = model.normals[p2NormalIndex];
+	p3normal = model.normals[p3NormalIndex];
+
+	glm::vec4 normalTemp = model.objectTransform * glm::vec4(p1normal, 1.0f);
+	p1normal = glm::vec3(normalTemp) / normalTemp.w;
+
+	normalTemp = model.objectTransform * glm::vec4(p2normal, 1.0f);
+	p2normal = glm::vec3(normalTemp) / normalTemp.w;
+
+	normalTemp = model.objectTransform * glm::vec4(p3normal, 1.0f);
+	p3normal = glm::vec3(normalTemp) / normalTemp.w;
+
+
+}
+
+void Renderer::flatShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, bool phong, int faceIndex) {
+	float a1 = 0;
+	float a2 = 0;
+	float a3 = 0;
+	float A = 0;
+	float z = 0;
+
+	glm::vec3 U = p2 - p1;
+	glm::vec3 V = p3 - p1;
+
+	float x = (U.y * V.z) - (U.z * V.y);
+	float y = (U.z * V.x) - (U.x * V.z);
+	float z1 = (U.x * V.y) - (U.y * V.x);
+
+	glm::vec3 normal = glm::normalize(glm::vec3(x, y, z1));
+
+	const Face& face = model.GetFace(faceIndex);
+	int p1Index = face.GetVertexIndex(0) - 1;
+	int p2Index = face.GetVertexIndex(1) - 1;
+	int p3Index = face.GetVertexIndex(2) - 1;
+
+	int p1NormalIndex = face.GetNormalIndex(0) - 1;
+	int p2NormalIndex = face.GetNormalIndex(1) - 1;
+	int p3NormalIndex = face.GetNormalIndex(2) - 1;
+
+	glm::vec3 p1normal = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 p2normal = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 p3normal = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	p1normal = model.normals[p1NormalIndex];
+	p2normal = model.normals[p2NormalIndex];
+	p3normal = model.normals[p3NormalIndex];
+
+	glm::vec4 normalTemp = model.objectTransform * glm::vec4(p1normal, 1.0f);
+	p1normal = glm::vec3(normalTemp) / normalTemp.w;
+
+	normalTemp = model.objectTransform * glm::vec4(p2normal, 1.0f);
+	p2normal = glm::vec3(normalTemp) / normalTemp.w;
+
+	normalTemp = model.objectTransform * glm::vec4(p3normal, 1.0f);
+	p3normal = glm::vec3(normalTemp) / normalTemp.w;
+
+
+	for (int y = yMax; y >= yMin; y--) {
+		for (int x = xMin; x <= xMax; x++) {
+			glm::ivec2 point = glm::ivec2(x, y);
+			if (pointInTriangle(point, p1, p2, p3)) {
+				a1 = triangleArea(p1, p2, point);
+				a2 = triangleArea(p2, p3, point);
+				a3 = triangleArea(p1, p3, point);
+
+				A = a1 + a2 + a3;
+				z = ((a1 * p3.z) / A) + ((a2 * p1.z) / A) + ((a3 * p2.z) / A);
+
+				glm::vec3 tempNormal;
+				if (phong) {
+					tempNormal = ((a1 * p3normal) / A) + ((a2 * p1normal) / A) + ((a3 * p2normal) / A);
+				}
+				else {
+					tempNormal = normal;
+				}
+
+				// Ambient
+				glm::vec3 Ia = light.highValue1 * light.ambientColor * model.ambientColor;
+				//cout << glm::to_string(Ia) << endl;
+
+
+				// Diffuse
+				glm::vec3 lightVector = glm::normalize(light.updatedLocation - glm::vec3(x, y, z));
+				glm::vec3 Id = light.highValue1 * 1000.0f * light.diffuseColor * model.diffuseColor * max((float)glm::dot(tempNormal, lightVector), 0.0f);
+				//cout << glm::to_string(Id) << endl;
+
+
+				// Specular
+				float* arr = scene.GetActiveCamera().eye;
+				glm::vec3 R = glm::normalize((2 * glm::dot(lightVector, tempNormal) * tempNormal) - lightVector);				glm::vec3 cameraLocation = glm::vec3(arr[0], arr[1], arr[2]);
+				glm::vec3 V = glm::normalize(cameraLocation - glm::vec3(x, y, z));
+				glm::vec3 Is = light.highValue1 * light.specularColor * model.specularColor * pow(max((float)glm::dot(R, V), 0.0f), light.alpha);
+				glm::vec3 finalColor = 0.3f * (Ia + Id + Is);
+				//finalColor /= max(max(finalColor.x, finalColor.y), finalColor.z);
+				PutPixel(x, y, finalColor, z);
+			}
+		}
+	}
+
+	if (model.specularReflection) {
+		glm::vec3 faceCenter = glm::vec3((p1.x + p2.x + p3.x) / 3, (p1.y + p2.y + p3.y) / 3, 1);
+		glm::ivec2 point = glm::ivec2(faceCenter.x, faceCenter.y);
+		a1 = triangleArea(p1, p2, point);
+		a2 = triangleArea(p2, p3, point);
+		a3 = triangleArea(p1, p3, point);
+
+
+
+		A = a1 + a2 + a3;
+		faceCenter.z = ((a1 * p3.z) / A) + ((a2 * p1.z) / A) + ((a3 * p2.z) / A);
+
+		float* arr = scene.GetActiveCamera().eye;
+		glm::vec3 cameraLocation = glm::vec3(arr[0], arr[1], arr[2]);
+		glm::vec3 V = glm::normalize(cameraLocation - faceCenter);
+		glm::vec3 lightVector = glm::normalize(light.updatedLocation - faceCenter);
+		glm::vec3 R = model.specularReflectionScale * glm::normalize(V - (2 * glm::dot(normal, V) * normal));
+
+		lightVector *= model.specularReflectionScale;
+
+		DrawLine(faceCenter, faceCenter + lightVector, glm::vec3(0, 0, 1));
+		DrawLine(faceCenter, faceCenter + R, glm::vec3(1, 0, 0));
+	}
+
+}
+
+void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, int faceIndex) {
+	float a1 = 0;
+	float a2 = 0;
+	float a3 = 0;
+	float A = 0;
+	float z = 0;
+
+	const Face& face = model.GetFace(faceIndex);
+	int p1Index = face.GetVertexIndex(0) - 1;
+	int p2Index = face.GetVertexIndex(1) - 1;
+	int p3Index = face.GetVertexIndex(2) - 1;
+
+	int p1NormalIndex = face.GetNormalIndex(0) - 1;
+	int p2NormalIndex = face.GetNormalIndex(1) - 1;
+	int p3NormalIndex = face.GetNormalIndex(2) - 1;
+
+	glm::vec3 p1normal = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 p2normal = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 p3normal = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	for (int i = 0; i < model.verticesToNormals[p1Index].size(); i++)
+		p1normal += model.transformedNormals[model.verticesToNormals[p1Index][i]];
+	//p1normal /= model.verticesToNormals[p1Index].size();
+
+	for (int i = 0; i < model.verticesToNormals[p2Index].size(); i++)
+		p2normal += model.transformedNormals[model.verticesToNormals[p2Index][i]];
+	//p2normal /= model.verticesToNormals[p2Index].size();
+
+	for (int i = 0; i < model.verticesToNormals[p3Index].size(); i++)
+		p3normal += model.transformedNormals[model.verticesToNormals[p3Index][i]];
+	//p3normal /= model.verticesToNormals[p3Index].size();
+
+	p1normal = glm::normalize(p1normal);
+	p2normal = glm::normalize(p2normal);
+	p3normal = glm::normalize(p3normal);
+
+	p1normal = model.normals[p1NormalIndex];
+	p2normal = model.normals[p2NormalIndex];
+	p3normal = model.normals[p3NormalIndex];
+
+	glm::vec4 normalTemp = model.objectTransform * glm::vec4(p1normal, 1.0f);
+	p1normal = glm::vec3(normalTemp) / normalTemp.w;
+
+	normalTemp = model.objectTransform * glm::vec4(p2normal, 1.0f);
+	p2normal = glm::vec3(normalTemp) / normalTemp.w;
+
+	normalTemp = model.objectTransform * glm::vec4(p3normal, 1.0f);
+	p3normal = glm::vec3(normalTemp) / normalTemp.w;
+
+
 	////////// p1 color
 	// Ambient
 	glm::vec3 Ia = light.highValue1 * light.ambientColor * model.ambientColor;
 
 	// Diffuse
 	glm::vec3 lightVector = glm::normalize(light.updatedLocation - p1);
-	glm::vec3 Id = light.highValue2 * light.diffuseColor * model.diffuseColor * max((float)glm::dot(p1normal, lightVector), 0.0f);
-
+	glm::vec3 Id = light.highValue2 * light.diffuseColor * max((float)glm::dot(p1normal, lightVector), 0.0f) * model.diffuseColor;
 	// Specular
 	float* arr = scene.GetActiveCamera().eye;
 	glm::vec3 R = glm::normalize((2 * glm::dot(lightVector, p1normal) * p1normal) - lightVector);
@@ -846,15 +1163,13 @@ void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, floa
 
 	// Diffuse
 	lightVector = glm::normalize(light.updatedLocation - p2);
-	Id = light.highValue2 * light.diffuseColor * model.diffuseColor * max((float)glm::dot(p2normal, lightVector), 0.0f);
-
+	Id = light.highValue2 * light.diffuseColor * max((float)glm::dot(p2normal, lightVector), 0.0f) * model.diffuseColor;
 	// Specular
 	arr = scene.GetActiveCamera().eye;
 	R = glm::normalize((2 * glm::dot(lightVector, p2normal) * p2normal) - lightVector);
 	cameraLocation = glm::vec3(arr[0], arr[1], arr[2]);
 	V = glm::normalize(cameraLocation - p2);
-	Is = light.highValue3 * light.specularColor * model.specularColor * pow(max((float)glm::dot(R, V), 0.0f), light.alpha);
-
+	Is = light.highValue3 * light.specularColor * pow(max((float)glm::dot(R, V), 0.0f), light.alpha) * model.specularColor;
 	glm::vec3 p2Color = (Ia + Id + Is);
 	PutPixel(p2.x, p2.y, p2Color, p2.z);
 
@@ -865,8 +1180,7 @@ void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, floa
 
 	// Diffuse
 	lightVector = glm::normalize(light.updatedLocation - p3);
-	Id = light.highValue2 * light.diffuseColor * model.diffuseColor * max((float)glm::dot(p3normal, lightVector), 0.0f);
-
+	Id = light.highValue2 * light.diffuseColor * max((float)glm::dot(p3normal, lightVector), 0.0f) * model.diffuseColor;
 	// Specular
 	arr = scene.GetActiveCamera().eye;
 	R = glm::normalize((2 * glm::dot(lightVector, p3normal) * p3normal) - lightVector);
@@ -905,6 +1219,31 @@ void Renderer::gouraudShading(Scene& scene, MeshModel& model, Light& light, floa
 			}
 		}
 	}
+
+	if (model.specularReflection) {
+		glm::vec3 U = p2 - p1;
+		glm::vec3 V = p3 - p1;
+
+		float x1 = (U.y * V.z) - (U.z * V.y);
+		float y1 = (U.z * V.x) - (U.x * V.z);
+		float z1 = (U.x * V.y) - (U.y * V.x);
+
+		glm::vec3 normal = glm::normalize(glm::vec3(x1, y1, z1));
+
+		glm::vec3 faceCenter = glm::vec3((p1.x + p2.x + p3.x) / 3, (p1.y + p2.y + p3.y) / 3, 1);
+		glm::ivec2 point = glm::ivec2(faceCenter.x, faceCenter.y);
+		a1 = triangleArea(p1, p2, point);
+		a2 = triangleArea(p2, p3, point);
+		a3 = triangleArea(p1, p3, point);
+
+		A = a1 + a2 + a3;
+		faceCenter.z = ((a1 * p3.z) / A) + ((a2 * p1.z) / A) + ((a3 * p2.z) / A);
+		glm::vec3 lightVector = model.specularReflectionScale * glm::normalize(light.updatedLocation - faceCenter);
+		glm::vec3 R = -1 * model.specularReflectionScale * glm::normalize((2 * glm::dot(lightVector, normal) * normal) - lightVector);
+
+		DrawLine(faceCenter, faceCenter + lightVector, glm::vec3(0, 0, 1));
+		DrawLine(faceCenter, faceCenter + R, glm::vec3(1, 0, 0));
+	}
 }
 
 void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, MeshModel& model, int faceIndex, Scene& scene) {
@@ -936,7 +1275,7 @@ void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, MeshMod
 
 			// flat shading
 			if (light.lightingType == 0) {
-				flatShading(scene, model, light, xMin, xMax, yMin, yMax, p1, p2, p3);
+				flatShading(scene, model, light, xMin, xMax, yMin, yMax, p1, p2, p3, false, faceIndex);
 			}
 			// gouraud
 			if (light.lightingType == 1) {
@@ -944,7 +1283,7 @@ void Renderer::DrawTriangle(glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, MeshMod
 			}
 			// phong
 			if (light.lightingType == 2) {
-
+				flatShading(scene, model, light, xMin, xMax, yMin, yMax, p1, p2, p3, true, faceIndex);
 			}
 		}
 	}

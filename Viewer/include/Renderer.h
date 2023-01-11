@@ -26,9 +26,17 @@ public:
 	void flatShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3);
 	void phongLighting();
 	void gouraudShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, int faceIndex);
+	void flatShading(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, bool phong, int faceIndex);
+	void phongLighting(Scene& scene, MeshModel& model, Light& light, float xMin, float xMax, float yMin, float yMax, glm::vec3& p1, glm::vec3& p2, glm::vec3& p3, int faceIndex);
 	float maxZ = -1.0f * FLT_MAX;
 	float minZ = FLT_MAX;
-
+	bool fogEffect = false;
+	float fogStart = -4.5f;
+	float fogEnd = -4.1f;
+	bool blur = false;
+	bool blurred = false;
+	int convolutionSize = 3;
+	float std = 3;
 
 private:
 	void PutPixel(const int i, const int j, const glm::vec3& color, float depth);
@@ -37,6 +45,9 @@ private:
 	void Renderer::DrawPumpkin(int start_width, int start_height);
 	void CreateOpenglBuffer();
 	void InitOpenglRendering();
+	glm::vec3 fog(glm::vec3 color, float z);
+	void blurFilter();
+	void blurFilter1();
 
 	float* color_buffer;
 	float* z_buffer;
