@@ -17,6 +17,7 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 
     float max = -1.0f * FLT_MAX;
     float min = FLT_MAX;
+
     
     for (int i = 0; i < vertices.size(); i++) {
         x = vertices[i].x;
@@ -62,10 +63,29 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
     axis.push_back(glm::vec3(0, 0, 0));
     axis.push_back(glm::vec3(0, 0, maxCoordinates[2]));
 
-    
     maxScale = maxCoordinates[0];
     if (maxScale < maxCoordinates[1]) maxScale = maxCoordinates[1];
     if (maxScale < maxCoordinates[2]) maxScale = maxCoordinates[2];
+
+    verticesToNormals = std::vector<std::vector<int>>((vertices.size()));
+
+    int facesCount = this->GetFacesCount();
+    for (int j = 0; j < facesCount; j++) {
+        Face face = GetFace(j);
+
+        // VERTICES
+        int v1Index = face.GetVertexIndex(0) - 1;
+        int v2Index = face.GetVertexIndex(1) - 1;
+        int v3Index = face.GetVertexIndex(2) - 1;
+
+        int n1Index = face.GetNormalIndex(0) - 1;
+        int n2Index = face.GetNormalIndex(1) - 1;
+        int n3Index = face.GetNormalIndex(2) - 1;
+
+        verticesToNormals[v1Index].push_back(n1Index);
+        verticesToNormals[v2Index].push_back(n2Index);
+        verticesToNormals[v3Index].push_back(n3Index);
+    }
 }
 
 MeshModel::~MeshModel()
@@ -173,6 +193,10 @@ std::vector<glm::vec3> MeshModel::Draw(glm::mat4x4 cameraTransform) {
     glm::mat4x4 matrix = cameraTransform * this->objectTransform;
     maxZ = -1.0f * FLT_MAX;
     minZ = FLT_MAX;
+    float maxX = -1.0f * FLT_MAX;
+    float minX = FLT_MAX;
+    float maxY = -1.0f * FLT_MAX;
+    float minY = FLT_MAX;
     int verticesCount = this->vertices.size();
     for (int i = 0; i < verticesCount; i++) {
         glm::vec4 vector = matrix * glm::vec4(this->vertices.at(i), 1.0f);
@@ -181,8 +205,23 @@ std::vector<glm::vec3> MeshModel::Draw(glm::mat4x4 cameraTransform) {
         newVertices.push_back(glm::vec3(vector.x / vector.w, vector.y / vector.w, vector.z / vector.w));
         minZ = std::min(minZ, (vector.z / vector.w));
         maxZ = std::max(maxZ, vector.z / vector.w);
+
+        minX = std::min(minX, (vector.x / vector.w));
+        maxX = std::max(maxX, vector.x / vector.w);
+
+        minY = std::min(minY, (vector.y / vector.w));
+        maxY = std::max(maxY, vector.y / vector.w);
     }
 
+    int normalsCount = this->vertices.size();
+    std::vector<glm::vec3> transformedNormals1;
+    for (int i = 0; i < normalsCount; i++) {
+        glm::vec4 vector = this->objectTransform * glm::vec4(this->normals.at(i), 1.0f);
+
+        // cut the w coordinate
+        transformedNormals1.push_back(glm::vec3(vector.x / vector.w, vector.y / vector.w, vector.z / vector.w));
+    }
+    transformedNormals = transformedNormals1;
 
     int facesCount = this->GetFacesCount();
     int counter = 0;
