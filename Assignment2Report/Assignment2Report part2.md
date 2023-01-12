@@ -9,14 +9,15 @@ glm::vec3 ambientColor = glm::vec3(1.0f, 1.0f, 1.0f);
 glm::vec3 diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
 glm::vec3 specularColor = glm::vec3(1.0f, 1.0f, 1.0f);
 ```
-we ran the program with the ligth set on red and we got the following output
+we ran the program with the light set on red and we got the following output
 
 ![displayObject](part2Pics/displayObject.gif)
 
-furthermore, we changed the mesh color to blue then we changed the lighting color so we can only see the "blue part" of the mesh color like below
-note that we can see the "blue part" that's being displayed by the RGB values of the light in the display window, and that is the part that is the model's color.
+furthermore, we changed the mesh color to blue then we changed the lighting color so we can only see the "blue part" of the mesh color like below.
 
-![changinColors](part2Pics/changinColors.gif)
+**note that we can see the "blue part" that's being displayed by the RGB values of the light in the display window, and that is the part that is the model's color.
+
+![changingColors](part2Pics/changingColors.gif)
 
 then we added the diffuse component to the scene and we got the following output
 
