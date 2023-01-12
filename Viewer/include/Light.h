@@ -14,7 +14,7 @@ public:
     glm::vec3 diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 specularColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
-    float localTranslateArray[3] = { 1000, 3000, 0 };
+    float localTranslateArray[3] = { 0, 0, 0 };
     float worldTranslateArray[3] = { 0, 0, 0 };
     glm::mat4x4 localTranslateMat = glm::mat4x4(1.0f);
     glm::mat4x4 worldTranslateMat = glm::mat4x4(1.0f);
