@@ -1044,7 +1044,7 @@ void Renderer::flatShading(Scene& scene, MeshModel& model, Light& light, float x
 				glm::vec3 finalColor = 0.3f * (Ia + Id + Is);
 				//finalColor /= max(max(finalColor.x, finalColor.y), finalColor.z);
 				PutPixel(x, y, finalColor, z);
-			}
+			} 
 		}
 	}
 }
