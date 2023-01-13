@@ -1,6 +1,7 @@
 # Assignment2Report-part2
 
 In this Assignment we added the abilities to add light sources and display multiple shading models.
+in other words we added the Ray tracing technique, so in order to see the models now we first have to add light sources to the scene and define the shading technique.
 
 first we added to the meshmodel and to the newly created light class 3 RGB values for the ambient, specular and diffuse lights.
 
