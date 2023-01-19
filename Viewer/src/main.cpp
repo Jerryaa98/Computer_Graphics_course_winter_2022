@@ -599,17 +599,5 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene, Renderer& renderer) {
 			}
 		}
 
-		if (ImGui::CollapsingHeader("Fog")) {
-			ImGui::Checkbox("Fog Effect", &(renderer.fogEffect));
-			ImGui::InputFloat("Fog Start", &(renderer.fogStart), 0.01, 0.01, "%.2f");
-			ImGui::InputFloat("Fog End", &(renderer.fogEnd), 0.01, 0.01, "%.2f");
-
-			ImGui::Separator();
-			ImGui::Separator();
-			ImGui::Checkbox("MSAA Effect", &(renderer.msaaFlag));
-			/*ImGui::Checkbox("blur Effect", &(renderer.blur));
-			ImGui::InputFloat("STD", &(renderer.std), 0.1, 0.01, "%.2f");*/
-		}
-
 	ImGui::End();
 }
