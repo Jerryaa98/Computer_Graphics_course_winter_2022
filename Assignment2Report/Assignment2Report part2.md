@@ -28,6 +28,7 @@ next we implemetned the regular flat shading and we got this output
 
 ![BunnyFlatShading](part2Pics/BunnyFlatShading.gif)
 
+we tweeked some of the parameters and got this output as well:
 ![flatshadingExample2](part2Pics/flatshadingExample2.jpg)
 
 
@@ -36,6 +37,7 @@ we can see the difference clearly on the edges of the triangles between the tran
 
 ![BunnyGouraudShading](part2Pics/BunnyGouraudShading.gif)
 
+we tweeked some of the parameters and got this output as well:
 ![gouradExample2](part2Pics/gouradExample2.jpg)
 
 next we added a temporary piece of code that draws the light refections off the triangles like the face normal vectors that we drew in assignment 1c.
@@ -46,6 +48,7 @@ next we added the phong shading, we can clearly see the difference here as well 
 
 ![BunnyPhongShading](part2Pics/BunnyPhongShading.gif)
 
+we tweeked some of the parameters and got this output as well:
 ![phongExample2](part2Pics/phongExample2.jpg)
 
 we added a variable that gives us control over the intensity of the shader, that way we can control it and give it a mirror effect or a matte effect.
