@@ -55,10 +55,6 @@ we added a variable that gives us control over the intensity of the shader, that
 
 ![alpha](part2Pics/alpha.gif)
 
-we can also implement Directional light by placing the point light source at infinity in one of the axes.
-
-![DirectionalLight](part2Pics/DirectionalLight.jpg)
-
 ## Shadings on Different Models
 
 ### Flat Shadings
