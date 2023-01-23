@@ -28,10 +28,15 @@ next we implemetned the regular flat shading and we got this output
 
 ![BunnyFlatShading](part2Pics/BunnyFlatShading.gif)
 
+![flatshadingExample2](part2Pics/flatshadingExample2.jpg)
+
+
 next step was to implement the gouraud shading, we got the following results:
 we can see the difference clearly on the edges of the triangles between the transitions and the continuity of the colors.
 
 ![BunnyGouraudShading](part2Pics/BunnyGouraudShading.gif)
+
+![gouradExample2](part2Pics/gouradExample2.jpg)
 
 next we added a temporary piece of code that draws the light refections off the triangles like the face normal vectors that we drew in assignment 1c.
 
@@ -40,6 +45,8 @@ next we added a temporary piece of code that draws the light refections off the 
 next we added the phong shading, we can clearly see the difference here as well as it gives us a more "cartoony" look and the mirrory reflections with the low contrast between triangles.
 
 ![BunnyPhongShading](part2Pics/BunnyPhongShading.gif)
+
+![phongExample2](part2Pics/phongExample2.jpg)
 
 we added a variable that gives us control over the intensity of the shader, that way we can control it and give it a mirror effect or a matte effect.
 
