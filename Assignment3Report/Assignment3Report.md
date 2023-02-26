@@ -108,6 +108,3 @@ colorShader.setUniform("material.alpha", scene->GetLight(0)->alpha);
 colorShader.setUniform("material.lightPos", scene->GetLight(0)->GetPosition());
 colorShader.setUniform("material.eye", camera.GetEye());
 ```
-
-
-
