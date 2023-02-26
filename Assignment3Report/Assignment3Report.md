@@ -119,11 +119,11 @@ colorShader.setUniform("material.eye", camera.GetEye());
 
 we used 6 pictures that we found online to construct this environment.
 
-![environmentMapping1](pics/environmentMapping1.jpg)
+![environmentMapping1](pics/environmentMapping1.png)
 
-![environmentMapping2](pics/environmentMapping2.jpg)
+![environmentMapping2](pics/environmentMapping2.png)
 
-![environmentMapping3](pics/environmentMapping3.jpg)
+![environmentMapping3](pics/environmentMapping3.png)
 
 #### Toon Shading
 
