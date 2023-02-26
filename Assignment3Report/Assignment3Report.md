@@ -187,6 +187,12 @@ here we apply different textures on a cow model.
 ![sphyrecialMapping](pics/sphyrecialMapping.png)
 ![sphere2](pics/sphere2.png)
 
+#### more examples on spot:-
+![spot1](pics/spot1.png)
+![spot2](pics/spot2.png)
+![spot3](pics/spot3.png)
+![spot4](pics/spot4.png)
+
 
 ## 8
 
