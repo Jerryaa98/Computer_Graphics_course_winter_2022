@@ -602,6 +602,7 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene, Renderer& renderer) {
 	ImGui::End();
 }*/
 
+
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <glad/glad.h>

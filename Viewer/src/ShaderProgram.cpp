@@ -2,7 +2,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-
 #include <glm/gtc/type_ptr.hpp>
 
 //-----------------------------------------------------------------------------

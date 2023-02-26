@@ -37,6 +37,7 @@ Camera& Scene::GetCamera(int index)
 }
 
 const Camera& Scene::GetActiveCamera() const {
+
 	return cameras[activeCameraIndex];
 }
 

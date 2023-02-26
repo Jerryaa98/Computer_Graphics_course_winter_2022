@@ -1,6 +1,7 @@
 #pragma once
 #include <istream>
 #include "Face.h"
+
 /*
 Face::Face(std::istream& issLine)
 {
@@ -11,6 +12,7 @@ Face::Face(std::istream& issLine)
 	char c;
 	for (int i = 0; i < 3; i++)
 	{
+
 		issLine >> std::ws >> vertexIndices.at(i) >> std::ws;
 		if (issLine.peek() != '/')
 		{

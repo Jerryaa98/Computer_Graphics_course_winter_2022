@@ -8,4 +8,5 @@ AmbientLight::AmbientLight() :
 
 AmbientLight::~AmbientLight()
 {
+
 }

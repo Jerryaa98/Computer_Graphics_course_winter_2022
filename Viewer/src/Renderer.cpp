@@ -5,6 +5,7 @@
 #include <memory>
 #include <algorithm>
 #include "Renderer.h"
+
 //#include "E:\opencv\build\include\opencv2\opencv.hpp"
 
 Renderer::Renderer() {

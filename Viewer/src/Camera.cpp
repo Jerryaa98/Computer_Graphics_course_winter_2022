@@ -22,6 +22,7 @@ Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, c
 {
 	UpdateProjectionMatrix();
 	viewTransformation = glm::lookAt(eye, at, up);
+
 }
 
 

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 
+
 // get line that takes line endings into account. The stack overflow thread:
 // https://stackoverflow.com/questions/6089231/getting-std-ifstream-to-handle-lf-cr-and-crlf
 std::istream& safeGetline(std::istream& is, std::string& t)

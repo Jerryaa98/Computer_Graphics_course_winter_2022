@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
+
 /*MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, const std::string& model_name) :
 	faces(faces),
 	vertices(vertices),

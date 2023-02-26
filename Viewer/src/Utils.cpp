@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
 
+
 glm::vec3 Utils::Vec3fFromStream(std::istream& issLine)
 {
 	float x, y, z;

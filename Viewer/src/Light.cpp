@@ -2,6 +2,7 @@
 #include "Light.h"
 
 
+
 Light::Light() :color(glm::vec3(1.0, 1.0, 1.0)){
 }
 
