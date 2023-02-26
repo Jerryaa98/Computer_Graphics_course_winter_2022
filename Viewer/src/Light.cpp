@@ -1,17 +1,22 @@
 // light.cpp
 #include "Light.h"
-#include <iostream>
-#include <glm\gtx\string_cast.hpp>
 
 
-void Light::GetTransform(glm::mat4x4 transformMat) {
-    localTranslateMat[3][0] = localTranslateArray[0];
-    localTranslateMat[3][1] = localTranslateArray[1];
-    localTranslateMat[3][2] = localTranslateArray[2];
+Light::Light() :color(glm::vec3(1.0, 1.0, 1.0)){
+}
 
-    worldTranslateMat[3][0] = worldTranslateArray[0];
-    worldTranslateMat[3][1] = worldTranslateArray[1];
-    worldTranslateMat[3][2] = worldTranslateArray[2];
+Light::Light(const glm::vec3& color) : color(color) {
+}
 
-    this->updatedLocation = transformMat * localTranslateMat * glm::vec4(location, 1);
+Light::~Light(){
+}
+
+const glm::vec3& Light::GetColor() const
+{
+	return color;
+}
+
+void Light::SetColor(const glm::vec3& color)
+{
+	this->color = color;
 }

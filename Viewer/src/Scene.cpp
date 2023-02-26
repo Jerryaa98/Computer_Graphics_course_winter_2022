@@ -1,91 +1,92 @@
 #include "Scene.h"
-#include "MeshModel.h"
+//#include "MeshModel.h"
 #include <string>
 
 Scene::Scene() :
-	active_camera_index(0),
-	active_model_index(0)
-{
+	activeCameraIndex(0),
+	activeModelIndex(0){
 
 }
 
-void Scene::AddModel(const std::shared_ptr<MeshModel>& mesh_model)
-{
-	mesh_models.push_back(mesh_model);
-	active_model_index = mesh_models.size() - 1;
-	std::string name = "Model" + std::to_string(active_model_index) + " " + (*mesh_model).GetModelName();
-	this->modelsList.push_back(name);
+void Scene::AddModel(const std::shared_ptr<MeshModel>& model){
+	models.push_back(model);
+}
 
+void Scene::AddCamera(const Camera& camera)
+{
+	cameras.push_back(camera);
 }
 
 int Scene::GetModelCount() const
 {
-	return mesh_models.size();
-}
-
-MeshModel& Scene::GetModel(int index) const
-{
-	return *mesh_models[index];
-}
-
-MeshModel& Scene::GetActiveModel() const
-{
-	return *mesh_models[active_model_index];
-}
-
-void Scene::AddCamera(const std::shared_ptr<Camera>& camera)
-{
-	cameras.push_back(camera);
-	active_camera_index = cameras.size() - 1;
-	std::string name = "Camera" + std::to_string(active_camera_index); 
-	SetActiveCameraIndex(active_camera_index);
+	return models.size();
 }
 
 int Scene::GetCameraCount() const
 {
 	return cameras.size();
 }
+std::shared_ptr<MeshModel> Scene::GetModel(int index) const
+{
+	return models[index];
+}
 
 Camera& Scene::GetCamera(int index)
 {
-	return *cameras[index];
+	return cameras[index];
+}
+
+const Camera& Scene::GetActiveCamera() const {
+	return cameras[activeCameraIndex];
 }
 
 Camera& Scene::GetActiveCamera()
 {
-	return *cameras[active_camera_index];
+	return cameras[activeCameraIndex];
 }
-
 void Scene::SetActiveCameraIndex(int index)
 {
-	active_camera_index = index;
+	if (index >= 0 && index < cameras.size())
+	{
+		activeCameraIndex = index;
+	}
 }
 
-int Scene::GetActiveCameraIndex() const
-{
-	return active_camera_index;
+const int Scene::GetActiveCameraIndex() const {
+	return activeCameraIndex;
 }
-
 void Scene::SetActiveModelIndex(int index)
 {
-	active_model_index = index;
+	activeModelIndex = index;
 }
-
-int Scene::GetActiveModelIndex() const
+const int Scene::GetActiveModelIndex() const
 {
-	return active_model_index;
+	return activeModelIndex;
 }
-
-void Scene::AddLight(const std::shared_ptr<Light>& light)
+const std::shared_ptr<MeshModel>& Scene::GetActiveModel() const
+{
+	return models[activeModelIndex];
+}
+void Scene::AddLight(const std::shared_ptr<PointLight>& light)
 {
 	lights.push_back(light);
 }
-
 int Scene::GetLightCount() const
 {
 	return lights.size();
 }
-
-Light& Scene::GetLight(int index) {
-	return *lights[index];
+std::shared_ptr<PointLight> Scene::GetLight(int index) const
+{
+	return lights[index];
 }
+
+const std::vector<std::shared_ptr<PointLight>>& Scene::GetActiveLights() const
+{
+	return lights;
+}
+
+const AmbientLight& Scene::GetAmbientLight()
+{
+	return ambientLight;
+}
+

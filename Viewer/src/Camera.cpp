@@ -1,135 +1,154 @@
 #include "Camera.h"
 #include "Utils.h"
 #include <iostream>
-#include <glm/gtx/transform.hpp>
-#include <glm/glm.hpp>
-#include <glm\gtx\string_cast.hpp>
+//#include <glm/gtx/transform.hpp>
+//#include <glm/glm.hpp>
+//#include <glm\gtx\string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
-Camera::Camera()
+Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, const float aspectRatio) :
+	zoom(1.0f),
+	fovy(glm::pi<float>() / 4.0f),
+	height(5),
+	zNear(0.1f),
+	zFar(200.0f),
+	aspectRatio(aspectRatio),
+	prespective(true),
+	viewTransformation(1),
+	eye(eye),
+	at(at),
+	up(up)
 {
-
-	this->view_transformation = glm::mat4x4(1.0f);
-
-	nearVal = 30;
-	farVal = -200;
-	right = 100;
-	left = -100;
-	top = 100;
-	bottom = -100;
-	fov = 5;
-
-	eye[0] = 0;
-	eye[1] = 0;
-	eye[2] = 10;
-
-	at[0] = 0;
-	at[1] = 0;
-	at[2] = 0;
+	UpdateProjectionMatrix();
+	viewTransformation = glm::lookAt(eye, at, up);
 }
 
-Camera::~Camera()
+
+Camera::~Camera(){
+
+}
+
+void Camera::SetOrthProj(
+	const float height,
+	const float aspectRatio,
+	const float zNear,
+	const float zFar)
 {
-
+	prespective = false;
+	float width = aspectRatio * height;
+	projectionTransformation = glm::ortho(-width / 2, width / 2, -height / 2, height / 2, zNear, zFar);
 }
 
-//const glm::mat4x4& Camera::GetProjectionTransformation() const{
-//	// return proj_trans;
-//}
-
-const glm::mat4x4& Camera::GetViewTransformation() const{
-	return view_transformation;
+void Camera::SetPersProj(
+	const float fovy,
+	const float aspectRatio,
+	const float zNear,
+	const float zFar)
+{
+	prespective = true;
+	projectionTransformation = glm::perspective(fovy, aspectRatio, zNear, zFar);
 }
 
+bool Camera::IsPrespective()
+{
+	return prespective;
+}
 
-glm::mat4x4 Camera::GetTransform() {
-	// calculate local transformations
-	localTranslateMat[3][0] = localTranslateArray[0];
-	localTranslateMat[3][1] = localTranslateArray[1];
-	localTranslateMat[3][2] = localTranslateArray[2];
+const glm::mat4x4& Camera::GetProjectionTransformation() const
+{
+	return projectionTransformation;
+}
 
-	localRotateXMat[1][1] = cos(glm::radians(localRotateArray[0]));
-	localRotateXMat[1][2] = sin(glm::radians(localRotateArray[0]));
-	localRotateXMat[2][1] = -sin(glm::radians(localRotateArray[0]));
-	localRotateXMat[2][2] = cos(glm::radians(localRotateArray[0]));
+const glm::mat4x4& Camera::GetViewTransformation() const
+{
+	return viewTransformation;
+}
+void Camera::Zoom(const float factor)
+{
+	fovy = fovy * factor;
+	if (fovy > glm::pi<float>()){
+		fovy = glm::pi<float>();
+	}
+	UpdateProjectionMatrix();
+}
+void Camera::SphericalRotate(const glm::vec2& sphericalDelta)
+{
+}
+void Camera::SetAspectRatio(float aspectRatio)
+{
+	this->aspectRatio = aspectRatio;
+	UpdateProjectionMatrix();
+}
 
-	localRotateYMat[0][0] = cos(glm::radians(localRotateArray[1]));
-	localRotateYMat[0][2] = sin(glm::radians(localRotateArray[1]));
-	localRotateYMat[2][0] = -sin(glm::radians(localRotateArray[1]));
-	localRotateYMat[2][2] = cos(glm::radians(localRotateArray[1]));
-
-	localRotateZMat[0][0] = cos(glm::radians(localRotateArray[2]));
-	localRotateZMat[0][1] = sin(glm::radians(localRotateArray[2]));
-	localRotateZMat[1][0] = -sin(glm::radians(localRotateArray[2]));
-	localRotateZMat[1][1] = cos(glm::radians(localRotateArray[2]));
-
-	// calculate world transformations
-	worldTranslateMat[3][0] = worldTranslateArray[0];
-	worldTranslateMat[3][1] = worldTranslateArray[1];
-	worldTranslateMat[3][2] = worldTranslateArray[2];
-
-	worldRotateXMat[1][1] = cos(glm::radians(worldRotateArray[0]));
-	worldRotateXMat[1][2] = sin(glm::radians(worldRotateArray[0]));
-	worldRotateXMat[2][1] = -sin(glm::radians(worldRotateArray[0]));
-	worldRotateXMat[2][2] = cos(glm::radians(worldRotateArray[0]));
-
-	worldRotateYMat[0][0] = cos(glm::radians(worldRotateArray[1]));
-	worldRotateYMat[0][2] = sin(glm::radians(worldRotateArray[1]));
-	worldRotateYMat[2][0] = -sin(glm::radians(worldRotateArray[1]));
-	worldRotateYMat[2][2] = cos(glm::radians(worldRotateArray[1]));
-
-	worldRotateZMat[0][0] = cos(glm::radians(worldRotateArray[2]));
-	worldRotateZMat[0][1] = sin(glm::radians(worldRotateArray[2]));
-	worldRotateZMat[1][0] = -sin(glm::radians(worldRotateArray[2]));
-	worldRotateZMat[1][1] = cos(glm::radians(worldRotateArray[2]));
-
-	objectTransform = localTranslateMat * localRotateXMat * localRotateYMat * localRotateZMat;
-	worldTransform = worldTranslateMat * worldRotateXMat * worldRotateYMat * worldRotateZMat;
-
-
-	this->drawTransformation = worldTransform * objectTransform;
-
-	glm::mat4x4 lookat = this->GetCameraLookAt();
-
-	glm::mat4x4 orthoPerspMat;
-
-	if (OrthoPerspective)
-		orthoPerspMat = glm::ortho(left, right, bottom, top, nearVal, farVal);
+void Camera::UpdateProjectionMatrix()
+{
+	if (prespective)
+	{
+		SetPersProj(fovy, aspectRatio, zNear, zFar);
+	}
 	else
-		orthoPerspMat = glm::perspective(glm::radians(fov), (float)half_height / (float)half_width, nearVal, farVal);
-
-	return orthoPerspMat * lookat * glm::inverse(this->drawTransformation);
+	{
+		SetOrthProj(height, aspectRatio, zNear, zFar);
+	}
+}
+void Camera::SwitchToPresp()
+{
+	prespective = true;
+	UpdateProjectionMatrix();
 }
 
-glm::mat4x4 Camera::GetCameraLookAt() {
-	glm::vec3 cameraPos = glm::vec3(this->eye[0], this->eye[1], this->eye[2]);
-	glm::vec3 cameraTarget = glm::vec3(this->at[0], this->at[1], this->at[2]);
-	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-	//glm::mat4x4 lookat = glm::lookAt(cameraPos, cameraTarget, cameraUp);
-	glm::mat4x4 lookat = glm::lookAt(cameraPos, cameraTarget, up);
-
-	return lookat;
+void Camera::SwitchToOrtho()
+{
+	prespective = false;
+	UpdateProjectionMatrix();
 }
 
-void Camera::IncrementalTrans(bool GoRightLeft) {
-	glm::mat4x4 Translate = glm::mat4x4(1);
-	if (GoRightLeft) {
-		Translate[3][0] = 0.02;
-		Translate[3][1] = localTranslateArray[1];
-		Translate[3][2] = localTranslateArray[2];
-		localTranslateArray[0] += 0.02;
-	}
-	else {
-		Translate[3][0] = -0.02;
-		Translate[3][1] = localTranslateArray[1];
-		Translate[3][2] = localTranslateArray[2];
-		localTranslateArray[0] -= 0.02;
-	}
-	Translate = glm::inverse(Translate);
-	this->drawTransformation = glm::inverse(this->drawTransformation) * Translate;
+float Camera::GetFar()
+{
+	return zFar;
+}
+
+void Camera::SetNear(const float zNear)
+{
+	this->zNear = zNear;
+	UpdateProjectionMatrix();
+}
+
+float Camera::GetHeight()
+{
+	return height;
+}
+
+void Camera::SetFovy(const float fovy)
+{
+	this->fovy = fovy;
+	UpdateProjectionMatrix();
+}
+
+float Camera::GetFovy()
+{
+	return fovy;
+}
+
+float Camera::GetNear()
+{
+	return zNear;
+}
+
+void Camera::SetFar(const float zFar)
+{
+	this->zFar = zFar;
+	UpdateProjectionMatrix();
+}
+
+void Camera::SetHeight(const float height)
+{
+	this->height = height;
+	UpdateProjectionMatrix();
+}
+
+const glm::vec3& Camera::GetEye() const
+{
+	return eye;
 }
