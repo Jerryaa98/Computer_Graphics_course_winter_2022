@@ -2,19 +2,18 @@
 
 ## 1
 
-it creates a special identifier for an opengl texture and for a vertex array object (VAO).
-it creates a buffer, and copies the vertex and texture coordinates data to it.
-it creates a shader program, and tells the shader where to look for the vertex position data, and the data dimensions.
+the program creates an identifier for a texture in opengl and for a vertex array object (VAO).
+then copies the vertex data and textures into a buffer.
+it creates a vertex  and fragmant shader programs, and tells the shaders where to look for the vertex position data, and the data dimensions.
 
 
 ## 2
 
-we started by loading the mesh to the GPU.
-
+we loaded a mesh model onto the GPU.
 
 ## 3
 
-this is our code for the vShader:
+Vshader Code:-
 
 ```c++
 #version 330 core
@@ -54,7 +53,7 @@ void main()
 ```
 
 ## 4
-We implemented a simple fragment shader that outputs a constant color.
+fragment Shader which ouputs a single color:
 ```c++
 #version 330 core
 
@@ -89,8 +88,8 @@ void main()
 }
 ```
 
-## 5
-we loaded all the variables and parameters to the GPU.
+## 5 Mesh Display
+we loaded all the variables and parameters to the GPU in the main.cpp.
 
 ```c++
 colorShader.setUniform("model", currentModel->GetWorldTransformation() *currentModel->GetModelTransformation());
@@ -111,9 +110,83 @@ colorShader.setUniform("material.lightPos", scene->GetLight(0)->GetPosition());
 colorShader.setUniform("material.eye", camera.GetEye());
 ```
 
-## 6
+and we got the following output using spot.obj file:-
 
-## 7
+note that we can see the initial coloring on the model being the same as when we loaded the box in the original demo.
+
+![5-1](pics/5-1.png)
+
+then we applied different transformations on the model eg. rotations, scaling and translations on the z axis which we can see the model being slightly invisibile.
+
+![5-2](pics/5-2.png)
+![5-3](pics/5-3.png)
+![5-4](pics/5-4.png)
+![5-5](pics/5-5.png)
+![5-6](pics/5-6.png)
+![5-7](pics/5-7.png)
+![5-8](pics/5-8.png)
+
+then we put a specific color on the model and got the following output.
+
+![5-9](pics/5-9.png)
+![5-10](pics/5-10.png)
+
+then we applied "fill" on the model and got the following output.
+
+![5-11](pics/5-11.png)
+![5-12](pics/5-12.png)
+
+## 6 Lighting
+
+light is at origin.
+
+#### 1
+specular is at 1.
+
+![6-1](pics/6-1.png)
+
+specular is at 32.
+
+![6-2](pics/6-2.png)
+
+specular is at 64.
+
+![6-3](pics/6-3.png)
+
+with rotation.
+
+![6-4](pics/6-4.png)
+
+Phong shading on Cow with different colors and different backgrounds, with different values.
+
+![6-2-1](pics/6-2-1.png)
+![6-2-2](pics/6-2-2.png)
+![6-2-3](pics/6-2-3.png)
+![6-2-4](pics/6-2-4.png)
+![6-2-5](pics/6-2-5.png)
+![6-2-6](pics/6-2-6.png)
+![6-2-7](pics/6-2-7.png)
+![6-2-8](pics/6-2-8.png)
+
+## 7 Textures
+here we apply different textures on a cow model.
+
+#### Simple:
+![simpleMapping](pics/simpleMapping.png)
+![simple2](pics/simple2.png)
+
+#### Plane:
+![planeMapping](pics/planeMapping.png)
+![plane2](pics/plane2.png)
+
+#### Cylinder:
+![Cylindermapping](pics/Cylindermapping.png)
+![Cylinder2](pics/Cylinder2.png)
+
+#### Sphere:
+![sphyrecialMapping](pics/sphyrecialMapping.png)
+![sphere2](pics/sphere2.png)
+
 
 ## 8
 
