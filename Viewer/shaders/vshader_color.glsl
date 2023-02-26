@@ -16,7 +16,7 @@ out vec2 fragTexCoords;
 
 void main()
 {
-   orig_fragPos = pos, 1.0f;
+	orig_fragPos = pos, 1.0f;
 	fragPos = vec3(model * vec4(pos, 1.0f));
 	fragNormal = vec3(model * vec4(normal, 1.0f));
 

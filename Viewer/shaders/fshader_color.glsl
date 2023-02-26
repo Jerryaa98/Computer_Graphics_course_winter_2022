@@ -3,7 +3,9 @@
 struct Material
 {
 	sampler2D textureMap;
+
 	vec3 vertexNormal;
+
 	vec3 objAmbientColor;
 	vec3 objDiffuseColor;
 	vec3 objSpecularColor;
@@ -17,11 +19,12 @@ struct Material
 	vec3 lightPos;
 	vec3 eye;
 };
+
 // We set this field's properties from the C++ code
 uniform Material material;
 
 float pi = 3.14159;
-int toonLevels = 6;
+int toonLevels = 5;
 
 // Inputs from vertex shader (after interpolation was applied)
 in vec3 fragPos;
@@ -52,13 +55,24 @@ void main()
 	vec3 lightVector = normalize(material.lightPos - fragPos);
 	vec3 Id = material.lightDiffuseColor * material.objDiffuseColor * max(float(dot(fragNormal, lightVector)), 0.0f);
 
+	// normal mapping
+	//vec3 Id = material.lightDiffuseColor * material.objDiffuseColor * max(float(dot(normalize(textureColor), lightVector)), 0.0f);
+
+
+	// Specular
+	//vec3 R = normalize((2 * dot(lightVector, fragNormal) * fragNormal) - lightVector);
+	//vec3 cameraLocation = material.eye;
+	//vec3 V = normalize(cameraLocation - fragPos);
+	//vec3 Is = material.lightSpecularColor * material.objSpecularColor * pow(max(float(dot(R, V)), 0.0f), material.alpha);
+
 	float toonLevel = floor(pow(max(float(dot(fragNormal, lightVector)), 0.0f), material.alpha) * toonLevels);
 	vec3 Is = material.lightSpecularColor * material.objSpecularColor * (toonLevel / toonLevels);
 
 
+	//frag_color = normalize(vec4(Ia, material.alpha) + vec4(Id, 0.0f) + vec4(Is, 0.0f));
+
 	frag_color = (toonLevel / toonLevels) * normalize(vec4(Ia, material.alpha) + vec4(Id, 0.0f) + vec4(Is, 0.0f));
 
+	//frag_color = vec4(textureColor, 1.0f);
 
 }
-
-
