@@ -1,16 +1,16 @@
-##1
+## 1
 
 it creates a special identifier for an opengl texture and for a vertex array object (VAO).
 it creates a buffer, and copies the vertex and texture coordinates data to it.
 it creates a shader program, and tells the shader where to look for the vertex position data, and the data dimensions.
 
 
-##2
+## 2
 
 we started by loading the mesh to the GPU.
 
 
-##3
+## 3
 
 this is our code for the vShader:
 
@@ -51,7 +51,7 @@ void main()
 
 ```
 
-##4
+## 4
 We implemented a simple fragment shader that outputs a constant color.
 ```c++
 #version 330 core
@@ -87,7 +87,7 @@ void main()
 }
 ```
 
-##5
+## 5
 we loaded all the variables and parameters to the GPU.
 
 ```c++
@@ -108,3 +108,14 @@ colorShader.setUniform("material.alpha", scene->GetLight(0)->alpha);
 colorShader.setUniform("material.lightPos", scene->GetLight(0)->GetPosition());
 colorShader.setUniform("material.eye", camera.GetEye());
 ```
+
+## 6
+
+## 7
+
+## 8
+
+#### Environment Mapping
+
+
+#### Toon Shading
