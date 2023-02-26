@@ -119,14 +119,14 @@ colorShader.setUniform("material.eye", camera.GetEye());
 
 we used 6 pictures that we found online to construct this environment.
 
-![environmentMapping1](Pics/environmentMapping1.jpg)
+![environmentMapping1](pics/environmentMapping1.jpg)
 
-![environmentMapping2](Pics/environmentMapping2.jpg)
+![environmentMapping2](pics/environmentMapping2.jpg)
 
-![environmentMapping3](Pics/environmentMapping3.jpg)
+![environmentMapping3](pics/environmentMapping3.jpg)
 
 #### Toon Shading
 
 we can see the levels of brightness on the ball very clearly.
 
-![ballToonShading](Pics/ballToonShading.jpg)
+![ballToonShading](pics/ballToonShading.jpg)
