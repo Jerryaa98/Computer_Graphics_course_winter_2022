@@ -196,6 +196,13 @@ here we apply different textures on a cow model.
 
 ## 8
 
+#### Normal Mapping
+
+nothing fancy over here, did it in the opengl Demo, we simply took the normal map, transtlated its colors into normals, and used those normals in the light calculation instead of the fragNormal
+
+![normalmapping1](pics/normalmapping1.jpg)
+![normalmapping2](pics/normalmapping2.jpg)
+
 #### Environment Mapping
 
 we used 6 pictures that we found online to construct this environment.
