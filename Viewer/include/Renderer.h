@@ -2,11 +2,24 @@
 #include "Scene.h"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "ShaderProgram.h"
+#include <vector>
+#include <GLFW/glfw3.h>
+#include <imgui/imgui.h>
+#include <memory>
+#include "Texture2D.h"
 
 class Renderer
 {
 public:
-	Renderer(int viewportWidth, int viewportHeight);
+	Renderer();
+	~Renderer();
+	void Render(const std::shared_ptr<Scene>& scene);
+	void LoadShaders();
+	void LoadTextures();
+
+	/*
+	* Renderer(int viewportWidth, int viewportHeight);
 	virtual ~Renderer();
 	void Render(const Scene& scene);
 	void Render(const Scene& scene, std::shared_ptr<MeshModel> cameraModel);
@@ -38,9 +51,15 @@ public:
 	int convolutionSize = 3;
 	float std = 3;
 	bool msaaFlag = false;
+	*/
 
 private:
-	void PutPixel(const int i, const int j, const glm::vec3& color, float depth);
+	ShaderProgram lightShader;
+	ShaderProgram colorShader;
+	Texture2D texture1;
+
+	/*
+	* void PutPixel(const int i, const int j, const glm::vec3& color, float depth);
 	void Renderer::DrawCircleOfLines(int start_width, int start_height);
 	void Renderer::DrawActualCircle(int start_width, int start_height);
 	void Renderer::DrawPumpkin(int start_width, int start_height);
@@ -56,4 +75,5 @@ private:
 	int viewport_height;
 	GLuint gl_screen_tex;
 	GLuint gl_screen_vtc;
+	*/
 };

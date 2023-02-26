@@ -9,69 +9,63 @@
 class Camera
 {
 public:
-    Camera();
-	virtual ~Camera();
+    Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, const float aspectRatio);
+    ~Camera();
 
-	glm::mat4x4 GetCameraLookAt();
+    float GetNear();
+    void SetNear(const float zNear);
 
+    float GetFar();
+    void SetFar(const float zFar);
+    
+    float GetFovy();
+    void SetFovy(const float fovy);
+    
+    float GetHeight();
+    void SetHeight(const float height);
+    
+    bool IsPrespective();
 	void SetOrthProj(const float height, const float aspectRatio, const float zNear, const float zFar);
 	void SetPersProj(const float fovy, const float aspect, const float zNear, const float zFar);
+    const glm::vec3& GetEye() const;
 
 	const glm::mat4x4& GetProjectionTransformation() const;
 	const glm::mat4x4& GetViewTransformation() const;
-	void  Camera::IncrementalTrans(bool GoRightLeft);
+    void Zoom(const float factor);
 
-    float localTranslateArray[3] = { 0, 0, 0 };
-    float localRotateArray[3] = { 0, 0, 0 };
+    
+    void SwitchToPresp();
+    void SwitchToOrtho();
+    void SphericalRotate(const glm::vec2& sphericalDelta);
 
-    float worldTranslateArray[3] = { 0, 0, 0 };
-    float worldRotateArray[3] = { 0, 0, 0 };
-
-
-    int half_width;
-    int half_height;
+    void UpdateProjectionMatrix();
 
     glm::mat4x4 GetTransform();
-
+    void SetAspectRatio(float aspectRatio);
     int OrthoPerspective = 0;
 
-    float nearVal;
-    float farVal;
-    float right;
-    float left;
-    float top;
-    float bottom;
-    float fov;
 
-    float eye[3];
-    float at[3];
-
-    glm::mat4x4 drawTransformation;
 
 private:
+    glm::mat4x4 viewTransformation;
+    glm::mat4x4 projectionTransformation;
 
-    std::vector<Face> faces;
-    std::vector<glm::vec3> vertices;
+    glm::vec3 eye;
+    glm::vec3 up;
+    glm::vec3 at;
 
+    glm::vec3 x;
+    glm::vec3 y;
+    glm::vec3 z;
 
-    // local matrices (init with identity matrix)
-    glm::mat4x4 localTranslateMat = glm::mat4x4(1.0f);
-    glm::mat4x4 localRotateXMat = glm::mat4x4(1.0f);
-    glm::mat4x4 localRotateYMat = glm::mat4x4(1.0f);
-    glm::mat4x4 localRotateZMat = glm::mat4x4(1.0f);
+    float zoom;
+    float fovy;
+    float height;
+    float zNear;
+    float zFar;
+    float aspectRatio;
 
-    // world matrices (init with identity matrix)
-    glm::mat4x4 worldTranslateMat = glm::mat4x4(1.0f);
-    glm::mat4x4 worldRotateXMat = glm::mat4x4(1.0f);
-    glm::mat4x4 worldRotateYMat = glm::mat4x4(1.0f);
-    glm::mat4x4 worldRotateZMat = glm::mat4x4(1.0f);
-
-    glm::mat4x4 objectTransform;
-    glm::mat4x4 worldTransform;
-
-    glm::mat4x4 orthographic;
-
-    glm::mat4x4 view_transformation;
-    glm::mat4x4 projection_transformation;
+    bool prespective;
+   
 	
 };
