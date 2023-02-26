@@ -116,6 +116,11 @@ colorShader.setUniform("material.eye", camera.GetEye());
 ## 8
 
 #### Environment Mapping
+![](Pics/environmentMapping1.jpg)
 
+![](Pics/environmentMapping2.jpg)
+
+![](Pics/environmentMapping3.jpg)
 
 #### Toon Shading
+![](Pics/ballToonShading.jpg)
